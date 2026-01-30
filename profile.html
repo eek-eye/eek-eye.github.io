@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Eeks-Eye</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Add Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics-compat.js"></script>
+    <style>
+        body {
+            background: #111;
+            color: #fff;
+            font-family: 'Inter', 'SF Pro Display', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        .profile-container {
+            max-width: 600px;
+            margin: 4rem auto;
+            padding: 2rem;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 12px;
+            box-shadow: 0 4px 24px #000a;
+        }
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        .profile-picture {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #ff00ff;
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        .profile-info {
+            flex: 1;
+        }
+        .profile-name {
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .profile-email {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+        }
+        .profile-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        .action-button {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .edit-button {
+            background-color: #ff00ff;
+            color: white;
+            border: none;
+        }
+        .edit-button:hover {
+            background-color: #cc00cc;
+            transform: translateY(-2px);
+        }
+        .logout-button {
+            background-color: transparent;
+            color: #ff4444;
+            border: 1px solid #ff4444;
+        }
+        .logout-button:hover {
+            background-color: rgba(255, 68, 68, 0.1);
+            transform: translateY(-2px);
+        }
+        .profile-form {
+            display: none;
+            margin-top: 2rem;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            color: white;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #ff00ff;
+            box-shadow: 0 0 0 2px rgba(255, 0, 255, 0.2);
+        }
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        .save-button {
+            background-color: #ff00ff;
+            color: white;
+            padding: 1rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        .save-button:hover {
+            background-color: #cc00cc;
+            transform: translateY(-2px);
+        }
+        .cancel-button {
+            background-color: transparent;
+            color: white;
+            padding: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        .cancel-button:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        .auth-message {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: none;
+        }
+        .error-message {
+            background-color: rgba(255, 68, 68, 0.1);
+            color: #ff4444;
+            border: 1px solid rgba(255, 68, 68, 0.2);
+        }
+        .success-message {
+            background-color: rgba(0, 200, 81, 0.1);
+            color: #00C851;
+            border: 1px solid rgba(0, 200, 81, 0.2);
+        }
+        .verification-status {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+        .verified {
+            color: #00C851;
+        }
+        .unverified {
+            color: #ff4444;
+        }
+        .resend-verification {
+            color: #ff00ff;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        .resend-verification:hover {
+            color: #cc00cc;
+        }
+        .home-btn {
+            position: absolute;
+            top: 1.2rem;
+            left: 1.2rem;
+            background: #222;
+            color: #fff;
+            padding: 0.5rem 1.2rem;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            box-shadow: 0 2px 8px #0004;
+            z-index: 10;
+            transition: background 0.2s, color 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .home-btn:hover {
+            background: #fff;
+            color: #111;
+        }
+        @media (max-width: 700px) {
+            .home-btn { top: 0.5rem; left: 0.5rem; padding: 0.4rem 0.8rem; font-size: 1rem; }
+        }
+    </style>
+</head>
+<body class="dark-theme">
+    <div class="page-transition-overlay"></div>
+    <div class="x-border x-border-left">X</div>
+    <div class="x-border x-border-right">I</div>
+    
+    <div class="x-line">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</div>
+
+    <header class="site-header">
+        <video autoplay loop muted playsinline class="header-video">
+            <source src="images/ezgif.com-mute-video.mp4" type="video/mp4">
+        </video>
+        <div class="header-top-left">
+            <a href="startup.html" class="about-button nav-link">Home</a> 
+            <a href="about.html" class="about-button nav-link">Why?</a> 
+        </div>
+        <div class="header-top-right">
+            <div class="menu-icon-container">
+                <i class="fas fa-times menu-icon red-x"></i>
+                <div class="dropdown-menu">
+                    <a href="about.html" class="nav-link">About</a>
+                    <a href="explore.html" class="nav-link">Aesthetic</a>
+                    <a href="designs.html" class="nav-link">Designs</a>
+                </div>
+            </div>
+        </div>
+        <div class="logo-container">
+            <a href="startup.html" class="logo-link nav-link">
+                <img src="images/neon-eye-logo.png" alt="X-EYE" class="site-logo">
+            </a>
+        </div>
+        <h1>
+            <span>E</span><span>e</span><span>k</span><span>s</span> 
+            <span class="eye-text"><span>E</span><span>y</span><span>e</span></span>
+        </h1>
+        <p class="header-subtitle">Profile</p>
+    </header>
+
+    <main>
+        <div class="profile-container">
+            <div class="profile-header">
+                <img id="profilePicture" class="profile-picture" src="images/default-avatar.png" alt="Profile Picture">
+                <div class="profile-info">
+                    <h2 id="profileName" class="profile-name">Loading...</h2>
+                    <p id="profileEmail" class="profile-email">Loading...</p>
+                    <div id="verificationStatus" class="verification-status"></div>
+                </div>
+            </div>
+            <div class="profile-actions">
+                <button id="editProfile" class="action-button edit-button">
+                    <i class="fas fa-edit"></i> Edit Profile
+                </button>
+                <button id="logoutButton" class="action-button logout-button">
+                    <i class="fas fa-sign-out-alt"></i> Logout
+                </button>
+            </div>
+
+            <form id="profileForm" class="profile-form">
+                <div class="form-group">
+                    <label for="editName">Full Name</label>
+                    <input type="text" id="editName" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="editEmail">Email</label>
+                    <input type="email" id="editEmail" name="email" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="save-button">Save Changes</button>
+                    <button type="button" id="cancelEdit" class="cancel-button">Cancel</button>
+                </div>
+            </form>
+
+            <div class="auth-message error-message" id="errorMessage"></div>
+            <div class="auth-message success-message" id="successMessage"></div>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-left">
+            <a href="contact.html" class="footer-link-button">Contact</a>
+            <a href="faq.html" class="footer-link-button">FAQ</a>
+            <a href="what-you-need-to-know.html" class="footer-link-button">What You Need To Know</a>
+        </div>
+        <div class="footer-center">
+            <div class="social-links">
+                <a href="https://www.instagram.com/eeks.eye/" target="_blank" rel="noopener noreferrer" aria-label="Visit Eeks Eye on Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+            </div>
+            <p>&copy; 2025 Eeks Eye. All Rights Reserved.</p>
+        </div>
+        <div class="footer-right">
+            <form class="newsletter-form">
+                <h4>Subscribe to Updates</h4>
+                <input type="email" placeholder="Enter your email here" required>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="newsletter-check-profile" name="newsletter-check-profile">
+                    <label for="newsletter-check-profile">Yes, subscribe for newsletter</label>
+                </div>
+                <button type="submit">Subscribe</button>
+            </form>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
+    <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBuZpT46hKccS6-t2b4-gWXF93BNBu9ErQ",
+            authDomain: "eeks-eye.firebaseapp.com",
+            projectId: "eeks-eye",
+            storageBucket: "eeks-eye.firebasestorage.app",
+            messagingSenderId: "662530364021",
+            appId: "1:662530364021:web:454ba95f835655502c9e3c",
+            measurementId: "G-3Q7X3M2KRN"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const analytics = firebase.analytics();
+
+        // Page entrance animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const overlay = document.querySelector('.page-transition-overlay');
+            setTimeout(() => {
+                overlay.classList.add('fade-out');
+            }, 500);
+        });
+
+        // DOM Elements
+        const profileName = document.getElementById('profileName');
+        const profileEmail = document.getElementById('profileEmail');
+        const profilePicture = document.getElementById('profilePicture');
+        const verificationStatus = document.getElementById('verificationStatus');
+        const editProfileButton = document.getElementById('editProfile');
+        const logoutButton = document.getElementById('logoutButton');
+        const profileForm = document.getElementById('profileForm');
+        const editName = document.getElementById('editName');
+        const editEmail = document.getElementById('editEmail');
+        const cancelEdit = document.getElementById('cancelEdit');
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+
+        // Check authentication state
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                // User is signed in
+                updateProfileUI(user);
+            } else {
+                // User is signed out
+                window.location.href = 'login.html';
+            }
+        });
+
+        // Update profile UI
+        function updateProfileUI(user) {
+            profileName.textContent = user.displayName || 'User';
+            profileEmail.textContent = user.email;
+            
+            // Update profile picture if available
+            if (user.photoURL) {
+                profilePicture.src = user.photoURL;
+            }
+
+            // Update verification status
+            if (user.emailVerified) {
+                verificationStatus.innerHTML = '<span class="verified"><i class="fas fa-check-circle"></i> Email Verified</span>';
+            } else {
+                verificationStatus.innerHTML = `
+                    <span class="unverified"><i class="fas fa-exclamation-circle"></i> Email Not Verified</span>
+                    <a class="resend-verification" id="resendVerification">Resend Verification</a>
+                `;
+                document.getElementById('resendVerification').addEventListener('click', () => {
+                    user.sendEmailVerification()
+                        .then(() => {
+                            showSuccess('Verification email sent!');
+                        })
+                        .catch((error) => {
+                            showError('Failed to send verification email');
+                        });
+                });
+            }
+        }
+
+        // Edit profile
+        editProfileButton.addEventListener('click', () => {
+            const user = auth.currentUser;
+            if (user) {
+                editName.value = user.displayName || '';
+                editEmail.value = user.email;
+                profileForm.style.display = 'block';
+            }
+        });
+
+        // Cancel edit
+        cancelEdit.addEventListener('click', () => {
+            profileForm.style.display = 'none';
+        });
+
+        // Save profile changes
+        profileForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const user = auth.currentUser;
+            
+            if (!user) {
+                showError('User not authenticated');
+                return;
+            }
+
+            try {
+                // Update profile
+                await user.updateProfile({
+                    displayName: editName.value
+                });
+
+                // Update email if changed
+                if (editEmail.value !== user.email) {
+                    await user.updateEmail(editEmail.value);
+                    // Send verification email for new email
+                    await user.sendEmailVerification();
+                }
+
+                showSuccess('Profile updated successfully!');
+                profileForm.style.display = 'none';
+                updateProfileUI(user);
+            } catch (error) {
+                console.error('Profile update error:', error);
+                showError(getErrorMessage(error.code));
+            }
+        });
+
+        // Logout
+        logoutButton.addEventListener('click', () => {
+            auth.signOut()
+                .then(() => {
+                    window.location.href = 'login.html';
+                })
+                .catch((error) => {
+                    console.error('Logout error:', error);
+                    showError('Failed to logout');
+                });
+        });
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.style.display = 'block';
+            successMessage.style.display = 'none';
+        }
+
+        function showSuccess(message) {
+            successMessage.textContent = message;
+            successMessage.style.display = 'block';
+            errorMessage.style.display = 'none';
+        }
+
+        function getErrorMessage(errorCode) {
+            switch (errorCode) {
+                case 'auth/requires-recent-login':
+                    return 'Please log in again to update your email';
+                case 'auth/email-already-in-use':
+                    return 'This email is already in use';
+                case 'auth/invalid-email':
+                    return 'Invalid email address';
+                case 'auth/operation-not-allowed':
+                    return 'Operation not allowed';
+                default:
+                    return 'An error occurred. Please try again';
+            }
+        }
+    </script>
+    <script src="translation-system.js"></script>
+</body>
+</html> 

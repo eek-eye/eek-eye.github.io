@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore - Eeks-Eye</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- SF Pro Font -->
+    <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+    <!-- Inter Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .page-transition-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index: 9999;
+            opacity: 1;
+            pointer-events: none;
+            transition: opacity 2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .page-transition-overlay.fade-out {
+            opacity: 0;
+        }
+
+        body {
+            opacity: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+
+
+        .site-header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 0.5rem 0.3rem;
+            min-height: 50px;
+            max-height: 60px;
+            background: white;
+            backdrop-filter: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid black;
+        }
+        .site-header::before {
+            display: none !important;
+        }
+        .site-header::after {
+            display: none !important;
+        }
+        .site-header .logo-container,
+        .site-header .header-subtitle {
+            display: none;
+        }
+        .site-header .logo-container {
+            position: absolute;
+            left: 50%;
+            top: auto;
+            bottom: -20px;
+            transform: translateX(-50%);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding-bottom: 0.3rem;
+        }
+        
+        .site-header .site-logo {
+            width: 75px;
+            height: 75px;
+            object-fit: contain;
+        }
+        .site-header .header-buttons-container {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            left: 1.2rem;
+            right: auto;
+            display: flex;
+            flex-direction: row;
+            gap: 0.25in;
+            z-index: 1100;
+            background: transparent;
+            backdrop-filter: none;
+            border-radius: 2rem;
+            box-shadow: none;
+            padding: 0.4rem 1.2rem;
+            margin: 0;
+            align-items: center;
+            border: none;
+            opacity: 0.9;
+        }
+        .site-header .header-buttons-container a {
+            font-size: 0.6rem;
+            padding: 0.2rem 0.6rem;
+            border-radius: 1.2rem;
+            background: transparent;
+            color: #ff006e;
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+            text-shadow: none;
+            box-shadow: none;
+        }
+        .site-header .header-buttons-container a:hover {
+            text-shadow: none;
+            transform: translateY(-1px);
+            box-shadow: none;
+        }
+        .site-header .header-top-right {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            right: 1.2rem;
+            z-index: 1100;
+        }
+        .site-header .login-button {
+            font-size: 0.7rem;
+            padding: 0.25rem 0.8rem;
+            border-radius: 1.5rem;
+            background: transparent;
+            color: #ff006e;
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.3s ease;
+            text-shadow: none;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+        }
+        .site-header .login-button:hover {
+            text-shadow: none;
+            transform: translateY(-1px);
+            box-shadow: 0 0 35px rgba(255, 255, 255, 1);
+        }
+        .site-header .header-top-left {
+            display: none;
+        }
+        .search-container {
+            display: none;
+        }
+        .managed-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.5rem;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 4px;
+            position: relative;
+        }
+        .managed-header .about-button {
+            margin: 0;
+            padding: 0.5rem 1rem;
+        }
+        .managed-header .menu-icon-container {
+            position: relative;
+            cursor: pointer;
+        }
+        .managed-header .menu-icon {
+            font-size: 1.5rem;
+            padding: 0.5rem;
+            color: white;
+            transition: transform 0.3s;
+        }
+        .managed-header .menu-icon:hover {
+            transform: scale(1.1);
+        }
+        .dropdown-menu {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -2.6rem;
+            display: flex;
+            justify-content: center;
+            gap: 1.25rem;
+            padding: 0.35rem 1.5rem;
+            background: rgba(0, 0, 0, 0.82);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            text-align: center;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-size: 0.78rem;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-14px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            z-index: 1200;
+            flex-wrap: wrap;
+        }
+        .site-header.header-scrolled .dropdown-menu {
+            bottom: -1.4rem;
+            font-size: 0.7rem;
+            gap: 1rem;
+        }
+        .dropdown-menu.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+        .dropdown-menu a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.2rem 0.6rem;
+            color: white;
+            text-decoration: none;
+            border-radius: 999px;
+            border: 1px solid transparent;
+            transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+            min-width: 70px;
+        }
+        .dropdown-menu a:hover {
+            border-color: rgba(255, 255, 255, 0.6);
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+        
+        /* Password Modal Styles */
+        .password-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+                width: 100%;
+            min-height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 10000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .password-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .password-overlay.success {
+            background: rgba(0, 255, 0, 0.85);
+        }
+        .password-modal.success {
+            border: 2px solid #00ff00;
+        }
+        .password-input.success {
+            border-bottom-color: #00ff00;
+            color: #00ff00;
+        }
+        .password-modal {
+            position: absolute;
+            top: 50vh;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10001;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            text-align: center;
+        }
+        .password-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .password-modal-label {
+            color: #fff;
+            font-size: 1.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+        .password-input {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #fff;
+            color: #fff;
+                font-size: 1.2rem;
+            padding: 0.5rem 0;
+            width: 300px;
+            text-align: center;
+            outline: none;
+            font-family: inherit;
+            }
+        .password-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        .password-close-btn {
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            z-index: 10002;
+            color: #fff;
+            font-size: 2.5rem;
+            font-weight: 300;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease, color 0.3s ease;
+            line-height: 1;
+        }
+        .password-overlay.active ~ .password-close-btn {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .password-close-btn:hover {
+            transform: scale(1.2);
+            color: #ff006e;
+        }
+        @keyframes screenShake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-20px); }
+            20%, 40%, 60%, 80% { transform: translateX(20px); }
+        }
+        .password-overlay.shake {
+            animation: screenShake 0.5s ease-in-out;
+        }
+        body.shake {
+            animation: screenShake 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body class="dark-theme">
+    <div class="page-transition-overlay"></div>
+    <div class="x-border x-border-left">X</div>
+    <div class="x-border x-border-right">I</div>
+    
+    <div class="x-line">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</div>
+
+    <header class="site-header">
+        <div class="header-buttons-container">
+            <a href="about.html" class="about-button nav-link" data-translate="why">Why?</a>
+            <a href="designs.html" class="explore-button nav-link" data-translate="designs">Designs</a>
+            <a href="contact.html" class="explore-button nav-link" data-translate="contact">Contact</a>
+            <a href="login.html" class="explore-button nav-link" id="loginButton" data-translate="login">Login</a>
+            </div>
+        <div class="logo-container" style="position: relative; z-index: 10;">
+            <a href="startup.html" class="logo-link nav-link">
+                <img src="images/neon-eye-logo.png" alt="Eeks Eye" class="site-logo">
+            </a>
+        </div>
+    </header>
+
+    <!-- Password Modal -->
+    <div class="password-overlay"></div>
+    <div class="password-modal">
+        <label class="password-modal-label" data-translate="password">Password</label>
+        <input type="password" class="password-input" placeholder="" autofocus>
+    </div>
+    <div class="password-close-btn" onclick="closePasswordModal()">×</div>
+
+    <main style="background:#fff;min-height:70vh;">
+        <div class="explore-content-wrapper">
+            <!-- Product Grid -->
+            <section class="explore-products">
+                <div class="explore-product-grid">
+                    <div class="explore-product-item" id="first-product" onclick="showPasswordModal(1)">
+                        <i class="fas fa-bookmark explore-bookmark-icon" onclick="event.stopPropagation(); return false;"></i>
+                        <img src="Code_Locked_XI_PS_.png/Locked_XI_.png" alt="I 伊克西 I I eeks eye I I 2026" class="explore-product-img">
+                        <div class="explore-product-info">
+                            <div class="explore-product-title">I 伊克西 I I eeks eye I I 2026</div>
+                            <div class="explore-product-category">Runway</div>
+                            <div class="explore-product-price" data-price="200">$200</div>
+                        </div>
+                    </div>
+                    <div class="explore-product-item" id="second-product" onclick="showPasswordModal(2)">
+                        <i class="fas fa-bookmark explore-bookmark-icon" onclick="event.stopPropagation(); return false;"></i>
+                        <img src="Code_Locked_XI_PS_.png/Locked_Japense_.png" alt="I 耐力药丸 I I eekseye I I 2026" class="explore-product-img">
+                        <div class="explore-product-info">
+                            <div class="explore-product-title">I 耐力药丸 I I eekseye I I 2026</div>
+                            <div class="explore-product-category">Runway</div>
+                            <div class="explore-product-price" data-price="200">$200</div>
+                        </div>
+                    </div>
+                    <div class="explore-product-item" id="third-product" onclick="showPasswordModal(3)">
+                        <i class="fas fa-bookmark explore-bookmark-icon" onclick="event.stopPropagation(); return false;"></i>
+                        <img src="Code_Locked_XI_PS_.png/Locked_Ch@0s_.png" alt="I I满月 I eeks eye I 2006" class="explore-product-img">
+                        <div class="explore-product-info">
+                            <div class="explore-product-title">I I满月 I eeks eye I 2006</div>
+                            <div class="explore-product-category">Runway</div>
+                            <div class="explore-product-price" data-price="200">$200</div>
+                        </div>
+                    </div>
+                </div>
+                <div style="text-align: center; padding: 3rem; color: #000; font-size: 1.5rem; font-weight: 600;">
+                    coming soon...
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-left">
+            <a href="contact.html" class="footer-link-button" data-translate="contact">Contact</a>
+            <a href="faq.html" class="footer-link-button" data-translate="faq">FAQ</a>
+            <a href="what-you-need-to-know.html" class="footer-link-button" data-translate="whatYouNeedToKnow">What You Need To Know</a>
+        </div>
+        <div class="footer-center">
+            <div class="social-links">
+                <a href="https://www.instagram.com/eeks.eye/" target="_blank" rel="noopener noreferrer" aria-label="Visit Eeks Eye on Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <!-- Add other social links here if needed -->
+            </div>
+            <p>&copy; 2025 Eeks Eye. All Rights Reserved.</p>
+        </div>
+        <div class="footer-right">
+            <form class="newsletter-form">
+                <h4 data-translate="subscribeToUpdates">Subscribe to Updates</h4>
+                <input type="email" placeholder="Enter your email here" data-translate-placeholder="enterEmail" required>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="newsletter-check-explore" name="newsletter-check-explore">
+                    <label for="newsletter-check-explore" data-translate="subscribeNewsletter">Yes, subscribe for newsletter</label>
+                </div>
+                <button type="submit" data-translate="subscribe">Subscribe</button>
+            </form>
+        </div>
+    </footer>
+    
+    <div class="x-line">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</div>
+
+    <div class="logo-transition-overlay"></div>
+    <div class="transition-text">XI</div>
+
+    <script>
+        // Page entrance animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const overlay = document.querySelector('.page-transition-overlay');
+            setTimeout(() => {
+                overlay.classList.add('fade-out');
+            }, 500);
+        });
+
+        // Navigation Transition
+        const navLinks = document.querySelectorAll('.nav-link');
+        const overlay = document.querySelector('.logo-transition-overlay');
+        const transitionText = document.querySelector('.transition-text');
+        const pageTransitionOverlay = document.querySelector('.page-transition-overlay');
+
+        function getLogoPosition() {
+            const logo = document.querySelector('.site-logo');
+            if (!logo) return { x: 0, y: 0, width: 0, height: 0 };
+            
+            const rect = logo.getBoundingClientRect();
+            return {
+                x: rect.left + window.scrollX,
+                y: rect.top + window.scrollY,
+                width: rect.width,
+                height: rect.height
+            };
+        }
+
+        function createTransition(destination) {
+            // Scroll to top to ensure transition is visible
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+
+            const logoPos = getLogoPosition();
+            const tempLogo = document.createElement('div');
+            tempLogo.className = 'temp-logo';
+            tempLogo.style.cssText = `
+                position: fixed;
+                left: ${logoPos.x}px;
+                top: ${logoPos.y}px;
+                width: ${logoPos.width}px;
+                height: ${logoPos.height}px;
+                background-image: url('images/neon-eye-logo.png');
+                background-size: contain;
+                background-repeat: no-repeat;
+                z-index: 1000;
+                transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+                transform-origin: center;
+            `;
+            document.body.appendChild(tempLogo);
+
+            // Create and style the XI transition text
+            const xiText = document.createElement('div');
+            xiText.className = 'transition-text';
+            xiText.textContent = 'XI';
+            xiText.style.cssText = `
+                position: fixed;
+                top: 50vh;
+                left: 50vw;
+                transform: translate(-50%, -50%);
+                font-size: 4rem;
+                color: white;
+                opacity: 0;
+                z-index: 1001;
+                transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+                pointer-events: none;
+            `;
+            document.body.appendChild(xiText);
+
+            // Start logo animation immediately
+            requestAnimationFrame(() => {
+                tempLogo.style.transform = 'scale(25) rotate(5deg)';
+                tempLogo.style.opacity = '0';
+            });
+
+            // Fade in overlay with slight delay
+            setTimeout(() => {
+                overlay.classList.add('active');
+                pageTransitionOverlay.classList.remove('fade-out');
+            }, 500);
+
+            // Show transition text with a slight bounce effect
+            setTimeout(() => {
+                xiText.style.opacity = '1';
+                xiText.style.transform = 'translate(-50%, -50%) scale(1.1)';
+                setTimeout(() => {
+                    xiText.style.transform = 'translate(-50%, -50%) scale(1)';
+                }, 200);
+            }, 800);
+
+            // Navigate after transition completes
+            setTimeout(() => {
+                window.location.href = destination;
+            }, 1600);
+        }
+
+        // Handle all navigation links
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const destination = this.href;
+                if (destination) {
+                    createTransition(destination);
+                }
+            });
+        });
+
+        // Handle browser back/forward buttons
+        window.addEventListener('popstate', function() {
+            createTransition(window.location.href);
+        });
+
+        // Scroll to top/bottom functionality
+        const scrollBtn = document.querySelector('.scroll-top');
+        const scrollBtnIcon = scrollBtn ? scrollBtn.querySelector('i') : null;
+        const topThreshold = 10;
+
+        function updateScrollButton() {
+            if (!scrollBtn || !scrollBtnIcon) return;
+            
+            const scrollPosition = window.pageYOffset;
+            const windowHeight = window.innerHeight;
+            const bodyHeight = document.body.offsetHeight;
+
+            if (scrollPosition > 300) {
+                scrollBtn.classList.add('visible');
+            } else {
+                scrollBtn.classList.remove('visible');
+            }
+
+            if (scrollPosition < topThreshold) {
+                scrollBtnIcon.classList.remove('fa-arrow-up');
+                scrollBtnIcon.classList.add('fa-arrow-down');
+                scrollBtn.setAttribute('aria-label', 'Scroll to bottom');
+            } else {
+                scrollBtnIcon.classList.remove('fa-arrow-down');
+                scrollBtnIcon.classList.add('fa-arrow-up');
+                scrollBtn.setAttribute('aria-label', 'Scroll to top');
+            }
+        }
+
+        window.addEventListener('scroll', () => {
+            updateScrollButton();
+        });
+        
+        if (scrollBtn) {
+        scrollBtn.addEventListener('click', () => {
+            if (scrollBtnIcon.classList.contains('fa-arrow-down')) {
+                    // Scroll to bottom
+                window.scrollTo({
+                    top: document.body.scrollHeight,
+                    behavior: 'smooth'
+                });
+            } else {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }
+        });
+        }
+
+        // Initial check in case page loads scrolled
+        updateScrollButton(); 
+
+
+        // Dropdown Menu Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuIcon = document.querySelector('.menu-icon.red-x');
+        const dropdownMenu = document.querySelector('.dropdown-menu');
+
+            if (menuIcon && dropdownMenu) {
+                menuIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+            dropdownMenu.classList.toggle('active');
+        });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!menuIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.classList.remove('active');
+                    }
+                });
+            }
+        });
+
+        // Add search functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('site-search');
+            const searchButton = document.getElementById('search-button');
+            const suggestionsDropdown = document.getElementById('suggestions-dropdown');
+
+            // Show suggestions dropdown when input is focused
+            searchInput.addEventListener('focus', function() {
+                suggestionsDropdown.style.display = 'block';
+            });
+
+            // Hide suggestions when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!searchInput.contains(e.target) && !suggestionsDropdown.contains(e.target)) {
+                    suggestionsDropdown.style.display = 'none';
+                }
+            });
+
+            // Handle suggestion clicks
+            document.querySelectorAll('.suggestion-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    searchInput.value = this.textContent;
+                    window.location.href = 'designs.html';
+                    suggestionsDropdown.style.display = 'none';
+                });
+            });
+
+            // Add event listeners
+            searchButton.addEventListener('click', function() {
+                window.location.href = 'designs.html';
+            });
+            
+            searchInput.addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    window.location.href = 'designs.html';
+                }
+            });
+        });
+
+        // Add Firebase SDK
+        const firebaseConfig = {
+            apiKey: "AIzaSyBuZpT46hKccS6-t2b4-gWXF93BNBu9ErQ",
+            authDomain: "eeks-eye.firebaseapp.com",
+            projectId: "eeks-eye",
+            storageBucket: "eeks-eye.firebasestorage.app",
+            messagingSenderId: "662530364021",
+            appId: "1:662530364021:web:454ba95f835655502c9e3c",
+            measurementId: "G-3Q7X3M2KRN"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const analytics = firebase.analytics();
+
+        // Check authentication state
+        auth.onAuthStateChanged((user) => {
+            const loginButton = document.getElementById('loginButton');
+            if (user) {
+                // User is signed in, hide login button
+                loginButton.classList.add('hidden');
+            } else {
+                // User is signed out, show login button
+                loginButton.classList.remove('hidden');
+            }
+        });
+
+        // Store current product number - global scope
+        var currentProductNumber = 1;
+        
+        // Password modal for products - global function for inline onclick
+        function showPasswordModal(productNumber) {
+            currentProductNumber = productNumber || 1;
+            const passwordOverlay = document.querySelector('.password-overlay');
+            const passwordModal = document.querySelector('.password-modal');
+            const passwordInput = document.querySelector('.password-input');
+            const passwordCloseBtn = document.querySelector('.password-close-btn');
+            
+            console.log('showPasswordModal called for product', currentProductNumber);
+            
+            if (passwordOverlay && passwordModal) {
+                passwordOverlay.classList.add('active');
+                passwordModal.classList.add('active');
+                if (passwordCloseBtn) {
+                    passwordCloseBtn.style.opacity = '1';
+                    passwordCloseBtn.style.pointerEvents = 'auto';
+                }
+                if (passwordInput) {
+                    passwordInput.value = ''; // Clear previous input
+                    setTimeout(() => passwordInput.focus(), 100);
+                    
+                    // Attach Enter key listener when modal opens
+                    passwordInput.onkeypress = function(e) {
+                        if (e.key === 'Enter' || e.keyCode === 13) {
+                            e.preventDefault();
+                            console.log('Enter pressed, checking password');
+                            checkPassword();
+                        }
+                    };
+                    
+                    // Also use keydown as backup
+                    passwordInput.onkeydown = function(e) {
+                        if (e.key === 'Enter' || e.keyCode === 13) {
+                            e.preventDefault();
+                            console.log('Enter pressed (keydown), checking password');
+                            checkPassword();
+                        }
+                    };
+                }
+                console.log('Password modal shown');
+            } else {
+                console.log('Password modal elements not found');
+            }
+        }
+        
+        // Also attach event listeners as backup
+        document.addEventListener('DOMContentLoaded', function() {
+            const firstProduct = document.getElementById('first-product');
+            const secondProduct = document.getElementById('second-product');
+            const thirdProduct = document.getElementById('third-product');
+            
+            if (firstProduct) {
+                firstProduct.addEventListener('click', function(e) {
+                    if (e.target.closest('.explore-bookmark-icon')) {
+                        e.stopPropagation();
+                        return;
+                    }
+                    e.preventDefault();
+                    e.stopPropagation();
+                    showPasswordModal(1);
+                });
+            }
+            
+            if (secondProduct) {
+                secondProduct.addEventListener('click', function(e) {
+                    if (e.target.closest('.explore-bookmark-icon')) {
+                        e.stopPropagation();
+                        return;
+                    }
+                    e.preventDefault();
+                    e.stopPropagation();
+                    showPasswordModal(2);
+                });
+            }
+            
+            if (thirdProduct) {
+                thirdProduct.addEventListener('click', function(e) {
+                    if (e.target.closest('.explore-bookmark-icon')) {
+                        e.stopPropagation();
+                        return;
+                    }
+                    e.preventDefault();
+                    e.stopPropagation();
+                    showPasswordModal(3);
+                });
+            }
+        });
+        
+        // Close password modal - global function for inline onclick
+        function closePasswordModal() {
+            const passwordOverlay = document.querySelector('.password-overlay');
+            const passwordModal = document.querySelector('.password-modal');
+            const passwordInput = document.querySelector('.password-input');
+            const passwordCloseBtn = document.querySelector('.password-close-btn');
+            
+            if (passwordOverlay) {
+                passwordOverlay.classList.remove('active');
+            }
+            if (passwordModal) {
+                passwordModal.classList.remove('active');
+            }
+            if (passwordCloseBtn) {
+                passwordCloseBtn.style.opacity = '0';
+                passwordCloseBtn.style.pointerEvents = 'none';
+            }
+            if (passwordInput) {
+                passwordInput.value = '';
+            }
+        }
+        
+        // Password validation
+        function checkPassword() {
+            const passwordInput = document.querySelector('.password-input');
+            const passwordOverlay = document.querySelector('.password-overlay');
+            const correctPassword = 'eekseye';
+            
+            if (!passwordInput) return;
+            
+            if (passwordInput.value.toLowerCase() === correctPassword) {
+                // Correct password - turn modal green
+                if (passwordOverlay) {
+                    passwordOverlay.classList.add('success');
+                }
+                const passwordModal = document.querySelector('.password-modal');
+                if (passwordModal) {
+                    passwordModal.classList.add('success');
+                }
+                if (passwordInput) {
+                    passwordInput.classList.add('success');
+                }
+                
+                // Close modal and redirect after showing green effect
+                setTimeout(() => {
+                    closePasswordModal();
+                    // Small delay before redirect to allow modal to close
+                    setTimeout(() => {
+                        const productPage = 'product' + currentProductNumber + '.html';
+                        window.location.href = productPage;
+                    }, 300);
+                }, 500);
+            } else {
+                // Wrong password - shake the whole screen and turn input line red
+                if (passwordOverlay) {
+                    passwordOverlay.classList.add('shake');
+                    setTimeout(() => {
+                        passwordOverlay.classList.remove('shake');
+                    }, 500);
+                }
+                
+                // Also shake the body
+                document.body.classList.add('shake');
+                setTimeout(() => {
+                    document.body.classList.remove('shake');
+                }, 500);
+                
+                // Turn input line red
+                passwordInput.style.borderBottomColor = '#ff0000';
+                
+                // Clear the input
+                passwordInput.value = '';
+                
+                // Keep the red line for 2 seconds, then return to white
+                setTimeout(() => {
+                    passwordInput.style.borderBottomColor = '#fff';
+                }, 2000);
+            }
+        }
+        
+        // Close modal when clicking overlay
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordOverlay = document.querySelector('.password-overlay');
+            
+            if (passwordOverlay) {
+                passwordOverlay.addEventListener('click', function(e) {
+                    if (e.target === passwordOverlay) {
+                        closePasswordModal();
+                    }
+                });
+            }
+        });
+
+
+    </script>
+    <script src="translation-system.js"></script>
+</body>
+</html> 
