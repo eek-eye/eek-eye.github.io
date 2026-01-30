@@ -1,0 +1,1300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Designs - Eeks-Eye</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .page-transition-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index: 9999;
+            opacity: 1;
+            pointer-events: none;
+            transition: opacity 2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .page-transition-overlay.fade-out {
+            opacity: 0;
+        }
+
+        body {
+            opacity: 1;
+            position: relative;
+            z-index: 1;
+            background-color: #000;
+        }
+
+        .transition-text {
+            position: fixed;
+            top: 50vh;
+            left: 50vw;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
+            color: white;
+            opacity: 0;
+            z-index: 1001;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+
+        .managed-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.5rem;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .managed-header .about-button {
+            margin: 0;
+            padding: 0.5rem 1rem;
+        }
+
+        .managed-header .menu-icon-container {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .managed-header .menu-icon {
+            font-size: 1.5rem;
+            padding: 0.5rem;
+            color: white;
+            transition: transform 0.3s;
+        }
+
+        .managed-header .menu-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -2.6rem;
+            display: flex;
+            justify-content: center;
+            gap: 1.25rem;
+            padding: 0.35rem 1.5rem;
+            background: rgba(0, 0, 0, 0.82);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            text-align: center;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-size: 0.78rem;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-14px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            z-index: 1200;
+            flex-wrap: wrap;
+        }
+
+        .site-header.header-scrolled .dropdown-menu {
+            bottom: -1.4rem;
+            font-size: 0.7rem;
+            gap: 1rem;
+        }
+
+        .dropdown-menu.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        .dropdown-menu a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.2rem 0.6rem;
+            color: white;
+            text-decoration: none;
+            border-radius: 999px;
+            border: 1px solid transparent;
+            transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+            min-width: 70px;
+        }
+
+        .dropdown-menu a:hover {
+            border-color: rgba(255, 255, 255, 0.6);
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .menu-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .menu-icon {
+            cursor: pointer;
+            padding: 10px;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .menu-icon i {
+            color: #ff0000;
+        }
+
+        .menu-icon:hover i {
+            color: #ff4444;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.95);
+            min-width: 200px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1000;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dropdown-content a {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding-left: 24px;
+        }
+
+        .show {
+            display: block;
+        }
+
+
+        .site-header,
+        .site-header.header-scrolled,
+        .site-header.header-background-hidden {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+        .site-header {
+            padding: 1.2rem 1.8rem;
+        }
+        .site-header .site-logo {
+            width: 180px;
+            height: 180px;
+        }
+        .site-header h1 {
+            letter-spacing: clamp(0.08rem, 0.22vw, 0.35rem);
+            font-kerning: normal;
+        }
+        .site-header h1 .eye-text {
+            margin-left: 0.12rem;
+        }
+        .site-header.header-scrolled {
+            padding: 0.1rem 0.3rem;
+            min-height: 36px;
+            margin-bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+        }
+        .site-header.header-scrolled .site-logo {
+            width: 60px;
+            height: 60px;
+        }
+        .site-header.header-scrolled h1 {
+            font-size: 1.8rem;
+            margin-top: 0.5rem;
+            letter-spacing: clamp(0.06rem, 0.18vw, 0.25rem);
+        }
+        .site-header.header-scrolled .header-subtitle {
+            font-size: 0.7rem;
+            display: none;
+        }
+        .site-header.header-scrolled .header-buttons-container {
+            position: absolute;
+            top: 0.4rem;
+            left: 1.2rem;
+            right: auto;
+            display: flex;
+            flex-direction: row;
+            gap: 0.5in;
+            z-index: 1100;
+            background: transparent;
+            backdrop-filter: none;
+            border-radius: 2rem;
+            box-shadow: none;
+            padding: 0.4rem 1.2rem;
+            margin: 0;
+            align-items: center;
+            border: none;
+            opacity: 0.9;
+        }
+        .site-header.header-scrolled .search-container {
+            display: none;
+        }
+
+        /* Ink splash overlay effect */
+        .ink-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 110%;
+            max-width: 600px;
+            min-width: 120px;
+            height: auto;
+            pointer-events: none;
+            opacity: 0.8;
+            transform: translate(-50%, -50%) rotate(-7deg);
+            z-index: 3;
+            filter: drop-shadow(0 0 12px #fff3) blur(0.2px);
+            transition: opacity 0.4s;
+        }
+
+        .header-buttons-container,
+        .site-header.header-scrolled .header-buttons-container {
+            transition: opacity 0.4s;
+        }
+        .site-header.header-scrolled .header-buttons-container {
+            opacity: 0.9;
+        }
+
+        .site-header .logo-container {
+            transition: opacity 0.4s;
+        }
+        .site-header.header-scrolled .logo-container {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .site-header.header-scrolled .site-logo {
+            width: 0;
+            height: 0;
+        }
+        .site-header.header-scrolled h1 {
+            font-size: 2.2rem;
+            margin-top: 0.5rem;
+        }
+        .site-header.header-scrolled .header-subtitle {
+            font-size: 1.3rem;
+        }
+        .site-header.header-scrolled .header-buttons-container {
+            margin-top: 2.5rem;
+        }
+
+        .header-buttons-container a {
+            font-size: 1.1rem;
+            padding: 0.55rem 1.43rem;
+            border-radius: 1.5rem;
+        }
+        .site-header.header-scrolled .header-buttons-container a {
+            font-size: 0.88rem;
+            padding: 0.33rem 1.1rem;
+            border-radius: 1.5rem;
+            text-shadow: none;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+            color: #ff006e;
+        }
+
+        .site-header.header-scrolled .header-buttons-container a:hover {
+            text-shadow: none;
+            transform: translateY(-1px);
+            box-shadow: 0 0 35px rgba(255, 255, 255, 1);
+        }
+
+        .site-header.header-scrolled .menu-icon.red-x {
+            display: none;
+        }
+
+        .search-container {
+            display: none;
+        }
+
+        .site-header.header-scrolled .header-video {
+            display: block;
+            opacity: 0.8;
+            filter: brightness(0.7);
+        }
+
+        .header-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+            filter: blur(5px);
+        }
+
+        .site-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .header-top-left {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-top-right {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .site-header.header-scrolled .header-top-right {
+            position: absolute;
+            top: 0.2rem;
+            right: 1.2rem;
+        }
+
+        /* Hide Designs button on designs page */
+        .header-buttons-container a[href="designs.html"] {
+            display: none;
+        }
+
+        .designs-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            padding: 3rem;
+            margin: 0 auto;
+            max-width: 1800px;
+            width: 100%;
+        }
+        
+        body, html {
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        .design-card {
+            position: relative;
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            background: #000;
+            display: block;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1;
+        }
+        
+        .design-card img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+            aspect-ratio: 1 / 1;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .design-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1rem;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 0) 100%);
+            color: #fff;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 10;
+        }
+
+        .design-info h3 {
+            font-size: 1rem;
+            margin: 0 0 0.25rem 0;
+            font-weight: 600;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .design-info p {
+            font-size: 0.75rem;
+            margin: 0;
+            color: rgba(255, 255, 255, 0.8);
+            display: block;
+            line-height: 1.4;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .design-actions {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.3s ease;
+        }
+
+        .action-button {
+            background: #fff;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .action-button:hover {
+            background: #fff;
+            transform: scale(1.1);
+        }
+
+        .action-button i {
+            color: #000;
+            font-size: 1.1rem;
+        }
+
+        .like-button.liked i {
+            color: #ff3b3b;
+        }
+
+        @media (max-width: 768px) {
+            .designs-grid {
+                grid-template-columns: repeat(2, 1fr);
+                padding: 1rem;
+                gap: 0.75rem;
+            }
+            
+            .design-info h3 {
+                font-size: 0.9rem;
+            }
+
+            .design-info p {
+                font-size: 0.7rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .designs-grid {
+                grid-template-columns: 1fr;
+                padding: 1rem;
+            }
+        }
+
+        .site-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 0;
+            pointer-events: none;
+        }
+        .site-header > * { position: relative; z-index: 1; }
+        .site-header > .header-top-left,
+        .site-header > .header-top-right {
+            position: absolute;
+            z-index: 10;
+        }
+
+        /* Tab buttons styling */
+        .tab-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab-button {
+            padding: 0.7rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 2rem;
+            border: 1px solid #000;
+            background: #fff;
+            color: #000;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tab-button:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        .tab-button.active {
+            background: #000;
+            color: #fff;
+            border-color: #000;
+        }
+
+        /* Content sections */
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+    </style>
+</head>
+<body class="dark-theme">
+    <div class="page-transition-overlay"></div>
+    <div class="x-border x-border-left">X</div>
+    <div class="x-border x-border-right">I</div>
+    
+    <div class="x-line">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</div>
+
+    <div class="header-buttons-container" style="position: fixed; top: 2rem; left: 50%; transform: translateX(-50%); z-index: 1000; display: flex; gap: 1rem; background: rgba(0, 0, 0, 0.8); padding: 1rem 2rem; border-radius: 2rem; backdrop-filter: blur(10px);">
+            <a href="about.html" class="about-button nav-link">Why?</a>
+            <a href="explore.html" class="explore-button nav-link">Aesthetic</a>
+            <a href="designs.html" class="explore-button nav-link">Designs</a>
+            <a href="contact.html" class="explore-button nav-link">Contact</a>
+        </div>
+
+    <main>
+        <div class="tab-buttons">
+            <button class="tab-button active" id="covers-tab" data-section="covers-section">Covers</button>
+            <button class="tab-button" id="posters-tab" data-section="posters-section">Archived</button>
+        </div>
+        
+        <!-- Covers Section -->
+        <div id="covers-section" class="content-section active">
+            <div class="designs-grid">
+            <!-- UFO -->
+            <a href="design-detail-ufo.html" class="design-card nav-link">
+                <img src="covers/UFO.jpg" alt="UFO">
+                <div class="design-info">
+                    <h3>UFO</h3>
+                    <p>A mysterious encounter from above</p>
+                </div>
+            </a>
+
+            <!-- In Love With You -->
+            <a href="design-detail-in-love-with-you.html" class="design-card nav-link">
+                <img src="covers/In Love With You.jpg" alt="In Love With You">
+                <div class="design-info">
+                    <h3>In Love With You</h3>
+                    <p>A passionate expression of deep affection</p>
+                </div>
+            </a>
+
+            <!-- Interstella -->
+            <a href="design-detail-interstella.html" class="design-card nav-link">
+                <img src="covers/Interstella.jpg" alt="Interstella">
+                <div class="design-info">
+                    <h3>Interstella</h3>
+                    <p>Journey through cosmic realms</p>
+                </div>
+            </a>
+
+            <!-- Destiny vs Plans -->
+            <a href="design-detail-destiny-vs-plans.html" class="design-card nav-link">
+                <img src="covers/Destiny vs Plans.jpg" alt="Destiny vs Plans">
+                <div class="design-info">
+                    <h3>Destiny vs Plans</h3>
+                    <p>The eternal struggle between fate and ambition</p>
+                </div>
+            </a>
+
+            <!-- Eeks Eye -->
+            <a href="design-detail-eeks-eye.html" class="design-card nav-link">
+                <img src="covers/Eeks Eye.jpg" alt="Eeks Eye">
+                <div class="design-info">
+                    <h3>Eeks Eye</h3>
+                    <p>A mesmerizing self-portrait of artistic vision</p>
+                </div>
+            </a>
+
+            <!-- Another Dimensions -->
+            <a href="design-detail-another-dimensions.html" class="design-card nav-link">
+                <img src="covers/Another Dimensions.jpg" alt="Another Dimensions">
+                <div class="design-info">
+                    <h3>Another Dimensions</h3>
+                    <p>Exploring realities beyond our own</p>
+                </div>
+            </a>
+
+            <!-- Rockstar -->
+            <a href="design-detail-rockstar.html" class="design-card nav-link">
+                <img src="covers/Rockstar.jpg" alt="Rockstar">
+                <div class="design-info">
+                    <h3>Rockstar</h3>
+                    <p>The allure of fame and glory</p>
+                </div>
+            </a>
+
+            <!-- Unguided -->
+            <a href="design-detail-unguided.html" class="design-card nav-link">
+                <img src="covers/Unguided.jpg" alt="Unguided">
+                <div class="design-info">
+                    <h3>Unguided</h3>
+                    <p>Finding your own path</p>
+                </div>
+            </a>
+
+            <!-- Seek -->
+            <a href="design-detail-seek.html" class="design-card nav-link">
+                <img src="covers/Seek.jpg" alt="Seek">
+                <div class="design-info">
+                    <h3>Seek</h3>
+                    <p>The eternal quest for meaning</p>
+                </div>
+            </a>
+
+            <!-- Vibration -->
+            <a href="design-detail-vibration.html" class="design-card nav-link">
+                <img src="covers/Vibration.jpg" alt="Vibration">
+                <div class="design-info">
+                    <h3>Vibration</h3>
+                    <p>The energy of movement and sound</p>
+                </div>
+            </a>
+
+            <!-- CH@0S -->
+            <a href="design-detail-chaos.html" class="design-card nav-link">
+                <img src="covers/CH@0S.jpg" alt="CH@0S">
+                <div class="design-info">
+                    <h3>CH@0S</h3>
+                    <p>Digital disorder and system collapse</p>
+                </div>
+            </a>
+
+            <!-- 5 Scenes -->
+            <a href="design-detail-5-scenes.html" class="design-card nav-link">
+                <img src="covers/5 Scenes.jpg" alt="5 Scenes">
+                <div class="design-info">
+                    <h3>5 Scenes</h3>
+                    <p>A visual narrative in five parts</p>
+                </div>
+            </a>
+
+            <!-- Dark Side -->
+            <a href="design-detail-dark-side.html" class="design-card nav-link">
+                <img src="covers/Dark Side.jpg" alt="Dark Side">
+                <div class="design-info">
+                    <h3>Dark Side</h3>
+                    <p>Exploring the shadows within</p>
+                </div>
+            </a>
+
+            <!-- Martyr -->
+            <a href="design-detail-martyr.html" class="design-card nav-link">
+                <img src="covers/Martyr.jpg" alt="Martyr">
+                <div class="design-info">
+                    <h3>Martyr</h3>
+                    <p>The sacrifice of self for belief</p>
+                </div>
+            </a>
+
+            <!-- Starsrock -->
+            <a href="design-detail-starsrock.html" class="design-card nav-link">
+                <img src="covers/Starsrock.jpg" alt="Starsrock">
+                <div class="design-info">
+                    <h3>Starsrock</h3>
+                    <p>A cosmic journey through space and time</p>
+                </div>
+            </a>
+
+            <!-- Opium type cover -->
+            <a href="design-detail-vampire.html" class="design-card nav-link">
+                <img src="covers/V.A.M.P.I.R.E.jpg" alt="V.A.M.P.I.R.E">
+                <div class="design-info">
+                    <h3>V.A.M.P.I.R.E</h3>
+                    <p>A hypnotic visual experience</p>
+                </div>
+            </a>
+
+            <!-- Cured -->
+            <a href="design-detail-cured.html" class="design-card nav-link">
+                <img src="covers/Cured.jpg" alt="Cured">
+                <div class="design-info">
+                    <h3>Cured</h3>
+                    <p>The path to healing and renewal</p>
+                </div>
+            </a>
+
+            <!-- Wait.. I'M Sorry -->
+            <a href="design-detail-wait-im-sorry.html" class="design-card nav-link">
+                <img src="covers/Wait.. I'M Sorry.jpg" alt="Wait.. I'M Sorry">
+                <div class="design-info">
+                    <h3>Wait.. I'M Sorry</h3>
+                    <p>A moment of reflection and regret</p>
+                </div>
+            </a>
+
+            <!-- Pyramid Scheme -->
+            <a href="design-detail-pyramid-scheme.html" class="design-card nav-link">
+                <img src="covers/Pyramid Scheme.jpg" alt="Pyramid Scheme">
+                <div class="design-info">
+                    <h3>Pyramid Scheme</h3>
+                    <p>The illusion of hierarchical success</p>
+                </div>
+            </a>
+
+            <!-- Truth Should Set You Free -->
+            <a href="design-detail-truth-should-set-you-free.html" class="design-card nav-link">
+                <img src="covers/Truth Should Set You Free.jpg" alt="Truth Should Set You Free">
+                <div class="design-info">
+                    <h3>Truth Should Set You Free</h3>
+                    <p>The liberating power of honesty</p>
+                </div>
+            </a>
+
+            <!-- Underground -->
+            <a href="design-detail-underground.html" class="design-card nav-link">
+                <img src="covers/Undeground.jpg" alt="Underground">
+                <div class="design-info">
+                    <h3>Underground</h3>
+                    <p>Beneath the surface of society</p>
+                </div>
+            </a>
+
+            <!-- Figure 10 -->
+            <a href="design-detail-figure-10.html" class="design-card nav-link">
+                <img src="covers/Figure 10.jpg" alt="Figure 10">
+                <div class="design-info">
+                    <h3>Figure 10</h3>
+                    <p>Geometric precision and form</p>
+                </div>
+            </a>
+
+            <!-- Villain -->
+            <a href="design-detail-villain.html" class="design-card nav-link">
+                <img src="covers/Villain.jpg" alt="Villain">
+                <div class="design-info">
+                    <h3>Villain</h3>
+                    <p>The complexity of darkness</p>
+                </div>
+            </a>
+
+            <!-- Piss em OFF -->
+            <a href="design-detail-piss-em-off.html" class="design-card nav-link">
+                <img src="covers/Piss em OFF.jpg" alt="Piss em OFF">
+                <div class="design-info">
+                    <h3>Piss em OFF</h3>
+                    <p>Raw energy and rebellion</p>
+                </div>
+            </a>
+
+            <!-- New Maps -->
+            <a href="design-detail-new-maps.html" class="design-card nav-link">
+                <img src="covers/New Maps.jpg" alt="New Maps">
+                <div class="design-info">
+                    <h3>New Maps</h3>
+                    <p>Charting unknown territories</p>
+                </div>
+            </a>
+
+            <!-- LOst -->
+            <a href="design-detail-lost.html" class="design-card nav-link">
+                <img src="covers/LOst.jpg" alt="LOst">
+                <div class="design-info">
+                    <h3>LOst</h3>
+                    <p>Navigating through uncertainty</p>
+                </div>
+            </a>
+
+            <!-- Alluring & -->
+            <a href="design-detail-alluring.html" class="design-card nav-link">
+                <img src="covers/Alluring &.jpg" alt="Alluring &">
+                <div class="design-info">
+                    <h3>Alluring &</h3>
+                    <p>The magnetic pull of attraction</p>
+                </div>
+            </a>
+
+            <!-- Distortion -->
+            <a href="design-detail-distortion.html" class="design-card nav-link">
+                <img src="covers/Distortion.jpg" alt="Distortion">
+                <div class="design-info">
+                    <h3>Distortion</h3>
+                    <p>Reality warped and twisted</p>
+                </div>
+            </a>
+
+            <!-- Forgive and Forget -->
+            <a href="design-detail-forgive-and-forget.html" class="design-card nav-link">
+                <img src="covers/Forgive and Forget.jpg" alt="Forgive and Forget">
+                <div class="design-info">
+                    <h3>Forgive and Forget</h3>
+                    <p>The healing power of letting go</p>
+                </div>
+            </a>
+
+            <!-- Nightmare -->
+            <a href="design-detail-nightmare.html" class="design-card nav-link">
+                <img src="covers/Nightmare.jpg" alt="Nightmare">
+                <div class="design-info">
+                    <h3>Nightmare</h3>
+                    <p>Dark visions from the subconscious</p>
+                </div>
+            </a>
+
+            <!-- Bryce -->
+            <a href="design-detail-bryce.html" class="design-card nav-link">
+                <img src="covers/Bryce.jpg" alt="Bryce">
+                <div class="design-info">
+                    <h3>Bryce</h3>
+                    <p>A personal journey of discovery</p>
+                </div>
+            </a>
+
+            <!-- Silloute -->
+            <a href="design-detail-silloute.html" class="design-card nav-link">
+                <img src="covers/Silloute.jpg" alt="Silloute">
+                <div class="design-info">
+                    <h3>Silloute</h3>
+                    <p>The mysterious shadow of form</p>
+                </div>
+            </a>
+            </div>
+        </div>
+        
+        <!-- Archived Section -->
+        <div id="posters-section" class="content-section">
+            <div class="designs-grid">
+                <!-- Archived images will be displayed here -->
+                <!-- You can add archived images similar to the covers above -->
+                <div style="text-align: center; padding: 4rem; color: #fff;">
+                    <h2>Archive Coming Soon</h2>
+                    <p>Archived images will be displayed here</p>
+                </div>
+            </div>
+        </div>
+        
+        <section class="black-section" style="width: 100%; height: 500px; background: #000;"></section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-left">
+            <a href="contact.html" class="footer-link-button">Contact</a>
+            <a href="faq.html" class="footer-link-button">FAQ</a>
+            <a href="what-you-need-to-know.html" class="footer-link-button">What You Need To Know</a>
+        </div>
+        <div class="footer-center">
+            <div class="social-links">
+                <a href="https://www.instagram.com/eeks.eye/" target="_blank" rel="noopener noreferrer" aria-label="Visit Eeks Eye on Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <!-- Add other social links here if needed -->
+            </div>
+            <p><a href="#" id="copyright-link" style="color:inherit; text-decoration:underline; cursor:pointer;">&copy; 2025 Eeks Eye. All Rights Reserved.</a></p>
+        </div>
+        <div class="footer-right">
+            <form class="newsletter-form">
+                <h4>Subscribe to Updates</h4>
+                <input type="email" placeholder="Enter your email here" required>
+                <div class="checkbox-container">
+                    <input type="checkbox" id="newsletter-check" name="newsletter-check">
+                    <label for="newsletter-check">Yes, subscribe for newsletter</label>
+                </div>
+                <button type="submit">Subscribe</button>
+            </form>
+        </div>
+    </footer>
+
+    <div class="x-line">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</div>
+
+    <div id="copyright-modal" style="display:none; position:fixed; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.7); z-index:99999; align-items:center; justify-content:center;">
+        <div style="background:#fff; color:#111; max-width:90vw; width:400px; padding:2rem 1.5rem; border-radius:10px; box-shadow:0 8px 32px #000a; position:relative; text-align:center;">
+            <button id="close-copyright-modal" style="position:absolute; top:10px; right:15px; background:none; border:none; font-size:1.5rem; color:#111; cursor:pointer;">&times;</button>
+            <h3 style="margin-bottom:1rem;">Copyright Notice</h3>
+            <p style="font-size:1.05rem; line-height:1.6;">All content, images, and designs on this site are owned and operated by Eeks Eye. No part of this website may be copied, reproduced, or used without express written permission from Eeks Eye. All rights reserved.</p>
+        </div>
+    </div>
+
+    <div class="logo-transition-overlay"></div>
+    <div class="transition-text">XI</div>
+
+    <script>
+    // Page entrance animation
+    document.addEventListener('DOMContentLoaded', () => {
+        const overlay = document.querySelector('.page-transition-overlay');
+        setTimeout(() => {
+            overlay.classList.add('fade-out');
+        }, 500);
+
+        // Tab switching functionality
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const contentSections = document.querySelectorAll('.content-section');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons and sections
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                contentSections.forEach(section => section.classList.remove('active'));
+
+                // Add active class to clicked button
+                this.classList.add('active');
+
+                // Show corresponding section
+                const targetSection = document.getElementById(this.getAttribute('data-section'));
+                if (targetSection) {
+                    targetSection.classList.add('active');
+                }
+            });
+        });
+    });
+
+    // Like button functionality
+    function toggleLike(button) {
+        const icon = button.querySelector('i');
+        if (icon.classList.contains('fa-regular')) {
+            icon.classList.remove('fa-regular');
+            icon.classList.add('fa-solid');
+            button.classList.add('liked');
+        } else {
+            icon.classList.remove('fa-solid');
+            icon.classList.add('fa-regular');
+            button.classList.remove('liked');
+        }
+    }
+
+    // Navigation Transition
+    const navLinks = document.querySelectorAll('.nav-link');
+    const overlay = document.querySelector('.logo-transition-overlay');
+    const transitionText = document.querySelector('.transition-text');
+    const pageTransitionOverlay = document.querySelector('.page-transition-overlay');
+
+    function getLogoPosition() {
+        const logo = document.querySelector('.site-logo');
+        if (!logo) return { x: 0, y: 0, width: 0, height: 0 };
+        
+        const rect = logo.getBoundingClientRect();
+        return {
+            x: rect.left + window.scrollX,
+            y: rect.top + window.scrollY,
+            width: rect.width,
+            height: rect.height
+        };
+    }
+
+    function createTransition(destination) {
+        // Scroll to top to ensure transition is visible
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+
+        const logoPos = getLogoPosition();
+        const tempLogo = document.createElement('div');
+        tempLogo.className = 'temp-logo';
+        tempLogo.style.cssText = `
+            position: fixed;
+            left: ${logoPos.x}px;
+            top: ${logoPos.y}px;
+            width: ${logoPos.width}px;
+            height: ${logoPos.height}px;
+            background-image: url('images/neon-eye-logo.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            z-index: 1000;
+            transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transform-origin: center;
+        `;
+        document.body.appendChild(tempLogo);
+
+        // Create and style the XI transition text
+        const xiText = document.createElement('div');
+        xiText.className = 'transition-text';
+        xiText.textContent = 'XI';
+        document.body.appendChild(xiText);
+
+        // Start logo animation immediately
+        requestAnimationFrame(() => {
+            tempLogo.style.transform = 'scale(25) rotate(5deg)';
+            tempLogo.style.opacity = '0';
+        });
+
+        // Fade in overlay with slight delay
+        setTimeout(() => {
+            overlay.classList.add('active');
+            pageTransitionOverlay.classList.remove('fade-out');
+        }, 500);
+
+        // Show transition text with a slight bounce effect
+        setTimeout(() => {
+            xiText.style.opacity = '1';
+            xiText.style.transform = 'translate(-50%, -50%) scale(1.1)';
+            setTimeout(() => {
+                xiText.style.transform = 'translate(-50%, -50%) scale(1)';
+            }, 200);
+        }, 800);
+
+        // Navigate after transition completes
+        setTimeout(() => {
+            window.location.href = destination;
+        }, 1600);
+    }
+
+    // Handle all navigation links
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            const destination = this.getAttribute('href');
+            if (destination && destination !== '#') {
+                e.preventDefault();
+                createTransition(destination);
+            }
+            // If destination is '#' or empty, let the default action occur (or do nothing)
+        });
+    });
+
+    const scrollBtn = document.querySelector('.scroll-top');
+    const scrollBtnIcon = scrollBtn ? scrollBtn.querySelector('i') : null;
+    const header = document.querySelector('.site-header');
+    const scrollThresholdAdd = 30;
+    const scrollThresholdRemove = 40;
+    const topThreshold = 10;
+
+    function updateScrollButton() {
+        if (!scrollBtn || !scrollBtnIcon) return;
+        const scrollPosition = window.pageYOffset;
+
+        if (scrollPosition > 300) {
+            scrollBtn.classList.add('visible');
+        } else {
+            scrollBtn.classList.remove('visible');
+        }
+
+        if (scrollPosition < topThreshold) {
+            scrollBtnIcon.classList.remove('fa-arrow-up');
+            scrollBtnIcon.classList.add('fa-arrow-down');
+            scrollBtn.setAttribute('aria-label', 'Scroll to bottom');
+        } else {
+            scrollBtnIcon.classList.remove('fa-arrow-down');
+            scrollBtnIcon.classList.add('fa-arrow-up');
+            scrollBtn.setAttribute('aria-label', 'Scroll to top');
+        }
+    }
+
+    let lastHeaderScrolled = false;
+    window.addEventListener('scroll', () => {
+        if (header) {
+            const scrollPosition = window.pageYOffset;
+
+            if (!lastHeaderScrolled && scrollPosition > scrollThresholdAdd) {
+                header.classList.add('header-scrolled');
+                lastHeaderScrolled = true;
+            } else if (lastHeaderScrolled && scrollPosition < scrollThresholdRemove) {
+                header.classList.remove('header-scrolled');
+                lastHeaderScrolled = false;
+            }
+
+            if (scrollPosition > topThreshold) {
+                header.classList.add('header-background-hidden');
+            } else {
+                header.classList.remove('header-background-hidden');
+            }
+        }
+
+        updateScrollButton();
+    });
+
+    if (scrollBtn && scrollBtnIcon) {
+        scrollBtn.addEventListener('click', () => {
+            if (scrollBtnIcon.classList.contains('fa-arrow-down')) {
+                window.scrollTo({
+                    top: document.body.scrollHeight,
+                    behavior: 'smooth'
+                });
+            } else {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }
+        });
+
+        updateScrollButton();
+    }
+
+    const headerTitle = document.querySelector('.site-header h1');
+    if (headerTitle && header) {
+        headerTitle.addEventListener('click', () => {
+            if (header.classList.contains('header-scrolled')) {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    }
+
+    // Handle browser back/forward buttons
+    window.addEventListener('popstate', function() {
+        createTransition(window.location.href);
+    });
+
+    // Search functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('site-search');
+        const searchButton = document.getElementById('search-button');
+        const suggestionsDropdown = document.getElementById('suggestions-dropdown');
+        const searchContainer = document.querySelector('.search-container');
+
+        if (!searchInput || !searchButton || !suggestionsDropdown || !searchContainer) {
+            return;
+        }
+
+        // Show suggestions dropdown when input is focused
+        searchInput.addEventListener('focus', function() {
+            suggestionsDropdown.style.display = 'block';
+        });
+
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!searchContainer.contains(e.target)) {
+                suggestionsDropdown.style.display = 'none';
+            }
+        });
+
+        // Handle suggestion clicks
+        document.querySelectorAll('.suggestion-item').forEach(item => {
+            item.addEventListener('click', function() {
+                searchInput.value = this.textContent;
+                performSearch();
+                suggestionsDropdown.style.display = 'none';
+            });
+        });
+
+        function performSearch() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            const designCards = document.querySelectorAll('.design-card');
+            
+            designCards.forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                if (title.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Add event listeners
+        searchButton.addEventListener('click', performSearch);
+        
+        searchInput.addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+    });
+
+    // Dropdown Menu Toggle
+    document.addEventListener('DOMContentLoaded', function() {
+        const menuIcon = document.querySelector('.menu-icon.red-x');
+        const dropdownMenu = document.querySelector('.dropdown-menu');
+
+        if (menuIcon && dropdownMenu) {
+            menuIcon.addEventListener('click', function(e) {
+                e.stopPropagation();
+                dropdownMenu.classList.toggle('active');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!menuIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                    dropdownMenu.classList.remove('active');
+                }
+            });
+        }
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Shift') {
+            const searchContainer = document.querySelector('.search-container');
+            if (searchContainer) {
+                if (searchContainer.style.display === 'block') {
+                    searchContainer.style.display = 'none';
+                } else {
+                    searchContainer.style.display = 'block';
+                    const input = searchContainer.querySelector('input');
+                    if (input) input.focus();
+                }
+            }
+        }
+    });
+
+    // Add Firebase SDK
+    const firebaseConfig = {
+        apiKey: "AIzaSyBuZpT46hKccS6-t2b4-gWXF93BNBu9ErQ",
+        authDomain: "eeks-eye.firebaseapp.com",
+        projectId: "eeks-eye",
+        storageBucket: "eeks-eye.firebasestorage.app",
+        messagingSenderId: "662530364021",
+        appId: "1:662530364021:web:454ba95f835655502c9e3c",
+        measurementId: "G-3Q7X3M2KRN"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const analytics = firebase.analytics();
+
+    // Check authentication state
+    auth.onAuthStateChanged((user) => {
+        const loginButton = document.getElementById('loginButton');
+        if (user) {
+            // User is signed in, hide login button
+            loginButton.classList.add('hidden');
+        } else {
+            // User is signed out, show login button
+            loginButton.classList.remove('hidden');
+        }
+    });
+
+
+    // Copyright modal logic
+    const copyrightLink = document.getElementById('copyright-link');
+    const copyrightModal = document.getElementById('copyright-modal');
+    const closeCopyrightModal = document.getElementById('close-copyright-modal');
+    if (copyrightLink && copyrightModal && closeCopyrightModal) {
+        copyrightLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            copyrightModal.style.display = 'flex';
+        });
+        closeCopyrightModal.addEventListener('click', function() {
+            copyrightModal.style.display = 'none';
+        });
+        copyrightModal.addEventListener('click', function(e) {
+            if (e.target === copyrightModal) copyrightModal.style.display = 'none';
+        });
+    }
+    </script>
+    <script src="translation-system.js"></script>
+</body>
+</html> 
