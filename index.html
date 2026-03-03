@@ -1,0 +1,2855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eeks-Eye - Art Reimagined</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- SF Pro Font -->
+    <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+    <!-- Inter Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .page-transition-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index: 9999;
+            opacity: 1;
+            pointer-events: none;
+            transition: opacity 2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .page-transition-overlay.fade-out {
+            opacity: 0;
+        }
+
+        body {
+            opacity: 1;
+            position: relative;
+            z-index: 1;
+            background-color: #000;
+        }
+
+        .transition-text {
+            position: fixed;
+            top: 50vh;
+            left: 50vw;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
+            color: white;
+            opacity: 0;
+            z-index: 1001;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+
+        .generations {
+            width: 100%;
+            max-width: 100%;
+            padding: 0;
+            margin: 0;
+            position: relative;
+            background: url('images/Dice-Background.png') center/cover no-repeat fixed;
+            background-attachment: fixed;
+        }
+        .generations::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1;
+        }
+        .generations > * {
+            position: relative;
+            z-index: 2;
+        }
+        .generations h2 {
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            font-size: 2.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .generations-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+            width: 100%;
+            max-width: 100%;
+            padding: 0 2rem;
+        }
+        .generation-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: center;
+            width: 100%;
+            max-width: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .generation-image {
+            width: 100%;
+            overflow: hidden;
+            padding: 2rem;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .generation-image img {
+            width: auto;
+            max-width: 100%;
+            height: auto;
+            max-height: 500px;
+            object-fit: contain;
+            display: block;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .generation-info {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+        }
+
+        .generation-info h3 {
+            color: white;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+
+        .generation-info p {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+        }
+
+        .managed-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.5rem;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .managed-header .about-button {
+            margin: 0;
+            padding: 0.5rem 1rem;
+        }
+
+        .managed-header .menu-icon-container {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .managed-header .menu-icon {
+            font-size: 0.75rem;
+            padding: 0.25rem;
+            color: white;
+            transition: transform 0.3s;
+        }
+
+        .managed-header .menu-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            right: 0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1.25rem;
+            padding: 0.35rem 1.5rem;
+            background: transparent;
+            border-top: none;
+            border-bottom: none;
+            text-align: center;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-size: 0.78rem;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-14px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            z-index: 1200;
+            flex-wrap: wrap;
+        }
+
+        .site-header.header-scrolled .dropdown-menu {
+            bottom: -1.4rem;
+            font-size: 0.7rem;
+            gap: 1rem;
+        }
+
+        .dropdown-menu.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        .dropdown-menu a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.2rem 0.6rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            border-radius: 999px;
+            border: 1px solid transparent;
+            transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+            min-width: 70px;
+        }
+
+        .dropdown-menu a::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('images/bloody-x.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+            pointer-events: none;
+        }
+        .dropdown-menu a:hover {
+            border-color: rgba(255, 255, 255, 0.6);
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+        .dropdown-menu a:hover::after {
+            opacity: 1;
+        }
+
+        .menu-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .menu-icon {
+            cursor: pointer;
+            padding: 5px;
+            color: white;
+            font-size: 0.75rem;
+        }
+
+        .menu-icon i {
+            color: #ff0000;
+        }
+
+        .menu-icon:hover i {
+            color: #ff4444;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.95);
+            min-width: 200px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1000;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dropdown-content a {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding-left: 24px;
+        }
+
+        .show {
+            display: block;
+        }
+
+        /* Contact Dropdown Menu - appears under header buttons (USD, Designs, Aesthetic, Why?, Contact) */
+        .contact-dropdown {
+            display: none;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 0;
+            margin-top: 0;
+            background: transparent;
+            pointer-events: auto;
+            transition: opacity 0.2s ease;
+            order: 2;
+        }
+
+        .contact-dropdown.active {
+            display: flex !important;
+            pointer-events: auto !important;
+        }
+        
+        .contact-dropdown.active * {
+            pointer-events: auto !important;
+        }
+        
+        .contact-dropdown.active .contact-dropdown-button {
+            pointer-events: auto !important;
+            cursor: pointer !important;
+        }
+
+        .contact-dropdown-button {
+            width: auto;
+            padding: 0.3rem 0.8rem;
+            margin: 0;
+            background: transparent;
+            border: none;
+            border-radius: 1rem;
+            color: white;
+            font-size: 0.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+            text-shadow: 0 0 4px #ff006e, 0 0 8px #ff006e;
+            pointer-events: auto !important;
+            z-index: 10003;
+        }
+
+        .contact-dropdown-button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('images/bloody-x.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+            pointer-events: none;
+        }
+
+        .contact-dropdown-button:hover {
+            background: transparent;
+            color: #ff006e;
+            text-shadow: 0 0 8px #ff006e, 0 0 16px #ff006e;
+            transform: translateY(-2px);
+        }
+
+        .contact-dropdown-button:hover::after {
+            opacity: 1;
+        }
+
+        .contact-dropdown-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: transparent;
+            z-index: 9999;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .contact-dropdown-overlay.active {
+            pointer-events: auto;
+        }
+
+        .contact-dropdown-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Aesthetic dropdown - Season 1, 2, 3 in a row under Designs for clean alignment */
+        .aesthetic-dropdown {
+            display: none;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 0;
+            margin-top: 0;
+            margin-right: 8rem;
+            background: transparent;
+            pointer-events: auto;
+            transition: opacity 0.2s ease;
+            order: 2;
+        }
+        .aesthetic-dropdown.active {
+            display: flex !important;
+            pointer-events: auto !important;
+            position: relative;
+            z-index: 10002;
+        }
+        .aesthetic-dropdown-button {
+            width: auto;
+            padding: 0.3rem 0.8rem;
+            margin: 0;
+            background: transparent;
+            border: none;
+            border-radius: 1rem;
+            color: white;
+            font-size: 0.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+            text-shadow: 0 0 4px #ff006e, 0 0 8px #ff006e;
+            pointer-events: auto !important;
+            z-index: 10003;
+        }
+        .aesthetic-dropdown-button:hover {
+            background: transparent;
+            color: #ff006e;
+            text-shadow: 0 0 8px #ff006e, 0 0 16px #ff006e;
+            transform: translateY(-2px);
+        }
+
+
+        .site-header,
+        .site-header.header-scrolled,
+        .site-header.header-background-hidden {
+            position: sticky;
+            top: 0;
+            z-index: 10001;
+        }
+        .site-header {
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            opacity: 1;
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .site-header.fade-out {
+            opacity: 0.15;
+            pointer-events: none;
+        }
+        .nav-header {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            padding: 0;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            z-index: 1000;
+            background: transparent;
+        }
+        .site-header .site-logo {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 1.25rem;
+            animation: slowSpin 8s linear infinite;
+        }
+        .site-header h1 {
+            font-size: 1.35rem;
+            letter-spacing: clamp(0.06rem, 0.165vw, 0.26rem);
+            font-kerning: normal;
+            color: white;
+            margin-bottom: 0.35rem;
+            text-align: center;
+        }
+        .site-header h1 .eye-text {
+            margin-left: 0.1rem;
+        }
+        .header-subtitle {
+            color: white;
+            font-size: 0.3rem;
+            text-align: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .site-header.header-scrolled {
+            padding: 0.1rem 0.3rem;
+            min-height: 36px;
+            margin-bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+        }
+        .site-header.header-scrolled .site-logo {
+            width: 24px;
+            height: 24px;
+        }
+        .site-header.header-scrolled h1 {
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+            letter-spacing: clamp(0.03rem, 0.09vw, 0.125rem);
+        }
+        .site-header.header-scrolled .header-subtitle {
+            font-size: 0.28rem;
+            display: none;
+        }
+        .site-header.header-scrolled .header-buttons-container {
+            position: absolute;
+            top: 0.2rem;
+            left: 0.6rem;
+            right: auto;
+            display: flex;
+            flex-direction: row;
+            gap: 0.125rem;
+            z-index: 1100;
+            background: transparent;
+            backdrop-filter: none;
+            border-radius: 1rem;
+            box-shadow: none;
+            padding: 0.2rem 0.6rem;
+            margin: 0;
+            align-items: center;
+            border: none;
+            opacity: 0.9;
+        }
+        .site-header.header-scrolled .search-container {
+            display: none;
+        }
+
+        /* Ink splash overlay effect */
+        .ink-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 110%;
+            max-width: 600px;
+            min-width: 120px;
+            height: auto;
+            pointer-events: none;
+            opacity: 0.8;
+            transform: translate(-50%, -50%) rotate(-7deg);
+            z-index: 3;
+            filter: drop-shadow(0 0 12px #fff3);
+            transition: opacity 0.4s;
+        }
+
+        .header-buttons-container,
+        .site-header.header-scrolled .header-buttons-container {
+            transition: none;
+        }
+        .site-header.header-scrolled .header-buttons-container {
+            opacity: 1;
+        }
+
+        .site-header .logo-container {
+            transition: opacity 0.4s;
+        }
+        .site-header.header-scrolled .logo-container {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .site-header.header-scrolled .site-logo {
+            width: 0;
+            height: 0;
+        }
+        .site-header.header-scrolled h1 {
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+        .site-header.header-scrolled .header-subtitle {
+            font-size: 0.5rem;
+        }
+        .site-header.header-scrolled .header-buttons-container {
+            margin-top: 1.25rem;
+        }
+
+        .nav-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.5rem;
+            z-index: 10000;
+            background: transparent;
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform;
+            opacity: 1 !important;
+            pointer-events: auto;
+        }
+        .nav-header-top-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+        .nav-header .header-top-left {
+            position: relative;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+        .header-buttons-container {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            align-items: center;
+            position: relative;
+            pointer-events: auto;
+            z-index: 10001;
+            opacity: 1 !important;
+        }
+        .header-buttons-container a {
+            font-size: 0.5rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 1rem;
+            color: white;
+            border: none;
+            transition: all 0.3s ease;
+            pointer-events: auto;
+            cursor: pointer;
+            z-index: 10002;
+            opacity: 1 !important;
+        }
+        .header-buttons-container a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        .site-header.header-scrolled .header-buttons-container a {
+            font-size: 0.44rem;
+            padding: 0.165rem 0.55rem;
+            border-radius: 0.75rem;
+            text-shadow: none;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+            color: #ff006e;
+            background-color: white;
+        }
+
+        .site-header.header-scrolled .header-buttons-container a:hover {
+            text-shadow: none;
+            transform: translateY(-1px);
+            box-shadow: 0 0 35px rgba(255, 255, 255, 1);
+        }
+
+        .site-header.header-scrolled .menu-icon.red-x {
+            display: none;
+        }
+
+        .search-container {
+            display: none;
+            max-width: 100%;
+            width: calc(100% + 2rem);
+            margin: 0 -1rem;
+            padding: 0;
+            position: relative;
+            left: calc(50% + 0.5rem);
+            transform: translateX(-50%);
+        }
+        .search-input {
+            padding: 0.4rem 1rem;
+            padding-right: 2.5rem;
+            height: auto;
+            border-radius: 0;
+        }
+
+        /* Hide header video in scrolled state */
+        .site-header.header-scrolled .header-video {
+            display: block;
+            opacity: 0.8;
+            filter: brightness(0.7);
+            -webkit-filter: brightness(0.7);
+        }
+
+        .header-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+        }
+
+        .site-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Pre-Hero Space Styles */
+        .pre-hero-space {
+            width: 100%;
+            height: 500px;
+            background: #000;
+            border-left: 2px solid #fff;
+            border-top: 2px solid #fff;
+            border-bottom: 1px solid #fff;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .pre-hero-image {
+            max-width: 80%;
+            max-height: 80%;
+            height: auto;
+            width: auto;
+            object-fit: contain;
+            z-index: 2;
+            position: relative;
+        }
+
+        /* Hero Section Styles */
+        .hero-section {
+            position: relative;
+            width: 100%;
+            height: 120vh;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+        }
+        
+        .hero-section-3 {
+            position: relative;
+            width: 100%;
+            min-height: auto;
+            padding: 4rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e8e8e8;
+        }
+
+        .hero-section-3-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 3rem 2rem;
+        }
+
+        .hero-section-3-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2.5rem;
+            align-items: stretch;
+        }
+
+        .hero-section-3-card {
+            background: #fff;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            border-radius: 4px;
+        }
+
+        .hero-section-3-icon {
+            font-size: 2.5rem;
+            color: #000;
+            margin-bottom: 1.25rem;
+        }
+
+        .hero-section-3-icon i {
+            font-weight: 400;
+        }
+
+        .hero-section-3-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #000;
+            margin: 0 0 1rem 0;
+            letter-spacing: 0.02em;
+        }
+
+        .hero-section-3-desc {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #444;
+            margin: 0 0 1.5rem 0;
+            flex-grow: 1;
+        }
+
+        .hero-section-3-btn {
+            display: inline-block;
+            padding: 0.6rem 1.5rem;
+            background: #fff;
+            color: #000;
+            border: 1px solid #000;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .hero-section-3-btn:hover {
+            background: #000;
+            color: #fff;
+        }
+
+        @media (max-width: 768px) {
+            .hero-section-3-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .hero-geometric-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+            opacity: 0.6;
+            pointer-events: none;
+            display: none;
+        }
+        
+        .geometric-shape {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .geometric-shape:nth-child(1) {
+            width: 120px;
+            height: 120px;
+            top: 10%;
+            left: 5%;
+            transform: rotate(15deg);
+        }
+        
+        .geometric-shape:nth-child(2) {
+            width: 80px;
+            height: 150px;
+            top: 20%;
+            left: 15%;
+            transform: rotate(-10deg);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .geometric-shape:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            top: 15%;
+            right: 10%;
+            transform: rotate(25deg);
+            background: rgba(240, 240, 240, 0.12);
+        }
+        
+        .geometric-shape:nth-child(4) {
+            width: 60px;
+            height: 180px;
+            top: 30%;
+            left: 25%;
+            transform: rotate(-20deg);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .geometric-shape:nth-child(5) {
+            width: 140px;
+            height: 90px;
+            top: 40%;
+            right: 20%;
+            transform: rotate(10deg);
+            background: rgba(250, 250, 250, 0.1);
+        }
+        
+        .geometric-shape:nth-child(6) {
+            width: 90px;
+            height: 90px;
+            top: 50%;
+            left: 10%;
+            transform: rotate(30deg);
+            background: rgba(255, 255, 255, 0.12);
+        }
+        
+        .geometric-shape:nth-child(7) {
+            width: 70px;
+            height: 160px;
+            top: 55%;
+            right: 15%;
+            transform: rotate(-15deg);
+            background: rgba(240, 240, 240, 0.1);
+        }
+        
+        .geometric-shape:nth-child(8) {
+            width: 110px;
+            height: 110px;
+            top: 65%;
+            left: 20%;
+            transform: rotate(20deg);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .geometric-shape:nth-child(9) {
+            width: 85px;
+            height: 130px;
+            top: 70%;
+            right: 25%;
+            transform: rotate(-25deg);
+            background: rgba(250, 250, 250, 0.12);
+        }
+        
+        .geometric-shape:nth-child(10) {
+            width: 100px;
+            height: 100px;
+            top: 80%;
+            left: 15%;
+            transform: rotate(15deg);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .geometric-shape:nth-child(11) {
+            width: 95px;
+            height: 140px;
+            top: 25%;
+            left: 50%;
+            transform: rotate(-30deg);
+            background: rgba(240, 240, 240, 0.09);
+        }
+        
+        .geometric-shape:nth-child(12) {
+            width: 130px;
+            height: 75px;
+            top: 45%;
+            left: 45%;
+            transform: rotate(18deg);
+            background: rgba(255, 255, 255, 0.11);
+        }
+        
+        .geometric-shape:nth-child(13) {
+            width: 65px;
+            height: 170px;
+            top: 60%;
+            left: 55%;
+            transform: rotate(-12deg);
+            background: rgba(250, 250, 250, 0.1);
+        }
+        
+        .geometric-shape:nth-child(14) {
+            width: 105px;
+            height: 105px;
+            top: 35%;
+            left: 70%;
+            transform: rotate(22deg);
+            background: rgba(255, 255, 255, 0.13);
+        }
+        
+        .geometric-shape:nth-child(15) {
+            width: 75px;
+            height: 145px;
+            top: 75%;
+            left: 60%;
+            transform: rotate(-18deg);
+            background: rgba(240, 240, 240, 0.08);
+        }
+
+        .hero-gone-image {
+            position: absolute;
+            z-index: 3;
+            max-width: 900px;
+            max-height: 900px;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .hero-gone-image-1 {
+            top: 5%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .hero-shirts-grid {
+            position: relative;
+            z-index: 4;
+            display: none; /* hidden for now */
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2.5rem;
+            max-width: 1600px;
+            margin: 0 auto;
+            margin-top: -32vh;
+            padding: 3rem;
+            align-items: center;
+            justify-items: center;
+        }
+
+        .hero-shirts-grid img {
+            width: 100%;
+            max-width: 420px;
+            height: auto;
+            object-fit: contain;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+        }
+
+        @media (max-width: 900px) {
+            .hero-shirts-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+
+            .hero-shirts-grid img {
+                max-width: 340px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .hero-shirts-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .hero-shirts-grid img {
+                max-width: 320px;
+            }
+        }
+
+        .year-marquee {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            overflow: hidden;
+            background: #000;
+            border-bottom: 2px solid #333;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .marquee-content {
+            display: flex;
+            white-space: nowrap;
+            animation: scroll 20s linear infinite;
+        }
+
+        .marquee-content span {
+            display: inline-block;
+            padding-right: 100px;
+            font-size: 2.5rem;
+            color: #ff0000;
+            font-weight: bold;
+            letter-spacing: 0.3em;
+            font-family: 'Courier New', monospace;
+            text-shadow: 
+                0 0 5px #ff0000,
+                0 0 10px #ff0000,
+                0 0 15px #ff0000,
+                0 0 20px #ff0000;
+            filter: brightness(1.2);
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            text-rendering: optimizeSpeed;
+            -webkit-font-smoothing: none;
+            font-smooth: never;
+        }
+
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* Shirt Marquee Styles */
+        .shirt-marquee {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            overflow: hidden;
+            background: #000;
+            border-bottom: 2px solid #333;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            z-index: 5;
+        }
+
+        .shirt-marquee-content {
+            display: flex;
+            white-space: nowrap;
+            animation: scroll 20s linear infinite;
+            align-items: center;
+        }
+
+        .shirt-marquee-content img {
+            height: 100px;
+            width: auto;
+            object-fit: contain;
+            padding-right: 80px;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .floating-character {
+            position: absolute;
+            font-size: 2rem;
+            pointer-events: none;
+            z-index: 10;
+            animation: dropFromSky 3s linear forwards, whiteRedGradient 3s linear infinite;
+            opacity: 1;
+            background: linear-gradient(90deg, #ffffff, #ff0000, #ffffff, #ff0000);
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            will-change: transform, opacity;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+
+        @keyframes whiteRedGradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            100% {
+                background-position: 200% 50%;
+            }
+        }
+        
+        /* Reduce motion for users who prefer it */
+        @media (prefers-reduced-motion: reduce) {
+            .floating-character {
+                animation: dropFromSky 3s linear forwards;
+            }
+        }
+
+        @keyframes dropFromSky {
+            0% { 
+                opacity: 0;
+                transform: translate3d(0, 0, 0) rotate(var(--rotation, 0deg));
+            }
+            5% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+                transform: translate3d(0, var(--final-y, calc(120vh - 100px)), 0) rotate(var(--rotation, 0deg));
+            }
+            100% { 
+                opacity: 0;
+                transform: translate3d(0, var(--final-y, calc(120vh - 100px)), 0) rotate(var(--rotation, 0deg));
+            }
+        }
+        
+        @keyframes dropFromSkyFadeMiddle {
+            0% { 
+                opacity: 0;
+                transform: translate3d(0, 0, 0) rotate(var(--rotation, 0deg));
+            }
+            5% {
+                opacity: 1;
+            }
+            45% {
+                opacity: 1;
+                transform: translate3d(0, var(--middle-y, 50vh), 0) rotate(var(--rotation, 0deg));
+            }
+            55% {
+                opacity: 0;
+                transform: translate3d(0, var(--middle-y, 50vh), 0) rotate(var(--rotation, 0deg));
+            }
+            100% { 
+                opacity: 0;
+                transform: translate3d(0, var(--middle-y, 50vh), 0) rotate(var(--rotation, 0deg));
+            }
+        }
+        
+        .floating-character.fade-middle {
+            animation: dropFromSkyFadeMiddle 2s linear forwards, whiteRedGradient 3s linear infinite;
+        }
+
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 2;
+            mix-blend-mode: normal;
+        }
+
+        /* Moving sign (marquee) - hero section top/bottom */
+        .hero-sign-marquee {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 32px;
+            overflow: hidden;
+            background: #000;
+            border-top: 1px solid #333;
+            border-bottom: 1px solid #333;
+            z-index: 6;
+            display: flex;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        .hero-sign-marquee.top {
+            top: 0;
+        }
+
+        .hero-sign-marquee.bottom {
+            bottom: 0;
+        }
+
+        .hero-sign-marquee .marquee-content {
+            display: flex;
+            white-space: nowrap;
+            animation: scroll 18s linear infinite;
+            will-change: transform;
+        }
+
+        .hero-sign-marquee .marquee-content span {
+            display: inline-block;
+            padding-right: 80px;
+            font-size: 0.8rem;
+            color: #fff;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            animation: heroSignPulse 1.6s linear infinite;
+        }
+
+        .hero-sign-marquee {
+            animation: heroSignPulseBorder 1.6s linear infinite;
+        }
+
+        @keyframes heroSignPulse {
+            0% { color: #fff; text-shadow: 0 0 0 rgba(255,0,0,0); }
+            50% { color: #ff0000; text-shadow: 0 0 12px rgba(255,0,0,0.6); }
+            100% { color: #fff; text-shadow: 0 0 0 rgba(255,0,0,0); }
+        }
+
+        @keyframes heroSignPulseBorder {
+            0% { border-top-color: #fff; border-bottom-color: #fff; }
+            50% { border-top-color: #ff0000; border-bottom-color: #ff0000; }
+            100% { border-top-color: #fff; border-bottom-color: #fff; }
+        }
+
+        @media (max-width: 768px) {
+            .hero-sign-marquee {
+                height: 28px;
+            }
+            .hero-sign-marquee .marquee-content span {
+                font-size: 0.7rem;
+                padding-right: 60px;
+            }
+        }
+
+
+        .hero-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            filter: blur(8px) brightness(0.6) contrast(1.2);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white;
+            padding: 4rem;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero-content h1 {
+            font-size: 4.5rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-content p {
+            font-size: 1.8rem;
+            opacity: 0.9;
+        }
+
+        .hero-buttons-venn {
+            position: absolute;
+            left: 51%;
+            bottom: 13rem;
+            z-index: 2;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            z-index: 3;
+            gap: 0;
+        }
+        .hero-explore-btn, .hero-designs-btn {
+            position: static;
+            border-radius: 50%;
+            width: 15rem;
+            height: 15rem;
+            font-size: 1rem;
+            font-weight: 700;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 18px 0 rgba(0,0,0,0.18);
+            border: 2px solid #fff;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            text-decoration: none;
+            transition: background 0.3s, color 0.3s, box-shadow 0.3s, transform 0.3s;
+            mix-blend-mode: screen;
+            margin-left: -2.5rem;
+        }
+        .hero-explore-btn {
+            background: #ff006e;
+            color: #fff;
+            z-index: 2;
+        }
+        .hero-designs-btn {
+            background: rgba(255,255,255,0.7);
+            color: #ff006e;
+            z-index: 2;
+        }
+        .hero-explore-btn:hover, .hero-designs-btn:hover {
+            filter: brightness(1.1) drop-shadow(0 0 8px #fff);
+            transform: scale(1.05);
+        }
+        @media (max-width: 768px) {
+            .hero-buttons-venn {
+                bottom: 3rem;
+            }
+            .hero-explore-btn, .hero-designs-btn {
+                width: 9rem;
+                height: 9rem;
+                font-size: 0.65rem;
+                margin-left: -1.2rem;
+            }
+        }
+
+        .hero-description-box {
+            position: absolute;
+            top: 2.5rem;
+            right: 3.5rem;
+            max-width: 340px;
+            background: rgba(30, 30, 30, 0.75);
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 400;
+            padding: 1.2rem 1.6rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 18px 0 rgba(0,0,0,0.14);
+            border: 1px solid rgba(255,255,255,0.10);
+            z-index: 4;
+            text-align: right;
+            letter-spacing: 0.01em;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            .hero-content p {
+                font-size: 1.2rem;
+            }
+            .hero-description-box {
+                top: 1rem;
+                right: 1rem;
+                max-width: 90vw;
+                font-size: 1rem;
+                padding: 0.8rem 1rem;
+            }
+        }
+
+        .site-header.header-scrolled .header-top-right {
+            position: absolute;
+            top: 0.1rem;
+            right: 0.6rem;
+        }
+
+        /* Currency Selector - Part of header buttons */
+        .header-buttons-container .currency-selector {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .site-header .currency-selector {
+            position: relative;
+        }
+        
+        /* Currency selector base styles */
+        .currency-selector {
+            position: relative;
+        }
+        
+        /* Prevent body flex from affecting it */
+        body.dark-theme > .currency-selector {
+            position: fixed !important;
+            align-self: auto !important;
+            order: 9999 !important;
+        }
+
+        .currency-button {
+            font-size: 0.5rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 1rem;
+            color: white;
+            border: none;
+            background: transparent;
+            transition: all 0.3s ease;
+            pointer-events: auto;
+            cursor: pointer;
+            z-index: 10002;
+            opacity: 1 !important;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-family: inherit;
+            text-decoration: none;
+        }
+
+        .currency-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .site-header.header-scrolled .currency-button {
+            font-size: 0.44rem;
+            padding: 0.165rem 0.55rem;
+            border-radius: 0.75rem;
+            text-shadow: none;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+            color: #ff006e;
+            background-color: white;
+        }
+
+        .site-header.header-scrolled .currency-button:hover {
+            text-shadow: none;
+            transform: translateY(-1px);
+            box-shadow: 0 0 35px rgba(255, 255, 255, 1);
+        }
+
+        .currency-button i {
+            font-size: 0.4rem;
+        }
+        
+        .site-header.header-scrolled .currency-button i {
+            font-size: 0.35rem;
+        }
+
+        .currency-dropdown {
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            left: -15%;
+            background: transparent;
+            border: none;
+            border-radius: 0.5rem;
+            min-width: 150px;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            backdrop-filter: none;
+            box-shadow: none;
+        }
+
+        .currency-dropdown.active {
+            display: flex;
+        }
+
+        .currency-option {
+            padding: 0.5rem 0.8rem;
+            color: white;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .currency-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .currency-option.active {
+            background: rgba(255, 0, 110, 0.2);
+            color: #ff006e;
+        }
+
+        .currency-option .currency-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+        }
+
+        .currency-option .currency-info span:first-child {
+            font-size: 0.55rem;
+        }
+
+        .currency-option .currency-code {
+            font-size: 0.45rem;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body class="dark-theme">
+    <div class="page-transition-overlay"></div>
+    <div class="contact-dropdown-overlay" id="contactDropdownOverlay"></div>
+    <div class="x-border x-border-left">X</div>
+    <div class="x-border x-border-right">I</div>
+    
+    <div class="x-line">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</div>
+
+    <header class="site-header">
+        <header class="nav-header">
+            <div class="nav-header-top-row">
+            <div class="header-top-left">
+            </div>
+            <div class="header-buttons-container">
+                <!-- Currency Selector - Part of header buttons, positioned before Designs -->
+                <div class="currency-selector" style="position: relative;">
+                    <button class="currency-button" id="currencyButton">
+                        <span id="currencyDisplay">US (USD $)</span>
+                        <i class="fas fa-chevron-up"></i>
+                    </button>
+                    <div class="currency-dropdown" id="currencyDropdown">
+                        <div class="currency-option active" data-currency="USD" data-country="US" data-symbol="$" data-lang="en">
+                            <div class="currency-info">
+                                <span>US (USD $)</span>
+                                <span class="currency-code" data-translate-currency="usdName">United States Dollar</span>
+                            </div>
+                        </div>
+                        <div class="currency-option" data-currency="CAD" data-country="CA" data-symbol="$" data-lang="fr">
+                            <div class="currency-info">
+                                <span>Canada - French (CAD $)</span>
+                                <span class="currency-code" data-translate-currency="cadName">Canadian Dollar</span>
+                            </div>
+                        </div>
+                        <div class="currency-option" data-currency="CAD" data-country="CA" data-symbol="$" data-lang="en">
+                            <div class="currency-info">
+                                <span>Canada - English (CAD $)</span>
+                                <span class="currency-code" data-translate-currency="cadName">Canadian Dollar</span>
+                            </div>
+                        </div>
+                        <div class="currency-option" data-currency="EUR" data-country="FR" data-symbol="€" data-lang="fr">
+                            <div class="currency-info">
+                                <span>France (EUR €)</span>
+                                <span class="currency-code" data-translate-currency="eurName">Euro</span>
+                            </div>
+                        </div>
+                        <div class="currency-option" data-currency="EUR" data-country="DE" data-symbol="€" data-lang="de">
+                            <div class="currency-info">
+                                <span>Germany (EUR €)</span>
+                                <span class="currency-code" data-translate-currency="eurName">Euro</span>
+                            </div>
+                        </div>
+                        <div class="currency-option" data-currency="EUR" data-country="ES" data-symbol="€" data-lang="es">
+                            <div class="currency-info">
+                                <span>Spain (EUR €)</span>
+                                <span class="currency-code" data-translate-currency="eurName">Euro</span>
+                            </div>
+                        </div>
+                        <div class="currency-option" data-currency="EUR" data-country="IT" data-symbol="€" data-lang="it">
+                            <div class="currency-info">
+                                <span>Italy (EUR €)</span>
+                                <span class="currency-code" data-translate-currency="eurName">Euro</span>
+                            </div>
+                        </div>
+                        <div class="currency-option" data-currency="CNY" data-country="CN" data-symbol="¥" data-lang="zh">
+                            <div class="currency-info">
+                                <span>China (CNY ¥)</span>
+                                <span class="currency-code" data-translate-currency="cnyName">Chinese Yuan</span>
+                            </div>
+                        </div>
+                        <div class="currency-option" data-currency="JPY" data-country="JP" data-symbol="¥" data-lang="ja">
+                            <div class="currency-info">
+                                <span>Japan (JPY ¥)</span>
+                                <span class="currency-code" data-translate-currency="jpyName">Japanese Yen</span>
+                            </div>
+                        </div>
+                        <div class="currency-option" data-currency="KRW" data-country="KR" data-symbol="₩" data-lang="ko">
+                            <div class="currency-info">
+                                <span>South Korea (KRW ₩)</span>
+                                <span class="currency-code" data-translate-currency="krwName">South Korean Won</span>
+                            </div>
+                        </div>
+                        <div class="currency-option" data-currency="GBP" data-country="GB" data-symbol="£" data-lang="en">
+                            <div class="currency-info">
+                                <span>United Kingdom (GBP £)</span>
+                                <span class="currency-code" data-translate-currency="gbpName">British Pound</span>
+                            </div>
+                        </div>
+                        <div class="currency-option" data-currency="AUD" data-country="AU" data-symbol="$" data-lang="en">
+                            <div class="currency-info">
+                                <span>Australia (AUD $)</span>
+                                <span class="currency-code" data-translate-currency="audName">Australian Dollar</span>
+                            </div>
+                        </div>
+                        <div class="currency-option" data-currency="NZD" data-country="NZ" data-symbol="$" data-lang="en">
+                            <div class="currency-info">
+                                <span>New Zealand (NZD $)</span>
+                                <span class="currency-code" data-translate-currency="nzdName">New Zealand Dollar</span>
+                            </div>
+                        </div>
+                        <div class="currency-option" data-currency="MXN" data-country="MX" data-symbol="$" data-lang="es">
+                            <div class="currency-info">
+                                <span>MX (MXN $)</span>
+                                <span class="currency-code" data-translate-currency="mxnName">Mexican Peso</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <a href="designs.html" class="explore-button nav-link" data-translate="designs">Designs</a>
+                <a href="#" class="explore-button nav-link aesthetic-button" id="headerAestheticButton" data-translate="aesthetic">Aesthetic</a>
+                <a href="about.html" class="about-button nav-link" data-translate="why">Why?</a>
+                <a href="#" class="explore-button nav-link contact-button" id="headerContactButton" data-translate="contact">Contact</a>
+            </div>
+            </div>
+            <div class="contact-dropdown" id="contactDropdown">
+                <a href="contact.html" class="contact-dropdown-button nav-link" data-translate="contact">Contact</a>
+                <a href="news.html" class="contact-dropdown-button nav-link" data-translate="news">News</a>
+                <a href="#" class="contact-dropdown-button nav-link" data-translate="button3">Button 3</a>
+                <a href="#" class="contact-dropdown-button nav-link" data-translate="button4">Button 4</a>
+            </div>
+            <div class="aesthetic-dropdown" id="aestheticDropdown">
+                <a href="explore.html?season=1" class="aesthetic-dropdown-button nav-link">Season 1</a>
+                <a href="explore.html?season=2" class="aesthetic-dropdown-button nav-link">Season 2</a>
+                <a href="explore.html?season=3" class="aesthetic-dropdown-button nav-link">Season 3</a>
+            </div>
+        </header>
+        <video autoplay loop muted playsinline class="header-video">
+            <source src="images/ezgif.com-mute-video.mp4" type="video/mp4">
+        </video>
+        <div class="logo-container" style="position: relative; z-index: 2;">
+            <a href="index.html" class="logo-link nav-link">
+                <img src="images/neon-eye-logo.png" alt="X-EYE" class="site-logo">
+            </a>
+        </div>
+        <h1>
+            <span>E</span><span>e</span><span>k</span><span>s</span> 
+            <span class="eye-text"><span>E</span><span>y</span><span>e</span></span>
+        </h1>
+        <p class="header-subtitle">X I</p>
+        <div class="search-container">
+            <input type="search" id="site-search" name="q" placeholder="What are you looking for..." class="search-input" data-translate-placeholder="searchPlaceholder">
+            <button type="submit" class="search-button" id="search-button"><i class="fas fa-search"></i></button>
+            <div class="suggestions-dropdown" id="suggestions-dropdown">
+                <div class="suggestion-header" data-translate="popularSearches">Popular Searches:</div>
+                <div class="suggestion-item">Dark Side</div>
+                <div class="suggestion-item">Interstella</div>
+                <div class="suggestion-item">Vibration</div>
+                <div class="suggestion-item">Rockstar</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="logo-transition-overlay"></div>
+    <div class="transition-text">XI</div>
+
+    <section class="hero-section">
+        <div class="hero-sign-marquee top" aria-hidden="true">
+            <div class="marquee-content">
+                <span>頑張っても手に入らないって約束する</span><span>頑張っても手に入らないって約束する</span><span>頑張っても手に入らないって約束する</span><span>頑張っても手に入らないって約束する</span>
+                <span>頑張っても手に入らないって約束する</span><span>頑張っても手に入らないって約束する</span><span>頑張っても手に入らないって約束する</span><span>頑張っても手に入らないって約束する</span>
+            </div>
+        </div>
+        <div class="hero-geometric-bg">
+            <div class="geometric-shape"></div>
+            <div class="geometric-shape"></div>
+            <div class="geometric-shape"></div>
+            <div class="geometric-shape"></div>
+            <div class="geometric-shape"></div>
+            <div class="geometric-shape"></div>
+            <div class="geometric-shape"></div>
+            <div class="geometric-shape"></div>
+            <div class="geometric-shape"></div>
+            <div class="geometric-shape"></div>
+            <div class="geometric-shape"></div>
+            <div class="geometric-shape"></div>
+            <div class="geometric-shape"></div>
+            <div class="geometric-shape"></div>
+            <div class="geometric-shape"></div>
+        </div>
+        <div class="hero-shirts-grid">
+            <img src="eekseye.png/I 伊克西 I I eeks eye I I 2026.png" alt="I 伊克西 I I eeks eye I I 2026">
+            <img src="eekseye.png/I 满月 I eekseye I 2026.png" alt="I 满月 I eekseye I 2026">
+            <img src="eekseye.png/I 多重人格 I eekseye I 2026.png" alt="I 多重人格 I eekseye I 2026">
+            <img src="eekseye.png/I メタ I eekseye I I 2026.png" alt="I メタ I eekseye I I 2026">
+        </div>
+        <img src="images/gone gone.png" alt="Gone gone" class="hero-gone-image hero-gone-image-1">
+        <div class="hero-sign-marquee bottom" aria-hidden="true">
+            <div class="marquee-content">
+                <span>頑張っても手に入らないって約束する</span><span>頑張っても手に入らないって約束する</span><span>頑張っても手に入らないって約束する</span><span>頑張っても手に入らないって約束する</span>
+                <span>頑張っても手に入らないって約束する</span><span>頑張っても手に入らないって約束する</span><span>頑張っても手に入らないって約束する</span><span>頑張っても手に入らないって約束する</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="hero-section-3">
+        <div class="hero-section-3-container">
+            <div class="hero-section-3-cards">
+                <div class="hero-section-3-card">
+                    <div class="hero-section-3-icon"><i class="fas fa-cog"></i></div>
+                    <h3 class="hero-section-3-title">Website Design</h3>
+                    <p class="hero-section-3-desc">Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ut labore et magna aliqua.</p>
+                    <a href="#" class="hero-section-3-btn">LEARN MORE</a>
+                </div>
+                <div class="hero-section-3-card">
+                    <div class="hero-section-3-icon"><i class="fas fa-at"></i></div>
+                    <h3 class="hero-section-3-title">Google Advertise</h3>
+                    <p class="hero-section-3-desc">Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ut labore et magna aliqua.</p>
+                    <a href="#" class="hero-section-3-btn">LEARN MORE</a>
+                </div>
+                <div class="hero-section-3-card">
+                    <div class="hero-section-3-icon"><i class="fas fa-chart-line"></i></div>
+                    <h3 class="hero-section-3-title">E-mail Hosting</h3>
+                    <p class="hero-section-3-desc">Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ut labore et magna aliqua.</p>
+                    <a href="#" class="hero-section-3-btn">LEARN MORE</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+    <button class="scroll-top" aria-label="Scroll to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <footer class="site-footer">
+        <div class="footer-left">
+            <a href="contact.html" class="footer-link-button nav-link" data-translate="contact">Contact</a>
+            <a href="faq.html" class="footer-link-button" data-translate="faq">FAQ</a>
+            <a href="what-you-need-to-know.html" class="footer-link-button" data-translate="whatYouNeedToKnow">What You Need To Know</a>
+        </div>
+        <div class="footer-center">
+            <div class="social-links">
+                <a href="https://www.instagram.com/eeks.eye/" target="_blank" rel="noopener noreferrer" aria-label="Visit Eeks Eye on Instagram">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                <!-- Add other social links here if needed -->
+            </div>
+            <p><a href="#" id="copyright-link" style="color:inherit; text-decoration:underline; cursor:pointer;">&copy; 2026 Eeks Eye. All Rights Reserved.</a></p>
+        </div>
+        <div class="footer-right">
+            <form class="newsletter-form">
+                <h4 data-translate="subscribeToUpdates">Subscribe to Updates</h4>
+                <input type="email" placeholder="Enter your email here" required data-translate-placeholder="enterEmail">
+                <div class="checkbox-container">
+                    <input type="checkbox" id="newsletter-check" name="newsletter-check">
+                    <label for="newsletter-check" data-translate="subscribeNewsletter">Yes, subscribe for newsletter</label>
+                </div>
+                <button type="submit" data-translate="subscribe">Subscribe</button>
+            </form>
+        </div>
+    </footer>
+
+    <div class="x-line">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</div>
+
+    <div id="copyright-modal" style="display:none; position:fixed; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.9); z-index:999999; align-items:center; justify-content:center; flex-direction:column; overflow-y:auto;">
+        <div style="background:#fff; color:#111; max-width:90vw; width:400px; padding:2rem 1.5rem; border-radius:10px; box-shadow:0 8px 32px #000a; position:relative; text-align:center; z-index:1000000; margin:auto;">
+            <button id="close-copyright-modal" style="position:absolute; top:10px; right:15px; background:none; border:none; font-size:1.5rem; color:#111; cursor:pointer; z-index:1000001;">&times;</button>
+            <h3 style="margin-bottom:1rem;">Copyright Notice</h3>
+            <p style="font-size:1.05rem; line-height:1.6;">All content, images, and designs on this site are owned and operated by Eeks Eye. No part of this website may be copied, reproduced, or used without express written permission from Eeks Eye. All rights reserved.</p>
+        </div>
+    </div>
+
+</body>
+
+<script>
+        // Page entrance animation
+        document.addEventListener('DOMContentLoaded', () => {
+            const overlay = document.querySelector('.page-transition-overlay');
+            if (overlay) {
+                setTimeout(() => {
+                    overlay.classList.add('fade-out');
+                }, 500);
+            }
+            // Background video 1.2x speed
+            const headerVideo = document.querySelector('.header-video');
+            if (headerVideo) {
+                headerVideo.playbackRate = 1.2;
+            }
+        });
+
+        // Dropdown menu functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuIcon = document.querySelector('.menu-icon');
+            const dropdownContent = document.querySelector('.dropdown-content');
+
+            if (menuIcon && dropdownContent) {
+                menuIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    dropdownContent.classList.toggle('show');
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!menuIcon.contains(e.target) && !dropdownContent.contains(e.target)) {
+                        dropdownContent.classList.remove('show');
+                    }
+                });
+            }
+        });
+
+        // Navigation Transition
+        const navLinks = document.querySelectorAll('.nav-link');
+        const overlay = document.querySelector('.logo-transition-overlay');
+        const transitionText = document.querySelector('.transition-text');
+        const pageTransitionOverlay = document.querySelector('.page-transition-overlay');
+
+        function getLogoPosition() {
+            const logo = document.querySelector('.site-logo');
+            if (!logo) return { x: 0, y: 0, width: 0, height: 0 };
+            
+            const rect = logo.getBoundingClientRect();
+            return {
+                x: rect.left + window.scrollX,
+                y: rect.top + window.scrollY,
+                width: rect.width,
+                height: rect.height
+            };
+        }
+
+        function createTransition(destination) {
+            // Scroll to top to ensure transition is visible
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+
+            const logoPos = getLogoPosition();
+            const tempLogo = document.createElement('div');
+            tempLogo.className = 'temp-logo';
+            tempLogo.style.cssText = `
+                position: fixed;
+                left: ${logoPos.x}px;
+                top: ${logoPos.y}px;
+                width: ${logoPos.width}px;
+                height: ${logoPos.height}px;
+                background-image: url('images/neon-eye-logo.png');
+                background-size: contain;
+                background-repeat: no-repeat;
+                z-index: 1000;
+                transition: all 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+                transform-origin: center;
+            `;
+            document.body.appendChild(tempLogo);
+
+            // Create and style the XI transition text
+            const xiText = document.createElement('div');
+            xiText.className = 'transition-text';
+            xiText.textContent = 'XI';
+            xiText.style.cssText = `
+                position: fixed;
+                top: 50vh;
+                left: 50vw;
+                transform: translate(-50%, -50%);
+                font-size: 4rem;
+                color: white;
+                opacity: 0;
+                z-index: 1001;
+                transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+                pointer-events: none;
+            `;
+            document.body.appendChild(xiText);
+
+            // Start logo animation immediately
+            requestAnimationFrame(() => {
+                tempLogo.style.transform = 'scale(25) rotate(5deg)';
+                tempLogo.style.opacity = '0';
+            });
+
+            // Fade in overlay with slight delay
+            setTimeout(() => {
+                overlay.classList.add('active');
+                pageTransitionOverlay.classList.remove('fade-out');
+            }, 500);
+
+            // Show transition text with a slight bounce effect
+            setTimeout(() => {
+                xiText.style.opacity = '1';
+                xiText.style.transform = 'translate(-50%, -50%) scale(1.1)';
+                setTimeout(() => {
+                    xiText.style.transform = 'translate(-50%, -50%) scale(1)';
+                }, 200);
+            }, 800);
+
+            // Navigate after transition completes
+            setTimeout(() => {
+                window.location.href = destination;
+            }, 1600);
+        }
+
+        // Handle all navigation links
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                // Skip contact dropdown buttons and aesthetic/contact triggers - they have their own handlers (don't stop propagation so those handlers can run)
+                if (this.classList.contains('contact-dropdown-button') || this.classList.contains('aesthetic-button') || this.classList.contains('contact-button')) {
+                    return;
+                }
+                e.preventDefault();
+                const destination = this.href;
+                // Skip navigation if href is "#" or empty
+                if (destination && destination !== '#' && !destination.endsWith('#') && destination !== window.location.href + '#') {
+                    createTransition(destination);
+                }
+            });
+        });
+
+// Scroll to top/bottom functionality
+const scrollBtn = document.querySelector('.scroll-top');
+const scrollBtnIcon = scrollBtn.querySelector('i');
+const topThreshold = 10;
+
+function updateScrollButton() {
+    const scrollPosition = window.pageYOffset;
+    const windowHeight = window.innerHeight;
+    const bodyHeight = document.body.offsetHeight;
+
+    if (scrollPosition > 300) {
+        scrollBtn.classList.add('visible');
+    } else {
+        scrollBtn.classList.remove('visible');
+    }
+
+    if (scrollPosition < topThreshold) {
+        scrollBtnIcon.classList.remove('fa-arrow-up');
+        scrollBtnIcon.classList.add('fa-arrow-down');
+        scrollBtn.setAttribute('aria-label', 'Scroll to bottom');
+    } else {
+        scrollBtnIcon.classList.remove('fa-arrow-down');
+        scrollBtnIcon.classList.add('fa-arrow-up');
+        scrollBtn.setAttribute('aria-label', 'Scroll to top');
+    }
+}
+
+let ticking = false;
+let scrollTimeout;
+
+window.addEventListener('scroll', () => {
+    updateScrollButton();
+    
+    // Disable transition during active scrolling for immediate response
+    const navHeader = document.querySelector('.nav-header');
+    if (navHeader) {
+        navHeader.style.transition = 'none';
+    }
+    
+    // Clear any existing timeout
+    if (scrollTimeout) {
+        clearTimeout(scrollTimeout);
+    }
+    
+    if (!ticking) {
+        window.requestAnimationFrame(() => {
+            // Move header with scroll - scroll state starts immediately when user scrolls
+            if (navHeader) {
+                const scrollPosition = window.pageYOffset;
+                
+                if (scrollPosition === 0) {
+                    // At top of page - regular header state, move 5% down
+                    const offset = window.innerHeight * 0.05; // 5% of viewport height
+                    navHeader.style.transform = `translateY(${offset}px)`;
+                } else {
+                    // User has started scrolling - enter scroll state immediately
+                    navHeader.style.transform = `translateY(${scrollPosition}px)`;
+                }
+            }
+            
+            ticking = false;
+        });
+        ticking = true;
+    }
+    
+    // Re-enable transition after scrolling stops
+    scrollTimeout = setTimeout(() => {
+        if (navHeader) {
+            navHeader.style.transition = 'transform 0.5s cubic-bezier(0.4, 0, 0.2, 1)';
+        }
+    }, 150);
+}, { passive: true });
+
+scrollBtn.addEventListener('click', () => {
+    if (scrollBtnIcon.classList.contains('fa-arrow-down')) {
+        // Scroll to bottom
+        window.scrollTo({
+            top: document.body.scrollHeight,
+            behavior: 'smooth'
+        });
+    } else {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    }
+});
+
+// Initial check in case page loads scrolled
+updateScrollButton();
+
+// Initialize header position on page load
+document.addEventListener('DOMContentLoaded', function() {
+    const navHeader = document.querySelector('.nav-header');
+    if (navHeader) {
+        const scrollPosition = window.pageYOffset;
+        if (scrollPosition === 0) {
+            // At top of page - regular header state, move 5% down
+            const offset = window.innerHeight * 0.05; // 5% of viewport height
+            navHeader.style.transform = `translateY(${offset}px)`;
+        } else {
+            // Page loaded scrolled - enter scroll state
+            navHeader.style.transform = `translateY(${scrollPosition}px)`;
+        }
+    }
+    
+});
+
+// Also initialize immediately in case DOM is already loaded
+const navHeaderInit = document.querySelector('.nav-header');
+if (navHeaderInit) {
+    const scrollPosition = window.pageYOffset;
+    if (scrollPosition === 0) {
+        const offset = window.innerHeight * 0.05;
+        navHeaderInit.style.transform = `translateY(${offset}px)`;
+    } else {
+        navHeaderInit.style.transform = `translateY(${scrollPosition}px)`;
+    }
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('site-search');
+    const searchButton = document.getElementById('search-button');
+    const suggestionsDropdown = document.getElementById('suggestions-dropdown');
+
+    // Show suggestions dropdown when input is focused
+    searchInput.addEventListener('focus', function() {
+        suggestionsDropdown.style.display = 'block';
+    });
+
+    // Hide suggestions when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!searchInput.contains(e.target) && !suggestionsDropdown.contains(e.target)) {
+            suggestionsDropdown.style.display = 'none';
+        }
+    });
+
+    // Handle suggestion clicks
+    document.querySelectorAll('.suggestion-item').forEach(item => {
+        item.addEventListener('click', function() {
+            searchInput.value = this.textContent;
+            window.location.href = 'designs.html';
+            suggestionsDropdown.style.display = 'none';
+        });
+    });
+
+    // Add event listeners
+    searchButton.addEventListener('click', function() {
+        window.location.href = 'designs.html';
+    });
+    
+    searchInput.addEventListener('keyup', function(e) {
+        if (e.key === 'Enter') {
+            window.location.href = 'designs.html';
+        }
+    });
+});
+
+// Dropdown Menu Toggle (menu icon and dropdown removed - no login required)
+document.addEventListener('DOMContentLoaded', function() {
+    // Contact and Aesthetic dropdown toggles
+    const headerContactButton = document.getElementById('headerContactButton');
+    const headerAestheticButton = document.getElementById('headerAestheticButton');
+    const contactDropdown = document.getElementById('contactDropdown');
+    const aestheticDropdown = document.getElementById('aestheticDropdown');
+    const contactDropdownOverlay = document.getElementById('contactDropdownOverlay');
+
+    function updateOverlay() {
+        const contactOpen = contactDropdown && contactDropdown.classList.contains('active');
+        const aestheticOpen = aestheticDropdown && aestheticDropdown.classList.contains('active');
+        if (contactDropdownOverlay) {
+            if (contactOpen || aestheticOpen) {
+                contactDropdownOverlay.classList.add('active');
+            } else {
+                contactDropdownOverlay.classList.remove('active');
+            }
+        }
+    }
+
+    function closeContactDropdown() {
+        if (contactDropdown) contactDropdown.classList.remove('active');
+        updateOverlay();
+    }
+
+    function closeAestheticDropdown() {
+        if (aestheticDropdown) aestheticDropdown.classList.remove('active');
+        updateOverlay();
+    }
+
+    function toggleContactDropdown() {
+        if (aestheticDropdown) aestheticDropdown.classList.remove('active');
+        if (contactDropdown) {
+            contactDropdown.classList.toggle('active');
+        }
+        updateOverlay();
+    }
+
+    function toggleAestheticDropdown() {
+        if (contactDropdown) contactDropdown.classList.remove('active');
+        if (aestheticDropdown) {
+            aestheticDropdown.classList.toggle('active');
+        }
+        updateOverlay();
+    }
+
+    // Add click listener for header Contact button
+    if (headerContactButton) {
+        headerContactButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleContactDropdown();
+        });
+    }
+
+    // Add click listener for header Aesthetic button (capture phase so it runs first and dropdown always opens)
+    if (headerAestheticButton) {
+        headerAestheticButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            toggleAestheticDropdown();
+        }, true);
+    }
+
+    // Close both dropdowns when clicking overlay
+    if (contactDropdownOverlay) {
+        contactDropdownOverlay.addEventListener('click', function(e) {
+            if (e.target === contactDropdownOverlay) {
+                closeContactDropdown();
+                closeAestheticDropdown();
+            }
+        });
+    }
+
+    // Close dropdowns when clicking outside (but allow clicks on dropdown buttons and trigger buttons)
+    document.addEventListener('click', function(e) {
+        const isContactTrigger = headerContactButton && headerContactButton.contains(e.target);
+        const isAestheticTrigger = headerAestheticButton && headerAestheticButton.contains(e.target);
+        const isInContactDropdown = contactDropdown && contactDropdown.contains(e.target);
+        const isInAestheticDropdown = aestheticDropdown && aestheticDropdown.contains(e.target);
+        const isContactDropdownButton = e.target.closest('.contact-dropdown-button');
+        const isAestheticDropdownButton = e.target.closest('.aesthetic-dropdown-button');
+
+        if (isContactTrigger || isAestheticTrigger || isContactDropdownButton || isAestheticDropdownButton || isInContactDropdown || isInAestheticDropdown) {
+            return;
+        }
+        if (contactDropdown && contactDropdown.classList.contains('active')) {
+            closeContactDropdown();
+        }
+        if (aestheticDropdown && aestheticDropdown.classList.contains('active')) {
+            closeAestheticDropdown();
+        }
+    }, false);
+
+    // Make contact dropdown buttons clickable
+    const contactDropdownButtons = document.querySelectorAll('.contact-dropdown-button');
+    contactDropdownButtons.forEach((button, index) => {
+        button.addEventListener('click', function(e) {
+            console.log('Button clicked:', index + 1, this.href);
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            
+            // Button 1 (index 0) should navigate to contact.html
+            // Button 2 (index 1) should navigate to news.html
+            if ((index === 0 && this.href && this.href.includes('contact.html')) ||
+                (index === 1 && this.href && this.href.includes('news.html'))) {
+                // Use the transition effect for navigation
+                const destination = this.href;
+                if (destination) {
+                    // Close dropdown before navigating
+                    closeContactDropdown();
+                    createTransition(destination);
+                }
+                return;
+            }
+            // For other buttons, handle custom behavior
+            console.log(`Button ${index + 1} clicked`);
+            // You can add specific functionality for each button here
+        }, true); // Use capture phase to run BEFORE other handlers
+    });
+
+    // Aesthetic dropdown buttons (Season 1, 2, 3) - close dropdown then navigate
+    const aestheticDropdownButtons = document.querySelectorAll('.aesthetic-dropdown-button');
+    aestheticDropdownButtons.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const destination = this.getAttribute('href');
+            closeAestheticDropdown();
+            if (destination && destination !== '#') {
+                createTransition(destination);
+            }
+        }, true);
+    });
+});
+
+let keysPressed = {};
+let lastToggleTime = 0;
+document.addEventListener('keydown', function(e) {
+    const key = e.key.toLowerCase();
+    keysPressed[key] = true;
+    
+    if (keysPressed['x'] && keysPressed['i']) {
+        const now = Date.now();
+        // Prevent rapid toggling and typing
+        if (now - lastToggleTime > 200) {
+            e.preventDefault();
+            e.stopPropagation();
+            const searchContainer = document.querySelector('.search-container');
+            const input = searchContainer ? searchContainer.querySelector('input') : null;
+            
+            if (searchContainer) {
+                if (searchContainer.style.display === 'block') {
+                    // Clear the input when closing
+                    if (input) {
+                        input.value = '';
+                    }
+                    searchContainer.style.display = 'none';
+                } else {
+                    searchContainer.style.display = 'block';
+                    if (input) {
+                        input.value = '';
+                        input.focus();
+                    }
+                }
+            }
+            lastToggleTime = now;
+        }
+    }
+});
+
+document.addEventListener('keyup', function(e) {
+    keysPressed[e.key.toLowerCase()] = false;
+});
+
+
+// Copyright modal logic
+const copyrightLink = document.getElementById('copyright-link');
+const copyrightModal = document.getElementById('copyright-modal');
+const closeCopyrightModal = document.getElementById('close-copyright-modal');
+if (copyrightLink && copyrightModal && closeCopyrightModal) {
+    let scrollPosition = 0;
+    copyrightLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        // Save current scroll position
+        scrollPosition = window.scrollY || window.pageYOffset;
+        // Position modal at current viewport - it will cover the visible area
+        copyrightModal.style.top = scrollPosition + 'px';
+        copyrightModal.style.display = 'flex';
+        copyrightModal.style.zIndex = '999999';
+        copyrightModal.style.position = 'fixed';
+        copyrightModal.style.left = '0';
+        copyrightModal.style.width = '100vw';
+        copyrightModal.style.height = '100vh';
+        // Prevent body scrolling
+        document.body.style.overflow = 'hidden';
+        document.body.style.position = 'fixed';
+        document.body.style.width = '100%';
+        document.body.style.top = `-${scrollPosition}px`;
+    });
+    closeCopyrightModal.addEventListener('click', function() {
+        const savedScroll = scrollPosition;
+        copyrightModal.style.display = 'none';
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
+        document.body.style.top = '';
+        // Restore scroll position
+        if (savedScroll !== undefined) {
+            window.scrollTo(0, savedScroll);
+        }
+    });
+    copyrightModal.addEventListener('click', function(e) {
+        if (e.target === copyrightModal) {
+            const savedScroll = scrollPosition;
+            copyrightModal.style.display = 'none';
+            document.body.style.overflow = '';
+            document.body.style.position = '';
+            document.body.style.width = '';
+            document.body.style.top = '';
+            // Restore scroll position
+            if (savedScroll !== undefined) {
+                window.scrollTo(0, savedScroll);
+            }
+        }
+    });
+}
+
+// Currency Selector Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const currencySelector = document.querySelector('.currency-selector');
+    const currencyButton = document.getElementById('currencyButton');
+    const currencyDropdown = document.getElementById('currencyDropdown');
+    const currencyDisplay = document.getElementById('currencyDisplay');
+    const currencyOptions = document.querySelectorAll('.currency-option');
+
+    // Currency selector is now part of header buttons, no special positioning needed
+
+    // Currency conversion rates (USD as base)
+    const exchangeRates = {
+        USD: 1.0,
+        CAD: 1.35,
+        EUR: 0.92,
+        CNY: 7.24,
+        JPY: 149.50,
+        KRW: 1318.50,
+        GBP: 0.79,
+        AUD: 1.52,
+        NZD: 1.68,
+        MXN: 16.85
+    };
+
+    // Translation dictionary
+    const translations = {
+        en: {
+            designs: 'Designs',
+            aesthetic: 'Aesthetic',
+            why: 'Why?',
+            contact: 'Contact',
+            login: 'Login',
+            profile: 'Profile',
+            likes: 'Likes',
+            address: 'Address',
+            orders: 'Orders',
+            news: 'News',
+            button3: 'Button 3',
+            button4: 'Button 4',
+            designer: 'Designer',
+            faq: 'FAQ',
+            whatYouNeedToKnow: 'What You Need To Know',
+            subscribeToUpdates: 'Subscribe to Updates',
+            enterEmail: 'Enter your email here',
+            subscribeNewsletter: 'Yes, subscribe for newsletter',
+            subscribe: 'Subscribe',
+            username: 'Username',
+            password: 'Password',
+            or: 'or',
+            signUp: 'Sign up',
+            searchPlaceholder: 'What are you looking for...',
+            popularSearches: 'Popular Searches:'
+        },
+        es: {
+            designs: 'Diseños',
+            aesthetic: 'Estética',
+            why: '¿Por qué?',
+            contact: 'Contacto',
+            login: 'Iniciar sesión',
+            profile: 'Perfil',
+            likes: 'Me gusta',
+            address: 'Dirección',
+            orders: 'Pedidos',
+            news: 'Noticias',
+            button3: 'Botón 3',
+            button4: 'Botón 4',
+            designer: 'Diseñador',
+            faq: 'Preguntas frecuentes',
+            whatYouNeedToKnow: 'Lo que necesitas saber',
+            subscribeToUpdates: 'Suscríbete a las actualizaciones',
+            enterEmail: 'Ingresa tu correo aquí',
+            subscribeNewsletter: 'Sí, suscríbeme al boletín',
+            subscribe: 'Suscribirse',
+            username: 'Nombre de usuario',
+            password: 'Contraseña',
+            or: 'o',
+            signUp: 'Registrarse',
+            searchPlaceholder: '¿Qué estás buscando...',
+            popularSearches: 'Búsquedas populares:'
+        },
+        fr: {
+            designs: 'Designs',
+            aesthetic: 'Esthétique',
+            why: 'Pourquoi?',
+            contact: 'Contact',
+            login: 'Connexion',
+            profile: 'Profil',
+            likes: 'J\'aime',
+            address: 'Adresse',
+            orders: 'Commandes',
+            news: 'Actualités',
+            button3: 'Bouton 3',
+            button4: 'Bouton 4',
+            designer: 'Designer',
+            faq: 'FAQ',
+            whatYouNeedToKnow: 'Ce que vous devez savoir',
+            subscribeToUpdates: 'S\'abonner aux mises à jour',
+            enterEmail: 'Entrez votre email ici',
+            subscribeNewsletter: 'Oui, s\'abonner à la newsletter',
+            subscribe: 'S\'abonner',
+            username: 'Nom d\'utilisateur',
+            password: 'Mot de passe',
+            or: 'ou',
+            signUp: 'S\'inscrire',
+            searchPlaceholder: 'Que cherchez-vous...',
+            popularSearches: 'Recherches populaires:'
+        },
+        de: {
+            designs: 'Designs',
+            aesthetic: 'Ästhetik',
+            why: 'Warum?',
+            contact: 'Kontakt',
+            login: 'Anmelden',
+            profile: 'Profil',
+            likes: 'Gefällt mir',
+            address: 'Adresse',
+            orders: 'Bestellungen',
+            news: 'Nachrichten',
+            button3: 'Button 3',
+            button4: 'Button 4',
+            designer: 'Designer',
+            faq: 'FAQ',
+            whatYouNeedToKnow: 'Was Sie wissen müssen',
+            subscribeToUpdates: 'Updates abonnieren',
+            enterEmail: 'Geben Sie hier Ihre E-Mail ein',
+            subscribeNewsletter: 'Ja, Newsletter abonnieren',
+            subscribe: 'Abonnieren',
+            username: 'Benutzername',
+            password: 'Passwort',
+            or: 'oder',
+            signUp: 'Registrieren',
+            searchPlaceholder: 'Wonach suchen Sie...',
+            popularSearches: 'Beliebte Suchen:'
+        },
+        it: {
+            designs: 'Design',
+            aesthetic: 'Estetica',
+            why: 'Perché?',
+            contact: 'Contatto',
+            login: 'Accedi',
+            profile: 'Profilo',
+            likes: 'Mi piace',
+            address: 'Indirizzo',
+            orders: 'Ordini',
+            news: 'Notizie',
+            button3: 'Pulsante 3',
+            button4: 'Pulsante 4',
+            designer: 'Designer',
+            faq: 'FAQ',
+            whatYouNeedToKnow: 'Cosa devi sapere',
+            subscribeToUpdates: 'Iscriviti agli aggiornamenti',
+            enterEmail: 'Inserisci la tua email qui',
+            subscribeNewsletter: 'Sì, iscriviti alla newsletter',
+            subscribe: 'Iscriviti',
+            username: 'Nome utente',
+            password: 'Password',
+            or: 'o',
+            signUp: 'Registrati',
+            searchPlaceholder: 'Cosa stai cercando...',
+            popularSearches: 'Ricerche popolari:'
+        },
+        zh: {
+            designs: '设计',
+            aesthetic: '美学',
+            why: '为什么？',
+            contact: '联系',
+            login: '登录',
+            profile: '个人资料',
+            likes: '喜欢',
+            address: '地址',
+            orders: '订单',
+            news: '新闻',
+            button3: '按钮 3',
+            button4: '按钮 4',
+            designer: '设计师',
+            faq: '常见问题',
+            whatYouNeedToKnow: '你需要知道的',
+            subscribeToUpdates: '订阅更新',
+            enterEmail: '在此输入您的电子邮件',
+            subscribeNewsletter: '是的，订阅新闻通讯',
+            subscribe: '订阅',
+            username: '用户名',
+            password: '密码',
+            or: '或',
+            signUp: '注册',
+            searchPlaceholder: '你在找什么...',
+            popularSearches: '热门搜索:'
+        },
+        ja: {
+            designs: 'デザイン',
+            aesthetic: '美学',
+            why: 'なぜ？',
+            contact: 'お問い合わせ',
+            login: 'ログイン',
+            profile: 'プロフィール',
+            likes: 'いいね',
+            address: '住所',
+            orders: '注文',
+            news: 'ニュース',
+            button3: 'ボタン 3',
+            button4: 'ボタン 4',
+            designer: 'デザイナー',
+            faq: 'よくある質問',
+            whatYouNeedToKnow: '知っておくべきこと',
+            subscribeToUpdates: 'アップデートを購読',
+            enterEmail: 'ここにメールアドレスを入力',
+            subscribeNewsletter: 'はい、ニュースレターを購読します',
+            subscribe: '購読',
+            username: 'ユーザー名',
+            password: 'パスワード',
+            or: 'または',
+            signUp: '登録',
+            searchPlaceholder: '何をお探しですか...',
+            popularSearches: '人気の検索:'
+        },
+        ko: {
+            designs: '디자인',
+            aesthetic: '미학',
+            why: '왜?',
+            contact: '연락처',
+            login: '로그인',
+            profile: '프로필',
+            likes: '좋아요',
+            address: '주소',
+            orders: '주문',
+            news: '뉴스',
+            button3: '버튼 3',
+            button4: '버튼 4',
+            designer: '디자이너',
+            faq: '자주 묻는 질문',
+            whatYouNeedToKnow: '알아야 할 사항',
+            subscribeToUpdates: '업데이트 구독',
+            enterEmail: '여기에 이메일을 입력하세요',
+            subscribeNewsletter: '예, 뉴스레터 구독',
+            subscribe: '구독',
+            username: '사용자 이름',
+            password: '비밀번호',
+            or: '또는',
+            signUp: '가입',
+            searchPlaceholder: '무엇을 찾고 계신가요...',
+            popularSearches: '인기 검색:'
+        }
+    };
+
+    // Get saved currency or default to USD
+    let currentCurrency = localStorage.getItem('selectedCurrency') || 'USD';
+    let currentCountry = localStorage.getItem('selectedCountry') || 'US';
+    let currentSymbol = localStorage.getItem('selectedSymbol') || '$';
+    let currentLanguage = localStorage.getItem('selectedLanguage') || 'en';
+
+    // Update display on load
+    updateCurrencyDisplay();
+    translatePage(currentLanguage);
+
+    // Toggle dropdown
+    currencyButton.addEventListener('click', function(e) {
+        e.stopPropagation();
+        currencyDropdown.classList.toggle('active');
+        const icon = currencyButton.querySelector('i');
+        if (currencyDropdown.classList.contains('active')) {
+            icon.classList.remove('fa-chevron-up');
+            icon.classList.add('fa-chevron-down');
+        } else {
+            icon.classList.remove('fa-chevron-down');
+            icon.classList.add('fa-chevron-up');
+        }
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!currencyButton.contains(e.target) && !currencyDropdown.contains(e.target)) {
+            currencyDropdown.classList.remove('active');
+            const icon = currencyButton.querySelector('i');
+            icon.classList.remove('fa-chevron-down');
+            icon.classList.add('fa-chevron-up');
+        }
+    });
+
+    // Handle currency selection
+    currencyOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            const currency = this.getAttribute('data-currency');
+            const country = this.getAttribute('data-country');
+            const symbol = this.getAttribute('data-symbol');
+            const lang = this.getAttribute('data-lang') || 'en';
+
+            // Update current currency
+            currentCurrency = currency;
+            currentCountry = country;
+            currentSymbol = symbol;
+            currentLanguage = lang;
+
+            // Save to localStorage
+            localStorage.setItem('selectedCurrency', currency);
+            localStorage.setItem('selectedCountry', country);
+            localStorage.setItem('selectedSymbol', symbol);
+            localStorage.setItem('selectedLanguage', lang);
+
+            // Reload page to reset with new language/currency
+            window.location.reload();
+        });
+    });
+
+    function translatePage(language) {
+        const lang = translations[language] || translations.en;
+        
+        // Translate elements with data-translate attribute
+        document.querySelectorAll('[data-translate]').forEach(element => {
+            const key = element.getAttribute('data-translate');
+            if (lang[key]) {
+                element.textContent = lang[key];
+            }
+        });
+
+        // Translate placeholders
+        document.querySelectorAll('[data-translate-placeholder]').forEach(element => {
+            const key = element.getAttribute('data-translate-placeholder');
+            if (lang[key]) {
+                element.placeholder = lang[key];
+            }
+        });
+
+        // Translate currency names in dropdown
+        const currencyNames = {
+            en: {
+                usdName: 'United States Dollar',
+                cadName: 'Canadian Dollar',
+                eurName: 'Euro',
+                cnyName: 'Chinese Yuan',
+                jpyName: 'Japanese Yen',
+                krwName: 'South Korean Won',
+                gbpName: 'British Pound',
+                audName: 'Australian Dollar',
+                nzdName: 'New Zealand Dollar',
+                mxnName: 'Mexican Peso'
+            },
+            es: {
+                usdName: 'Dólar Estadounidense',
+                cadName: 'Dólar Canadiense',
+                eurName: 'Euro',
+                cnyName: 'Yuan Chino',
+                jpyName: 'Yen Japonés',
+                krwName: 'Won Surcoreano',
+                gbpName: 'Libra Esterlina',
+                audName: 'Dólar Australiano',
+                nzdName: 'Dólar Neozelandés',
+                mxnName: 'Peso Mexicano'
+            },
+            fr: {
+                usdName: 'Dollar Américain',
+                cadName: 'Dollar Canadien',
+                eurName: 'Euro',
+                cnyName: 'Yuan Chinois',
+                jpyName: 'Yen Japonais',
+                krwName: 'Won Sud-Coréen',
+                gbpName: 'Livre Sterling',
+                audName: 'Dollar Australien',
+                nzdName: 'Dollar Néo-Zélandais',
+                mxnName: 'Peso Mexicain'
+            },
+            de: {
+                usdName: 'US-Dollar',
+                cadName: 'Kanadischer Dollar',
+                eurName: 'Euro',
+                cnyName: 'Chinesischer Yuan',
+                jpyName: 'Japanischer Yen',
+                krwName: 'Südkoreanischer Won',
+                gbpName: 'Britisches Pfund',
+                audName: 'Australischer Dollar',
+                nzdName: 'Neuseeland-Dollar',
+                mxnName: 'Mexikanischer Peso'
+            },
+            it: {
+                usdName: 'Dollaro Statunitense',
+                cadName: 'Dollaro Canadese',
+                eurName: 'Euro',
+                cnyName: 'Yuan Cinese',
+                jpyName: 'Yen Giapponese',
+                krwName: 'Won Sudcoreano',
+                gbpName: 'Sterlina Britannica',
+                audName: 'Dollaro Australiano',
+                nzdName: 'Dollaro Neozelandese',
+                mxnName: 'Peso Messicano'
+            },
+            zh: {
+                usdName: '美元',
+                cadName: '加拿大元',
+                eurName: '欧元',
+                cnyName: '人民币',
+                jpyName: '日元',
+                krwName: '韩元',
+                gbpName: '英镑',
+                audName: '澳元',
+                nzdName: '新西兰元',
+                mxnName: '墨西哥比索'
+            },
+            ja: {
+                usdName: '米ドル',
+                cadName: 'カナダドル',
+                eurName: 'ユーロ',
+                cnyName: '人民元',
+                jpyName: '日本円',
+                krwName: '韓国ウォン',
+                gbpName: '英ポンド',
+                audName: '豪ドル',
+                nzdName: 'ニュージーランドドル',
+                mxnName: 'メキシコペソ'
+            },
+            ko: {
+                usdName: '미국 달러',
+                cadName: '캐나다 달러',
+                eurName: '유로',
+                cnyName: '중국 위안',
+                jpyName: '일본 엔',
+                krwName: '대한민국 원',
+                gbpName: '영국 파운드',
+                audName: '호주 달러',
+                nzdName: '뉴질랜드 달러',
+                mxnName: '멕시코 페소'
+            }
+        };
+        
+        document.querySelectorAll('[data-translate-currency]').forEach(element => {
+            const key = element.getAttribute('data-translate-currency');
+            if (currencyNames[language] && currencyNames[language][key]) {
+                element.textContent = currencyNames[language][key];
+            }
+        });
+    }
+
+    function updateCurrencyDisplay() {
+        // Format: Country (Currency Symbol)
+        const countryNames = {
+            'US': 'US',
+            'CA': 'CA',
+            'FR': 'FR',
+            'DE': 'DE',
+            'ES': 'ES',
+            'IT': 'IT',
+            'CN': 'CN',
+            'JP': 'JP',
+            'KR': 'KR',
+            'GB': 'GB',
+            'AU': 'AU',
+            'NZ': 'NZ',
+            'MX': 'MX'
+        };
+        let countryName = countryNames[currentCountry] || currentCountry;
+        let currencyCode = currentCurrency;
+        currencyDisplay.textContent = `${countryName} (${currencyCode} ${currentSymbol})`;
+    }
+
+    function convertPrices() {
+        // Find all price elements on the page
+        // This is a basic implementation - you may need to adjust selectors based on your price elements
+        const priceElements = document.querySelectorAll('[data-price]');
+        
+        priceElements.forEach(element => {
+            const basePrice = parseFloat(element.getAttribute('data-price'));
+            if (!isNaN(basePrice)) {
+                const convertedPrice = basePrice * exchangeRates[currentCurrency];
+                // Format the price based on currency
+                if (currentCurrency === 'USD') {
+                    element.textContent = `$${convertedPrice.toFixed(2)}`;
+                } else if (currentCurrency === 'MXN') {
+                    element.textContent = `$${convertedPrice.toFixed(2)} MXN`;
+                }
+            }
+        });
+
+        // Also convert any prices in text content (more flexible approach)
+        // This will find prices in format $XX.XX and convert them
+        const pricePattern = /\$(\d+\.?\d*)/g;
+        const textElements = document.querySelectorAll('body *');
+        
+        textElements.forEach(element => {
+            if (element.children.length === 0) { // Only process leaf nodes
+                let text = element.textContent;
+                if (text && pricePattern.test(text)) {
+                    // This is a simplified approach - you may want more sophisticated price detection
+                    // For now, we'll just mark that conversion is available
+                }
+            }
+        });
+    }
+
+    // Convert prices on page load
+    convertPrices();
+});
+</script>
+</html> 
