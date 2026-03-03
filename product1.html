@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I 伊克西 I I eeks eye I I 2026 - Eeks Eye</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- SF Pro Font -->
+    <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+    <!-- Inter Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            background: #000;
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        
+        .product-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .product-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+        }
+        
+        .back-button {
+            color: #fff;
+            text-decoration: none;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: color 0.3s ease;
+        }
+        
+        .back-button:hover {
+            color: #ff006e;
+        }
+        
+        .product-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: start;
+        }
+        
+        .product-image-container {
+            position: relative;
+        }
+        
+        .product-image {
+            width: 100%;
+            height: auto;
+            border: 1px solid #333;
+            border-radius: 8px;
+        }
+        
+        .product-info {
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+        
+        .product-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin: 0;
+            text-align: center;
+        }
+        
+        .product-category {
+            font-size: 1rem;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            text-align: center;
+        }
+        
+        .product-price {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #fff;
+            text-align: center;
+        }
+        
+        .product-description {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: #ddd;
+            text-align: center;
+        }
+        
+        .checkout-button {
+            background: #ff006e;
+            color: #fff;
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+            display: inline-block;
+            text-align: center;
+            text-decoration: none;
+        }
+        
+        .checkout-button:hover {
+            background: #ff006e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(255, 0, 110, 0.4);
+        }
+        
+        .checkout-button:active {
+            transform: translateY(0);
+        }
+
+        .find-in-store {
+            display: block;
+            text-align: center;
+            color: #fff;
+            text-decoration: underline;
+            font-size: 0.95rem;
+            margin: 1rem 0 0.5rem;
+        }
+
+        .divider {
+            border: none;
+            border-top: 1px solid #333;
+            margin: 1.5rem 0;
+        }
+
+        .accordion {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        .accordion details {
+            border-bottom: 1px solid #333;
+            padding: 0.9rem 0;
+        }
+
+        .accordion summary {
+            list-style: none;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-size: 0.85rem;
+            color: #fff;
+        }
+
+        .accordion summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .accordion summary::after {
+            content: "▾";
+            font-size: 0.9rem;
+            color: #fff;
+        }
+
+        .accordion details[open] summary::after {
+            content: "▴";
+        }
+
+        .accordion-content {
+            margin-top: 0.75rem;
+            color: #ccc;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        @media (max-width: 768px) {
+            .product-content {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .product-title {
+                font-size: 1.05rem;
+            }
+        }
+
+        .page-transition-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 9999;
+            opacity: 1;
+            pointer-events: none;
+            transition: opacity 2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .page-transition-overlay.fade-out { opacity: 0; }
+        .logo-transition-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            opacity: 0;
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 999;
+            pointer-events: none;
+        }
+        .logo-transition-overlay.active { opacity: 1; }
+        .transition-text {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
+            color: #fff;
+            opacity: 0;
+            z-index: 1001;
+            pointer-events: none;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</head>
+<body>
+    <div class="page-transition-overlay"></div>
+    <div class="product-container">
+        <div class="product-header">
+            <a href="explore.html" class="back-button">← Back to Explore</a>
+        </div>
+        
+        <div class="product-content">
+            <div class="product-image-container">
+                <img src="eekseye.png/I 伊克西 I I eeks eye I I 2026.png" alt="I 伊克西 I I eeks eye I I 2026" class="product-image">
+            </div>
+            
+            <div class="product-info">
+                <h1 class="product-title">I 伊克西 I I eeks eye I I 2026</h1>
+                <div class="product-category">Runway</div>
+                <div class="product-price" data-price="275">$275.00</div>
+                <div class="product-description">
+                    BALENCIAGA | NBA COLLABORATION Oversized T-Shirt in white, blue and black dry jersey
+                </div>
+                <a href="https://fuchendeonze.wixsite.com/my-site-2" target="_blank" rel="noopener noreferrer" class="checkout-button">Purchase</a>
+                <a href="#" class="find-in-store">Find in store</a>
+                <hr class="divider">
+                <div class="accordion">
+                    <details>
+                        <summary>Product details</summary>
+                        <div class="accordion-content">
+                            Oversized fit. Crewneck. Short sleeves. Printed graphics.
+                        </div>
+                    </details>
+                    <details>
+                        <summary>Size &amp; fit</summary>
+                        <div class="accordion-content">
+                            This style fits oversized. For a closer fit, consider sizing down.
+                        </div>
+                    </details>
+                    <details>
+                        <summary>Free shipping, free returns</summary>
+                        <div class="accordion-content">
+                            Complimentary standard shipping and returns on all orders.
+                        </div>
+                    </details>
+                    <details>
+                        <summary>Product care</summary>
+                        <div class="accordion-content">
+                            Machine wash cold. Do not bleach. Tumble dry low.
+                        </div>
+                    </details>
+                    <details>
+                        <summary>Sustainability</summary>
+                        <div class="accordion-content">
+                            This product is made with responsibly sourced materials.
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="logo-transition-overlay"></div>
+    <div class="transition-text">XI</div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const overlay = document.querySelector('.page-transition-overlay');
+            setTimeout(() => overlay && overlay.classList.add('fade-out'), 500);
+        });
+        const logoOverlay = document.querySelector('.logo-transition-overlay');
+        const transitionText = document.querySelector('.transition-text');
+        const pageOverlay = document.querySelector('.page-transition-overlay');
+        function createTransition(destination) {
+            if (!destination || destination === '#' || destination.startsWith('javascript:')) return;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setTimeout(() => {
+                if (logoOverlay) logoOverlay.classList.add('active');
+                if (pageOverlay) pageOverlay.classList.remove('fade-out');
+            }, 100);
+            setTimeout(() => {
+                if (transitionText) {
+                    transitionText.style.opacity = '1';
+                    transitionText.style.transform = 'translate(-50%, -50%) scale(1.1)';
+                    setTimeout(() => { transitionText.style.transform = 'translate(-50%, -50%) scale(1)'; }, 200);
+                }
+            }, 500);
+            setTimeout(() => { window.location.href = destination; }, 1600);
+        }
+        document.querySelectorAll('a[href]').forEach(link => {
+            const href = link.getAttribute('href');
+            if (!href || href === '#' || link.target === '_blank' || link.hasAttribute('download')) return;
+            const isInternalHtml = (href.endsWith('.html') || href === 'index.html' || href === '/' || href.startsWith('./')) && !href.startsWith('http');
+            if (isInternalHtml) {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    createTransition(this.href);
+                });
+            }
+        });
+    </script>
+    <script src="translation-system.js"></script>
+</body>
+</html>
+
