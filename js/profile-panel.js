@@ -252,7 +252,8 @@
 
   function ensureCartButton(nearEl) {
     if (!nearEl || !nearEl.parentElement) return;
-    if (nearEl.parentElement.querySelector('.eeks-cart-launch')) return;
+    var parent = nearEl.parentElement;
+    if (parent.querySelector('.eeks-cart-launch')) return;
     ensureStyles();
     var btn = document.createElement('a');
     btn.href = '#';
@@ -263,8 +264,8 @@
       e.preventDefault();
       openPanel();
     });
-    // insert after signed-in container / google button area
-    nearEl.insertAdjacentElement('afterend', btn);
+    // Always last in the header button row
+    parent.appendChild(btn);
     updateBadges();
   }
 
