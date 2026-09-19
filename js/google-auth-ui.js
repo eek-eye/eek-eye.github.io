@@ -3,6 +3,7 @@
  * Uses js/authService.js (Firebase Auth ES module). Safe if Firebase fails to load.
  */
 import authService from './authService.js';
+try { window.__eeksAuthService = authService; window.authService = authService; } catch (e) {}
 
 export function initGoogleAuthUI(options = {}) {
   const resolveEl = (ref) => {
@@ -49,7 +50,8 @@ export function initGoogleAuthUI(options = {}) {
   const signOutBtn = document.createElement('button');
   signOutBtn.type = 'button';
   signOutBtn.className = 'google-auth-signout explore-button nav-link';
-  signOutBtn.textContent = signOutLabel;
+  signOutBtn.textContent = 'Profile';
+  signOutBtn.setAttribute('aria-label', 'Open profile and cart');
   signedInContainer.replaceChildren(photoEl, displayNameEl, signOutBtn);
 
   let busy = false;
@@ -70,6 +72,11 @@ export function initGoogleAuthUI(options = {}) {
   }
 
   function renderSignedOut() {
+    try {
+      if (window.EeksProfilePanel && window.EeksProfilePanel.setUser) {
+        window.EeksProfilePanel.setUser(null);
+      }
+    } catch (e) {}
     button.hidden = false;
     button.disabled = false;
     button.setAttribute('aria-busy', 'false');
@@ -86,6 +93,11 @@ export function initGoogleAuthUI(options = {}) {
     displayNameEl.textContent = displayLabel(user);
     if (user.photoURL) { photoEl.src = user.photoURL; photoEl.hidden = false; }
     else { photoEl.hidden = true; photoEl.removeAttribute('src'); }
+    try {
+      if (window.EeksProfilePanel && window.EeksProfilePanel.setUser) {
+        window.EeksProfilePanel.setUser(user);
+      }
+    } catch (e) {}
   }
 
   async function handleSignIn(event) {
@@ -133,7 +145,23 @@ export function initGoogleAuthUI(options = {}) {
   }
 
   button.addEventListener('click', handleSignIn);
-  signOutBtn.addEventListener('click', handleSignOut);
+  signOutBtn.addEventListener('click', function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (window.EeksProfilePanel && window.EeksProfilePanel.open) {
+      window.EeksProfilePanel.open();
+    } else {
+      handleSignOut(event);
+    }
+  });
+  // Clicking photo/name also opens profile
+  signedInContainer.addEventListener('click', function (event) {
+    if (event.target === signOutBtn) return;
+    if (window.EeksProfilePanel && window.EeksProfilePanel.open) {
+      event.preventDefault();
+      window.EeksProfilePanel.open();
+    }
+  });
 
   try {
     if (authService && typeof authService.onAuthStateChanged === 'function') {

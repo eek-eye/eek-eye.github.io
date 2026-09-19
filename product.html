@@ -443,7 +443,11 @@
                 <div class="product-category" id="product-category"></div>
                 <div class="product-price" id="product-price" data-price=""></div>
                 <div class="product-description" id="product-description"></div>
-                <button type="button" class="checkout-button" id="purchase-btn" data-translate="purchase">Purchase</button>
+                <div class="product-actions" style="display:flex;flex-wrap:wrap;gap:0.75rem;align-items:center;">
+                <button type="button" class="checkout-button" id="add-to-cart-btn">Add to cart</button>
+                <button type="button" class="checkout-button" id="purchase-btn" data-translate="purchase" style="background:transparent;color:inherit;border:1px solid currentColor;">Buy now</button>
+                </div>
+                <p id="add-to-cart-status" style="min-height:1.2em;font-size:0.9rem;margin:0.5rem 0 0;opacity:0.85;" hidden></p>
                 <p class="checkout-note">Secure checkout with Stripe — card, Apple Pay, and more.</p>
                 <a href="#" class="find-in-store">Find in store</a>
                 <hr class="divider">
@@ -485,12 +489,15 @@
     </div>
     <div class="logo-transition-overlay"></div>
     <div class="transition-text">XI</div>
+    <script src="js/explore-data.js"></script>
+    <script src="js/cart.js"></script>
+    <script src="js/profile-panel.js"></script>
     <script src="js/stripe-config.js"></script>
     <script src="js/abandoned-checkout-config.js"></script>
     <script src="js/abandoned-checkout.js"></script>
     <script src="js/stripe-checkout.js"></script>
     <script src="js/page-transition.js"></script>
-    <script src="js/explore-data.js"></script>
+    
     <script src="js/product-i18n.js"></script>
     <script src="js/cookie-consent.js"></script>
     <script src="translation-system.js"></script>
@@ -610,6 +617,20 @@
             var purchaseBtn = document.getElementById('purchase-btn');
             if (window.EeksStripeCheckout && purchaseBtn) {
                 window.EeksStripeCheckout.bindPurchaseButton(purchaseBtn, id);
+            }
+            var addBtn = document.getElementById('add-to-cart-btn');
+            var addStatus = document.getElementById('add-to-cart-status');
+            if (addBtn && window.EeksCart) {
+                addBtn.addEventListener('click', function () {
+                    var result = window.EeksCart.addItem(id, 1);
+                    if (addStatus) {
+                        addStatus.hidden = false;
+                        addStatus.textContent = result && result.ok ? 'Added to cart.' : 'Could not add to cart.';
+                    }
+                    if (window.EeksProfilePanel && window.EeksProfilePanel.refresh) {
+                        window.EeksProfilePanel.refresh();
+                    }
+                });
             }
         });
 
