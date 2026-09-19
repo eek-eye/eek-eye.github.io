@@ -57,18 +57,18 @@
         var style = document.createElement('style');
         style.id = 'abandoned-checkout-styles';
         style.textContent =
-            '.ac-overlay{position:fixed;inset:0;z-index:10080;background:rgba(0,0,0,.82);display:flex;align-items:center;justify-content:center;padding:1rem;}' +
-            '.ac-card{background:#111;color:#fff;max-width:420px;width:100%;padding:1.5rem;border-radius:10px;border:1px solid #333;font-family:inherit;position:relative;}' +
+            '.ac-overlay{position:fixed;inset:0;z-index:200000;background:rgba(0,0,0,.86);display:flex;align-items:center;justify-content:center;padding:1rem;pointer-events:auto;}' +
+            '.ac-card{background:#111;color:#fff;max-width:420px;width:100%;padding:1.5rem;border-radius:10px;border:1px solid #333;font-family:inherit;position:relative;pointer-events:auto;box-shadow:0 12px 40px rgba(0,0,0,.55);}' +
             '.ac-card h3{margin:0 0 .5rem;font-size:1.15rem;letter-spacing:.04em;text-transform:uppercase;}' +
             '.ac-card p{margin:0 0 1rem;color:#ccc;font-size:.92rem;line-height:1.5;}' +
             '.ac-card label{display:block;font-size:.8rem;margin-bottom:.35rem;color:#aaa;}' +
-            '.ac-card input[type=email]{width:100%;box-sizing:border-box;padding:.7rem .8rem;border-radius:6px;border:1px solid #444;background:#1a1a1a;color:#fff;margin-bottom:1rem;font-size:1rem;}' +
+            '.ac-card input[type=email]{width:100%;box-sizing:border-box;padding:.7rem .8rem;border-radius:6px;border:1px solid #444;background:#1a1a1a;color:#fff;margin-bottom:.75rem;font-size:1rem;pointer-events:auto;}' +
             '.ac-actions{display:flex;gap:.6rem;flex-wrap:wrap;}' +
-            '.ac-actions button{border:none;padding:.65rem 1.1rem;border-radius:6px;cursor:pointer;font-weight:600;font-size:.9rem;}' +
+            '.ac-actions button{border:none;padding:.7rem 1.15rem;border-radius:6px;cursor:pointer;font-weight:600;font-size:.9rem;pointer-events:auto;}' +
             '.ac-primary{background:#fff;color:#000;}' +
             '.ac-secondary{background:transparent;color:#fff;border:1px solid #555 !important;}' +
-            '.ac-close{position:absolute;top:.55rem;right:.7rem;background:none;border:none;color:#fff;font-size:1.35rem;cursor:pointer;}' +
-            '.ac-error{color:#ff8a80;font-size:.85rem;margin:-.5rem 0 .75rem;min-height:1.1em;}';
+            '.ac-close{position:absolute;top:.4rem;right:.45rem;background:none;border:none;color:#fff;font-size:1.5rem;line-height:1;cursor:pointer;padding:.45rem .6rem;pointer-events:auto;z-index:1;}' +
+            '.ac-error{color:#ff8a80;font-size:.85rem;margin:0 0 .75rem;min-height:1.1em;}';
         document.head.appendChild(style);
     }
 
@@ -78,55 +78,104 @@
             var existing = document.getElementById('ac-overlay');
             if (existing) existing.remove();
 
+            // Cart/profile panel sits at a high z-index and would block this dialog.
+            try {
+                if (window.EeksProfilePanel && typeof window.EeksProfilePanel.close === 'function') {
+                    window.EeksProfilePanel.close();
+                }
+            } catch (e) {}
+
+            var settled = false;
             var overlay = document.createElement('div');
             overlay.id = 'ac-overlay';
             overlay.className = 'ac-overlay';
             overlay.setAttribute('role', 'dialog');
+            overlay.setAttribute('aria-modal', 'true');
             overlay.setAttribute('aria-label', 'Email for order updates');
             overlay.innerHTML =
                 '<div class="ac-card">' +
-                '<button type="button" class="ac-close" aria-label="Close">&times;</button>' +
+                '<button type="button" class="ac-close" id="ac-close" aria-label="Close">&times;</button>' +
                 '<h3>Almost there</h3>' +
                 '<p>Enter your email so we can send order updates — and a reminder if checkout is left unfinished.</p>' +
+                '<form id="ac-form" action="#" method="post" novalidate>' +
                 '<label for="ac-email">Email</label>' +
-                '<input id="ac-email" type="email" autocomplete="email" placeholder="you@email.com" />' +
+                '<input id="ac-email" name="email" type="email" autocomplete="email" inputmode="email" placeholder="you@email.com" required />' +
                 '<div class="ac-error" id="ac-error" aria-live="polite"></div>' +
                 '<div class="ac-actions">' +
-                '<button type="button" class="ac-primary" id="ac-continue">Continue to checkout</button>' +
+                '<button type="submit" class="ac-primary" id="ac-continue">Continue to checkout</button>' +
                 '<button type="button" class="ac-secondary" id="ac-cancel">Cancel</button>' +
-                '</div></div>';
+                '</div></form></div>';
             document.body.appendChild(overlay);
 
+            var form = document.getElementById('ac-form');
             var input = document.getElementById('ac-email');
             var err = document.getElementById('ac-error');
+            var card = overlay.querySelector('.ac-card');
             if (defaults && defaults.email) input.value = defaults.email;
-            input.focus();
 
             function done(value) {
-                overlay.remove();
+                if (settled) return;
+                settled = true;
+                document.removeEventListener('keydown', onDocKey, true);
+                if (overlay.parentNode) overlay.remove();
                 resolve(value);
             }
 
-            document.getElementById('ac-close').onclick = function () { done(null); };
-            document.getElementById('ac-cancel').onclick = function () { done(null); };
-            overlay.addEventListener('click', function (e) {
-                if (e.target === overlay) done(null);
-            });
-            document.getElementById('ac-continue').onclick = function () {
+            function submitEmail() {
                 var email = String(input.value || '').trim();
                 if (!validEmail(email)) {
                     err.textContent = 'Please enter a valid email.';
                     input.focus();
                     return;
                 }
+                err.textContent = '';
                 done(email);
-            };
-            input.addEventListener('keydown', function (e) {
-                if (e.key === 'Enter') {
+            }
+
+            function onDocKey(e) {
+                if (e.key === 'Escape' || e.keyCode === 27) {
                     e.preventDefault();
-                    document.getElementById('ac-continue').click();
+                    e.stopPropagation();
+                    done(null);
+                    return;
                 }
+                if ((e.key === 'Enter' || e.keyCode === 13) && document.activeElement === input) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    submitEmail();
+                }
+            }
+
+            document.addEventListener('keydown', onDocKey, true);
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                submitEmail();
             });
+
+            document.getElementById('ac-close').addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                done(null);
+            });
+            document.getElementById('ac-cancel').addEventListener('click', function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+                done(null);
+            });
+            overlay.addEventListener('click', function (e) {
+                if (e.target === overlay) done(null);
+            });
+            if (card) {
+                card.addEventListener('click', function (e) {
+                    e.stopPropagation();
+                });
+            }
+
+            setTimeout(function () {
+                try { input.focus(); input.select(); } catch (e) {}
+            }, 30);
         });
     }
 
@@ -307,13 +356,14 @@
                 purchased: false
             };
             writeIntent(intent);
-            return queueTimedRecovery(intent).then(function (ref) {
+            // Queue timed reminder in the background — never block checkout or the dialog.
+            queueTimedRecovery(intent).then(function (ref) {
                 if (ref && ref.id) {
                     intent.firestoreId = ref.id;
                     writeIntent(intent);
                 }
-                return proceed(email);
-            });
+            }).catch(function () {});
+            return proceed(email);
         });
     }
 

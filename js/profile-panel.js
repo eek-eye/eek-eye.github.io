@@ -111,6 +111,7 @@
     if (!items.length) return;
     // Current Stripe flow is one product per checkout — start with first line item.
     var id = items[0].productId;
+    closePanel();
     if (window.EeksStripeCheckout && window.EeksStripeCheckout.startCheckout) {
       window.EeksStripeCheckout.startCheckout(id, null);
     } else {
