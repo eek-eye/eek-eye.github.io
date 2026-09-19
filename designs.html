@@ -1,0 +1,2025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Design Portfolio | EeksEye Creative TTRPG & Brand Designs</title>
+    <meta name="description" content="Browse the EeksEye design portfolio featuring custom creative work, tabletop RPG-inspired visuals, and branded digital design concepts.">
+    <meta name="keywords" content="EeksEye designs, design portfolio, TTRPG design, fantasy branding, custom graphics, RPG art direction, digital design showcase, creative studio portfolio">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <link rel="canonical" href="https://eekseye.com/designs">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="EeksEye">
+    <meta property="og:title" content="Design Portfolio | EeksEye Creative TTRPG & Brand Designs">
+    <meta property="og:description" content="Explore EeksEye's creative portfolio with custom design work inspired by tabletop gaming and fantasy aesthetics.">
+    <meta property="og:url" content="https://eekseye.com/designs">
+    <meta property="og:image" content="https://eekseye.com/images/tags.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Design Portfolio | EeksEye Creative TTRPG & Brand Designs">
+    <meta name="twitter:description" content="Explore EeksEye's creative portfolio with custom design work inspired by tabletop gaming and fantasy aesthetics.">
+    <meta name="twitter:image" content="https://eekseye.com/images/tags.png">
+    <link rel="icon" type="image/png" href="images/tags.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .page-transition-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index: 9999;
+            opacity: 1;
+            pointer-events: none;
+            transition: opacity 2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .page-transition-overlay.fade-out {
+            opacity: 0;
+        }
+
+        body {
+            opacity: 1;
+            position: relative;
+            z-index: 1;
+            background-color: #000;
+        }
+        body.designs-page {
+            --designs-sidebar-w: 0px;
+            background-color: #fff;
+            /* Override style.css: body has transform:scale(1) which breaks position:fixed (fixed sticks to body, not viewport) */
+            transform: none !important;
+        }
+
+        body.designs-page main {
+            position: relative;
+            z-index: 1;
+            margin-left: var(--designs-sidebar-w);
+            width: calc(100% - var(--designs-sidebar-w));
+            max-width: calc(100% - var(--designs-sidebar-w));
+            padding-inline: clamp(1rem, 2.5vw, 1.75rem);
+            box-sizing: border-box;
+        }
+
+        /* Left rail (matches Designs page mockup) */
+        .designs-left-sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: var(--designs-sidebar-w);
+            height: 100vh;
+            height: 100dvh;
+            background: #000;
+            border-right: 1px solid #1a1a1a;
+            z-index: 9990;
+            display: flex;
+            flex-direction: column;
+            font-family: 'Inter', sans-serif;
+            box-sizing: border-box;
+        }
+
+        body.designs-page .designs-left-sidebar {
+            display: none !important;
+        }
+
+        .designs-sidebar-brand {
+            background: #2d2d2d;
+            color: #fff;
+            font-weight: 700;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            padding: 0.85rem 0.75rem;
+            font-size: 0.95rem;
+            border-bottom: 1px solid #1a1a1a;
+            flex-shrink: 0;
+        }
+
+        .designs-sidebar-sub {
+            background: #5a1518;
+            color: #fff;
+            font-weight: 700;
+            text-align: center;
+            padding: 0.65rem 0.5rem;
+            font-size: 0.78rem;
+            letter-spacing: 0.04em;
+            border-bottom: 1px solid #1a1a1a;
+            flex-shrink: 0;
+        }
+
+        .designs-sidebar-nav {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            overflow-y: auto;
+            scrollbar-width: thin;
+        }
+
+        .designs-sidebar-link {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.4rem;
+            padding: 0.45rem 0.65rem 0.45rem 1.35rem;
+            color: #fff;
+            text-decoration: none;
+            border-bottom: 1px solid #222;
+            font-size: 0.62rem;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            line-height: 1.35;
+            transition: background 0.2s ease;
+            text-shadow: none;
+        }
+
+        .designs-sidebar-link > span:first-child {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .designs-sidebar-link:hover {
+            background: rgba(255, 255, 255, 0.05);
+            text-shadow: none;
+        }
+
+        .designs-sidebar-link[aria-current="page"] {
+            background: rgba(90, 21, 24, 0.45);
+        }
+
+        .designs-sidebar-status {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #00e676;
+            box-shadow: 0 0 6px rgba(0, 230, 118, 0.55);
+            flex-shrink: 0;
+        }
+
+        .designs-sidebar-footer {
+            border-top: 1px solid #222;
+            padding: 1rem 0.75rem;
+            text-align: center;
+            color: #888;
+            font-size: 0.75rem;
+            letter-spacing: 0.06em;
+            flex-shrink: 0;
+        }
+
+        .designs-sidebar-empty {
+            padding: 1rem 1.35rem;
+            color: #888;
+            font-size: 0.62rem;
+            line-height: 1.45;
+            border-bottom: 1px solid #222;
+        }
+
+        body.designs-page .contact-dropdown {
+            left: var(--designs-sidebar-w);
+        }
+
+        body.designs-page .contact-dropdown-overlay {
+            left: calc(var(--designs-sidebar-w) + 300px);
+        }
+
+        .transition-text {
+            position: fixed;
+            top: 50vh;
+            left: 50vw;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
+            color: white;
+            opacity: 0;
+            z-index: 1001;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+
+        .managed-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.5rem;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .managed-header .about-button {
+            margin: 0;
+            padding: 0.5rem 1rem;
+        }
+
+        .managed-header .menu-icon-container {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .managed-header .menu-icon {
+            font-size: 1.5rem;
+            padding: 0.5rem;
+            color: white;
+            transition: transform 0.3s;
+        }
+
+        .managed-header .menu-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: -2.6rem;
+            display: flex;
+            justify-content: center;
+            gap: 1.25rem;
+            padding: 0.35rem 1.5rem;
+            background: rgba(0, 0, 0, 0.82);
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+            text-align: center;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-size: 0.78rem;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-14px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            z-index: 1200;
+            flex-wrap: wrap;
+        }
+
+        .dropdown-menu.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        .dropdown-menu a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.2rem 0.6rem;
+            color: white;
+            text-decoration: none;
+            border-radius: 999px;
+            border: 1px solid transparent;
+            transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+            min-width: 70px;
+        }
+
+        .dropdown-menu a:hover {
+            border-color: rgba(255, 255, 255, 0.6);
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .menu-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .menu-icon {
+            cursor: pointer;
+            padding: 10px;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .menu-icon i {
+            color: #ff0000;
+        }
+
+        .menu-icon:hover i {
+            color: #ff4444;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.95);
+            min-width: 200px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1000;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dropdown-content a {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding-left: 24px;
+        }
+
+        .show {
+            display: block;
+        }
+
+        /* Contact Dropdown - match index */
+        .contact-dropdown {
+            position: fixed;
+            left: 0;
+            top: 5vh;
+            width: 300px;
+            height: 100vh;
+            background: transparent;
+            z-index: 99993;
+            display: none;
+            flex-direction: column;
+            padding: 2rem;
+            padding-top: calc(2rem + 16vh);
+            transform: translateX(-100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), top 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: auto;
+        }
+        .contact-dropdown.active {
+            display: flex !important;
+            transform: translateX(0);
+            pointer-events: auto !important;
+        }
+        .contact-dropdown.active * { pointer-events: auto !important; }
+        .contact-dropdown.active .contact-dropdown-button { pointer-events: auto !important; cursor: pointer !important; }
+        .contact-dropdown-button {
+            width: auto;
+            padding: 0.3rem 0.8rem;
+            margin-bottom: 0.5rem;
+            margin-left: -20%;
+            background: transparent;
+            border: none;
+            border-radius: 1rem;
+            color: #111;
+            text-shadow: none;
+            font-size: 0.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            position: relative;
+            overflow: hidden;
+            pointer-events: auto !important;
+            z-index: 10003;
+        }
+        .contact-dropdown-button:hover {
+            background: transparent;
+            color: #000;
+            text-shadow: none;
+            transform: translateY(-2px);
+        }
+        .contact-dropdown-overlay {
+            position: fixed;
+            top: 0;
+            left: 300px;
+            right: 0;
+            bottom: 0;
+            background: transparent;
+            z-index: 9999;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        .contact-dropdown-overlay.active {
+            display: block;
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Fixed header: whole nav (designs-nav-bar, nav-header-top-row, header-buttons-container) stays at top when user scrolls */
+        .designs-nav-bar {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            width: 100% !important;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.5rem;
+            /* Above .contact-dropdown-overlay (9999) so Season links stay clickable when Aesthetic menu is open */
+            z-index: 10050;
+            background: transparent;
+            pointer-events: none;
+        }
+        .designs-nav-bar > * {
+            pointer-events: auto;
+            position: relative;
+            z-index: 99991;
+        }
+        .designs-nav-bar .nav-header-top-row {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            width: auto;
+        }
+        .designs-nav-bar .header-top-left {
+            display: none;
+        }
+        .designs-nav-bar .header-buttons-container {
+            display: flex;
+            flex-direction: row;
+            gap: 0.1rem;
+            padding: 0.15rem 0.5rem;
+            align-items: center;
+            background: transparent;
+            z-index: 99992;
+        }
+        .designs-nav-bar .header-buttons-container a {
+            font-size: clamp(0.52rem, 0.95vw, 0.66rem);
+            padding: 0.3rem 0.75rem;
+            border-radius: 0.75rem;
+            color: #111;
+            background: none;
+            border: none;
+            text-shadow: none;
+            box-shadow: none;
+            transition: all 0.3s ease;
+        }
+        .designs-nav-bar .currency-button {
+            font-size: clamp(0.48rem, 0.88vw, 0.62rem);
+            padding: 0.28rem 0.68rem;
+            border-radius: 0.75rem;
+            color: #111;
+            background: none;
+            border: none;
+            text-shadow: none;
+            box-shadow: none;
+            transition: all 0.3s ease;
+        }
+        .designs-nav-bar .header-buttons-container a:hover,
+        .designs-nav-bar .currency-button:hover {
+            transform: translateY(-1px);
+            text-shadow: none;
+            color: #000;
+        }
+
+        /* Ink splash overlay effect */
+        .ink-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 110%;
+            max-width: 600px;
+            min-width: 120px;
+            height: auto;
+            pointer-events: none;
+            opacity: 0.8;
+            transform: translate(-50%, -50%) rotate(-7deg);
+            z-index: 3;
+            filter: drop-shadow(0 0 12px #fff3) blur(0.2px);
+            transition: opacity 0.4s;
+        }
+
+        /* Currency selector in nav bar */
+        .header-buttons-container .currency-selector {
+            position: relative;
+            display: inline-block;
+        }
+        .designs-nav-bar .currency-selector {
+            position: relative;
+        }
+        .currency-selector {
+            position: relative;
+        }
+        .currency-button {
+            font-size: 0.5rem;
+            padding: 0.3rem 0.8rem;
+            border-radius: 1rem;
+            color: white;
+            border: none;
+            background: transparent;
+            transition: all 0.3s ease;
+            pointer-events: auto;
+            cursor: pointer;
+            z-index: 99993;
+            opacity: 1 !important;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-family: inherit;
+            text-decoration: none;
+        }
+        .currency-button:hover {
+            background: none;
+            transform: translateY(-2px);
+        }
+        .currency-button i {
+            font-size: 0.48rem;
+        }
+        .designs-nav-bar .currency-button i {
+            font-size: 0.36rem;
+        }
+        .currency-dropdown {
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            left: 0;
+            background: rgba(0, 0, 0, 0.95);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            min-width: 150px;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 99994;
+        }
+        .designs-nav-bar .currency-dropdown {
+            z-index: 99994;
+        }
+        .currency-dropdown.active {
+            display: flex;
+        }
+        .currency-option {
+            padding: 0.5rem 0.75rem;
+            color: white;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            font-size: 0.75rem;
+        }
+        .currency-option:hover,
+        .currency-option.active {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .currency-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.15rem;
+        }
+        .currency-info .currency-code {
+            font-size: 0.65rem;
+            opacity: 0.8;
+        }
+        /* Aesthetic dropdown - match index */
+        .aesthetic-dropdown {
+            display: none;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 0;
+            margin-top: 0;
+            background: transparent;
+            pointer-events: auto;
+        }
+        .aesthetic-dropdown.active {
+            display: flex !important;
+            pointer-events: auto !important;
+            position: relative;
+            z-index: 99994;
+        }
+        .aesthetic-dropdown-button {
+            width: auto;
+            padding: 0.3rem 0.8rem;
+            margin: 0;
+            background: transparent;
+            border: none;
+            border-radius: 1rem;
+            color: #111;
+            font-size: 0.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            text-shadow: none;
+            text-decoration: none;
+        }
+        .aesthetic-dropdown-button:hover {
+            background: transparent;
+            color: #000;
+            text-shadow: none;
+            transform: translateY(-2px);
+        }
+        /* Tab buttons (Covers / Archived) - larger than nav links, same hover image as other buttons */
+        .designs-nav-bar .tab-button {
+            position: relative;
+            overflow: hidden;
+            padding: 0.28rem 0.72rem;
+            font-size: 0.62rem;
+            line-height: 1;
+            font-weight: inherit;
+            border: none;
+            border-radius: 0.75rem;
+            background: none;
+            color: #111;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+            -webkit-appearance: none;
+            appearance: none;
+            text-shadow: none;
+            box-shadow: none;
+        }
+        .designs-nav-bar .tab-button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('images/bloody-x.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+            pointer-events: none;
+        }
+        .designs-nav-bar .tab-button:hover {
+            transform: translateY(-1px);
+            text-shadow: none;
+            color: #000;
+        }
+        .designs-nav-bar .tab-button:hover::after {
+            opacity: 1;
+        }
+        .designs-nav-bar .tab-button.active {
+            color: #000;
+            background: none;
+            text-shadow: none;
+        }
+        main {
+            padding-top: 5rem;
+            position: relative;
+            min-height: 100vh;
+            z-index: 1;
+        }
+
+        body.designs-page .hero-section-3 {
+            position: relative;
+            width: 100%;
+            min-height: auto;
+            padding: 4rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+            box-sizing: border-box;
+        }
+
+        body.designs-page .hero-section-3-container {
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #121212;
+            border-radius: 0;
+            box-shadow: 0 4px 28px rgba(0, 0, 0, 0.35);
+            padding: 3rem 2rem;
+            box-sizing: border-box;
+        }
+
+        body.designs-page .hero-section-3-cards {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2.5rem;
+            align-items: stretch;
+        }
+
+        body.designs-page .hero-section-3-card {
+            background: #262626;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0;
+        }
+
+        body.designs-page .hero-section-3-icon {
+            font-size: 2.5rem;
+            color: #f0f0f0;
+            margin-bottom: 1.25rem;
+            line-height: 1;
+        }
+
+        body.designs-page .hero-section-3-icon i {
+            font-weight: 400;
+        }
+
+        body.designs-page .hero-section-3-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #fff;
+            margin: 0 0 1rem 0;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+        }
+
+        body.designs-page .hero-section-3-desc {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #b8b8b8;
+            margin: 0 0 1.5rem 0;
+            flex-grow: 1;
+        }
+
+        body.designs-page .hero-section-3-btn {
+            display: inline-block;
+            padding: 0.6rem 1.5rem;
+            background: transparent;
+            color: #fff;
+            border: 1px solid #fff;
+            border-radius: 0;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: background 0.2s, color 0.2s, border-color 0.2s;
+        }
+
+        body.designs-page .hero-section-3-btn:hover {
+            background: transparent;
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.85);
+        }
+
+        @media (max-width: 768px) {
+            body.designs-page .hero-section-3-cards {
+                grid-template-columns: 1fr;
+            }
+
+            body.designs-page .hero-section-3 {
+                padding: 2rem 1rem;
+            }
+
+            body.designs-page .hero-section-3-container {
+                padding: 1.75rem 1.25rem;
+            }
+        }
+
+        .designs-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.15rem;
+            padding: 2rem 0;
+            margin-left: auto;
+            margin-right: auto;
+            max-width: 1400px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        @media (max-width: 1200px) {
+            .designs-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        body, html {
+            overflow-x: hidden;
+        }
+
+        .design-card {
+            position: relative;
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            background: #000;
+            display: block;
+            padding: 8px;
+            border-radius: 2px;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1;
+            /* Fancy frame: outer shadow + layered borders + drop shadow under card */
+            box-shadow:
+                0 0 0 1px rgba(255, 255, 255, 0.06),
+                0 0 0 3px #0a0a0a,
+                0 0 0 4px rgba(255, 255, 255, 0.12),
+                0 0 0 6px #111,
+                0 8px 24px rgba(0, 0, 0, 0.5),
+                0 16px 48px rgba(0, 0, 0, 0.4),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+        }
+
+        /* Cover artwork removed for now — keep tiles tall enough for title strip */
+        #covers-section .design-card {
+            min-height: 148px;
+        }
+
+        /* Posters / ads: show full art (not forced square crop) */
+        #advertisements-section .design-card img {
+            aspect-ratio: auto;
+            max-height: min(75vh, 520px);
+            object-fit: contain;
+            background: #0a0a0a;
+        }
+
+        .design-card::before {
+            content: '';
+            position: absolute;
+            inset: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 1px;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        .design-card:hover {
+            box-shadow:
+                0 0 0 1px rgba(255, 255, 255, 0.1),
+                0 0 0 3px #0a0a0a,
+                0 0 0 4px rgba(255, 255, 255, 0.2),
+                0 0 0 6px #111,
+                0 12px 32px rgba(0, 0, 0, 0.55),
+                0 24px 56px rgba(0, 0, 0, 0.45),
+                0 0 24px rgba(255, 255, 255, 0.03),
+                inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+        }
+        
+        .design-card img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+            aspect-ratio: 1 / 1;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            border-radius: 1px;
+        }
+
+        .design-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 0.65rem 0.75rem;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.9) 0%, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 0) 100%);
+            color: #fff;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 10;
+        }
+
+        .design-info h3 {
+            font-size: 0.78rem;
+            margin: 0;
+            font-weight: 600;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .design-actions {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.3s ease;
+        }
+
+        .action-button {
+            background: none;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: none;
+        }
+
+        .action-button:hover {
+            background: none;
+            transform: scale(1.1);
+        }
+
+        .action-button i {
+            color: #333;
+            font-size: 1.1rem;
+            filter: none;
+        }
+        .action-button:hover i {
+            filter: none;
+        }
+
+        .like-button.liked i {
+            color: #ff3b3b;
+        }
+
+        @media (max-width: 768px) {
+            body.designs-page {
+                --designs-sidebar-w: 0px;
+            }
+
+            .designs-left-sidebar {
+                display: none;
+            }
+
+            .designs-grid {
+                grid-template-columns: repeat(2, 1fr);
+                padding: 1rem 0;
+                gap: 0.6rem;
+            }
+            
+            .design-info h3 {
+                font-size: 0.72rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .designs-grid {
+                grid-template-columns: 1fr;
+                padding: 1rem 0;
+            }
+        }
+
+        /* Content sections */
+        .content-section {
+            display: none;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        /* Designs page: footer column offset for sidebar */
+        body.designs-page .explore-footer-scale-wrap {
+            margin-left: var(--designs-sidebar-w);
+            width: calc(100% - var(--designs-sidebar-w));
+            max-width: calc(100% - var(--designs-sidebar-w));
+            box-sizing: border-box;
+            padding-left: clamp(2rem, 5vw, 3.5rem);
+            padding-right: clamp(1rem, 2.5vw, 1.75rem);
+        }
+
+        @supports not (zoom: 1) {
+            body.designs-page .explore-footer-scale-wrap {
+                width: calc((100% - var(--designs-sidebar-w)) / 0.67);
+                margin-left: var(--designs-sidebar-w);
+                margin-right: 0;
+            }
+        }
+
+        body.designs-page .site-footer.explore-footer-editorial {
+            margin-left: 0;
+            width: 100%;
+            max-width: 100%;
+            padding-inline: 0;
+        }
+
+        body.designs-page .explore-footer-grid > .explore-footer-col:first-child {
+            padding-left: clamp(3.25rem, 8vw, 6rem);
+        }
+
+        /* No pink glow: override global .nav-link from style.css + local controls */
+        body.designs-page a.nav-link,
+        body.designs-page .nav-link,
+        body.designs-page a.nav-link:hover,
+        body.designs-page .nav-link:hover {
+            text-shadow: none !important;
+            filter: none !important;
+        }
+
+        body.designs-page .designs-sidebar-link,
+        body.designs-page .designs-sidebar-link:hover {
+            text-shadow: none !important;
+        }
+
+        body.designs-page .designs-sidebar-status {
+            box-shadow: none;
+        }
+
+        body.designs-page .contact-dropdown-button {
+            text-shadow: none !important;
+            color: #000 !important;
+            background: transparent !important;
+            border: none !important;
+        }
+
+        body.designs-page .contact-dropdown-button:hover {
+            text-shadow: none !important;
+            color: #000 !important;
+            background: transparent !important;
+            border: none !important;
+        }
+
+        /* Header: no pill backgrounds (nav bar excluded from page invert) */
+        body.designs-page .designs-nav-bar .header-buttons-container a,
+        body.designs-page .designs-nav-bar .currency-button {
+            text-shadow: none !important;
+            color: #000 !important;
+            background: transparent !important;
+            border: none !important;
+        }
+
+        body.designs-page .designs-nav-bar .header-buttons-container a:hover,
+        body.designs-page .designs-nav-bar .currency-button:hover {
+            text-shadow: none !important;
+            color: #000 !important;
+            background: transparent !important;
+            border: none !important;
+        }
+
+        body.designs-page .designs-nav-bar .currency-button i {
+            color: #000 !important;
+        }
+
+        body.designs-page .aesthetic-dropdown-button {
+            text-shadow: none !important;
+            color: #000 !important;
+            background: transparent !important;
+            border: none !important;
+        }
+
+        body.designs-page .aesthetic-dropdown-button:hover {
+            text-shadow: none !important;
+            color: #000 !important;
+            background: transparent !important;
+            border: none !important;
+        }
+
+        body.designs-page .designs-nav-bar .tab-button {
+            text-shadow: none !important;
+            color: #000 !important;
+            background: transparent !important;
+            border: none !important;
+        }
+
+        body.designs-page .designs-nav-bar .tab-button:hover {
+            text-shadow: none !important;
+            color: #000 !important;
+            background: transparent !important;
+            border: none !important;
+        }
+
+        body.designs-page .designs-nav-bar .tab-button.active {
+            text-shadow: none !important;
+            color: #000 !important;
+            background: transparent !important;
+            border: none !important;
+            font-weight: 700;
+            text-decoration: underline;
+            text-underline-offset: 0.2em;
+        }
+
+        body.designs-page .designs-nav-bar .tab-button:hover::after,
+        body.designs-page .designs-nav-bar .tab-button.active::after {
+            opacity: 0;
+        }
+
+        body.designs-page .action-button i,
+        body.designs-page .action-button:hover i {
+            filter: none !important;
+        }
+
+        /* Footer: strip global .nav-link pink glow from style.css (this page only) */
+        body.designs-page .site-footer.explore-footer-editorial .nav-link,
+        body.designs-page .site-footer.explore-footer-editorial .nav-link:hover {
+            text-shadow: none !important;
+            filter: none !important;
+            transform: none;
+            opacity: 1;
+        }
+
+        body.designs-page .site-footer.explore-footer-editorial .explore-footer-link,
+        body.designs-page .site-footer.explore-footer-editorial .explore-footer-link:hover,
+        body.designs-page .site-footer.explore-footer-editorial .explore-footer-link--underline,
+        body.designs-page .site-footer.explore-footer-editorial .explore-footer-link--underline:hover {
+            text-shadow: none !important;
+        }
+
+        body.designs-page .explore-footer-bottom a,
+        body.designs-page .explore-footer-bottom a:hover {
+            text-shadow: none !important;
+        }
+
+        body.designs-page .scroll-top {
+            background-color: transparent !important;
+            border-color: rgba(255, 255, 255, 0.4);
+            text-shadow: none !important;
+            filter: none !important;
+        }
+
+        body.designs-page .scroll-top:hover {
+            background-color: transparent !important;
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.5);
+            text-shadow: none !important;
+            filter: none !important;
+        }
+
+        /*
+         * Inverted (light) look on designs page only.
+         * Apply filter per region (not on body) so position:fixed nav/dropdowns stay viewport-anchored.
+         */
+        body.designs-page .designs-left-sidebar,
+        body.designs-page .x-border,
+        body.designs-page .x-line,
+        body.designs-page main,
+        body.designs-page .index-cards-footer-scale,
+        body.designs-page .explore-footer-scale-wrap {
+            filter: invert(1) hue-rotate(180deg);
+        }
+
+        body.designs-page main img,
+        body.designs-page .index-cards-footer-scale img,
+        body.designs-page .explore-footer-scale-wrap img,
+        body.designs-page main video,
+        body.designs-page .index-cards-footer-scale video {
+            filter: invert(1) hue-rotate(180deg);
+        }
+    
+        /* Google auth header control */
+        .google-auth-signed-in {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            color: #f5f5f5;
+            font-size: 0.85rem;
+        }
+        .google-auth-signed-in[hidden],
+        .google-auth-error[hidden] { display: none !important; }
+        .google-auth-photo {
+            width: 1.35rem;
+            height: 1.35rem;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .google-auth-identity { white-space: nowrap; }
+        .google-auth-error {
+            color: #ff8a80;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body class="dark-theme designs-page">
+    <div class="page-transition-overlay"></div>
+    <aside class="designs-left-sidebar" aria-label="All designs" data-translate-aria="sidebarAllDesigns">
+        <div class="designs-sidebar-brand" data-translate="sidebarBrand">EEKSEYE</div>
+        <div class="designs-sidebar-sub" data-translate="sidebarSub">Fawzi v2,111,789</div>
+        <nav class="designs-sidebar-nav" id="designs-sidebar-nav"></nav>
+        <footer class="designs-sidebar-footer" data-translate="sidebarCopyright">© 2026 EEKS-EYE</footer>
+    </aside>
+    <div class="contact-dropdown-overlay" id="contactDropdownOverlay"></div>
+    <div class="x-border x-border-left">X</div>
+    <div class="x-border x-border-right">I</div>
+    
+    <div class="x-line">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</div>
+
+    <div class="designs-nav-bar">
+            <div class="nav-header-top-row">
+                <div class="header-top-left"></div>
+                <div class="header-buttons-container">
+                    <a href="index.html" class="explore-button nav-link" data-translate="home">Home</a>
+                    <a href="#" class="explore-button nav-link aesthetic-button" id="headerAestheticButton" data-translate="aesthetic">Aesthetic</a>
+                    <a href="about.html" class="about-button nav-link" data-translate="why">Why?</a>
+                    <a href="#" class="explore-button nav-link contact-button" id="headerContactButton" data-translate="contact">Contact</a>
+                <a href="#" class="explore-button nav-link" id="googleSignInButton" role="button">Continue with Google</a>
+                <div id="googleAuthSignedIn" class="google-auth-signed-in" hidden aria-live="polite"></div>
+                <div id="googleAuthError" class="google-auth-error" hidden role="alert"></div>
+                    <button type="button" class="tab-button active" id="covers-tab" data-section="covers-section" data-translate="tabCovers">Covers</button>
+                    <button type="button" class="tab-button" id="advertisements-tab" data-section="advertisements-section" data-translate="tabAdvertisements">Advertisements/Posters</button>
+                    <button type="button" class="tab-button" id="posters-tab" data-section="posters-section" data-translate="tabArchived">Archived</button>
+                </div>
+            </div>
+            <div class="contact-dropdown" id="contactDropdown">
+                <a href="contact.html" class="contact-dropdown-button nav-link" data-translate="contact">Contact</a>
+                <a href="news.html" class="contact-dropdown-button nav-link" data-translate="news">News</a>
+                <a href="#" class="contact-dropdown-button nav-link" data-translate="button3">Button 3</a>
+                <a href="#" class="contact-dropdown-button nav-link" data-translate="button4">Button 4</a>
+            </div>
+            <div class="aesthetic-dropdown" id="aestheticDropdown">
+                <a href="explore.html?season=1" class="aesthetic-dropdown-button nav-link" data-translate="season1">Season 1</a>
+                <a href="explore.html?season=2" class="aesthetic-dropdown-button nav-link" data-translate="season2">Season 2</a>
+                <a href="explore.html?season=3" class="aesthetic-dropdown-button nav-link" data-translate="season3">Season 3</a>
+            </div>
+    </div>
+
+    <div class="logo-transition-overlay"></div>
+
+    <main>
+        <!-- Covers Section -->
+        <div id="covers-section" class="content-section active">
+            <div class="designs-grid">
+            <!-- UFO -->
+            <a href="design-detail.html?id=ufo" class="design-card nav-link">
+                <div class="design-info">
+                    <h3>UFO</h3>
+                </div>
+            </a>
+
+            <!-- In Love With You -->
+            <a href="design-detail.html?id=in-love-with-you" class="design-card nav-link">
+                <div class="design-info">
+                    <h3>In Love With You</h3>
+                </div>
+            </a>
+
+            <!-- Interstella -->
+            <a href="design-detail.html?id=interstella" class="design-card nav-link">
+                <div class="design-info">
+                    <h3>Interstella</h3>
+                </div>
+            </a>
+
+            <!-- Destiny vs Plans -->
+            <a href="design-detail.html?id=destiny-vs-plans" class="design-card nav-link">
+                <div class="design-info">
+                    <h3>Destiny vs Plans</h3>
+                </div>
+            </a>
+
+            <!-- Eeks Eye -->
+            <a href="design-detail.html?id=eeks-eye" class="design-card nav-link">
+                <div class="design-info">
+                    <h3>Eeks Eye</h3>
+                </div>
+            </a>
+
+            <!-- Another Dimensions -->
+            <a href="design-detail.html?id=another-dimensions" class="design-card nav-link">
+                <div class="design-info">
+                    <h3>Another Dimensions</h3>
+                </div>
+            </a>
+
+            <!-- Rockstar -->
+            <a href="design-detail.html?id=rockstar" class="design-card nav-link">
+                <div class="design-info">
+                    <h3>Rockstar</h3>
+                </div>
+            </a>
+
+            <!-- Unguided -->
+            <a href="design-detail.html?id=unguided" class="design-card nav-link">
+                <div class="design-info">
+                    <h3>Unguided</h3>
+                </div>
+            </a>
+
+            <!-- Seek -->
+            <a href="design-detail.html?id=seek" class="design-card nav-link">
+                <div class="design-info">
+                    <h3>Seek</h3>
+                </div>
+            </a>
+
+            <!-- Vibration -->
+            <a href="design-detail.html?id=vibration" class="design-card nav-link">
+                <div class="design-info">
+                    <h3>Vibration</h3>
+                </div>
+            </a>
+
+            <!-- CH@0S -->
+            <a href="design-detail.html?id=chaos" class="design-card nav-link">
+                <div class="design-info">
+                    <h3>CH@0S</h3>
+                </div>
+            </a>
+
+            <!-- 5 Scenes -->
+            <a href="design-detail.html?id=5-scenes" class="design-card nav-link">
+                <div class="design-info">
+                    <h3>5 Scenes</h3>
+                </div>
+            </a>
+
+            <!-- Dark Side -->
+            <a href="design-detail.html?id=dark-side" class="design-card nav-link">
+                <div class="design-info">
+                    <h3>Dark Side</h3>
+                </div>
+            </a>
+
+            <!-- Martyr -->
+            <a href="design-detail.html?id=martyr" class="design-card nav-link">
+                <div class="design-info">
+                    <h3>Martyr</h3>
+                </div>
+            </a>
+
+            <!-- Opium type cover -->
+            <a href="design-detail.html?id=vampire" class="design-card nav-link">
+                <div class="design-info">
+                    <h3>V.A.M.P.I.R.E</h3>
+                </div>
+            </a>
+
+            <!-- Cured -->
+            <a href="design-detail.html?id=cured" class="design-card nav-link">
+                <div class="design-info">
+                    <h3>Cured</h3>
+                </div>
+            </a>
+
+            <!-- Wait.. I'M Sorry -->
+            <a href="design-detail.html?id=wait-im-sorry" class="design-card nav-link">
+                <div class="design-info">
+                    <h3>Wait.. I'M Sorry</h3>
+                </div>
+            </a>
+
+            <!-- Truth Should Set You Free -->
+            <a href="design-detail.html?id=truth-should-set-you-free" class="design-card nav-link">
+                <div class="design-info">
+                    <h3>Truth Should Set You Free</h3>
+                </div>
+            </a>
+
+            <!-- Figure 10 -->
+            <a href="design-detail.html?id=figure-10" class="design-card nav-link">
+                <div class="design-info">
+                    <h3>Figure 10</h3>
+                </div>
+            </a>
+
+            <!-- Villain -->
+            <a href="design-detail.html?id=villain" class="design-card nav-link">
+                <div class="design-info">
+                    <h3>Villain</h3>
+                </div>
+            </a>
+
+            <!-- Piss em OFF -->
+            <a href="design-detail.html?id=piss-em-off" class="design-card nav-link">
+                <div class="design-info">
+                    <h3>Piss em OFF</h3>
+                </div>
+            </a>
+
+            <!-- New Maps -->
+            <a href="design-detail.html?id=new-maps" class="design-card nav-link">
+                <div class="design-info">
+                    <h3>New Maps</h3>
+                </div>
+            </a>
+
+            <!-- LOst -->
+            <a href="design-detail.html?id=lost" class="design-card nav-link">
+                <div class="design-info">
+                    <h3>LOst</h3>
+                </div>
+            </a>
+
+            <!-- Alluring & -->
+            <a href="design-detail.html?id=alluring" class="design-card nav-link">
+                <div class="design-info">
+                    <h3>Alluring &</h3>
+                </div>
+            </a>
+
+            <!-- Distortion -->
+            <a href="design-detail.html?id=distortion" class="design-card nav-link">
+                <div class="design-info">
+                    <h3>Distortion</h3>
+                </div>
+            </a>
+
+            <!-- Nightmare -->
+            <a href="design-detail.html?id=nightmare" class="design-card nav-link">
+                <div class="design-info">
+                    <h3>Nightmare</h3>
+                </div>
+            </a>
+
+            <!-- Silloute -->
+            <a href="design-detail.html?id=silloute" class="design-card nav-link">
+                <div class="design-info">
+                    <h3>Silloute</h3>
+                </div>
+            </a>
+            </div>
+        </div>
+        
+        <!-- Archived Section -->
+        <div id="posters-section" class="content-section">
+            <div class="designs-grid">
+                <!-- Archived images will be displayed here -->
+                <!-- You can add archived images similar to the covers above -->
+                <div style="text-align: center; padding: 4rem; color: #fff;">
+                    <h2 data-translate="archiveSectionTitle">Archive Coming Soon</h2>
+                    <p data-translate="archiveSectionBody">Archived images will be displayed here</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Advertisements / Posters Section -->
+        <div id="advertisements-section" class="content-section">
+            <div class="designs-grid">
+            <a href="Posters/Bahahahaha.jpg" class="design-card nav-link" target="_blank" rel="noopener noreferrer" aria-label="Open Bahahahaha poster full size">
+                <img src="Posters/Bahahahaha.jpg" alt="Bahahahaha">
+                <div class="design-info">
+                    <h3>Bahahahaha</h3>
+                </div>
+            </a>
+            <a href="Posters/I.jpg" class="design-card nav-link" target="_blank" rel="noopener noreferrer" aria-label="Open I poster full size">
+                <img src="Posters/I.jpg" alt="I">
+                <div class="design-info">
+                    <h3>I</h3>
+                </div>
+            </a>
+            <a href="Posters/Pain.jpg" class="design-card nav-link" target="_blank" rel="noopener noreferrer" aria-label="Open Pain poster full size">
+                <img src="Posters/Pain.jpg" alt="Pain">
+                <div class="design-info">
+                    <h3>Pain</h3>
+                </div>
+            </a>
+            <a href="Posters/Ush-Ush.jpg" class="design-card nav-link" target="_blank" rel="noopener noreferrer" aria-label="Open Ush-Ush poster full size">
+                <img src="Posters/Ush-Ush.jpg" alt="Ush-Ush">
+                <div class="design-info">
+                    <h3>Ush-Ush</h3>
+                </div>
+            </a>
+            <a href="Posters/Walter%20Weight.jpg" class="design-card nav-link" target="_blank" rel="noopener noreferrer" aria-label="Open Walter Weight poster full size">
+                <img src="Posters/Walter%20Weight.jpg" alt="Walter Weight">
+                <div class="design-info">
+                    <h3>Walter Weight</h3>
+                </div>
+            </a>
+            <a href="Posters/XI.jpg" class="design-card nav-link" target="_blank" rel="noopener noreferrer" aria-label="Open XI poster full size">
+                <img src="Posters/XI.jpg" alt="XI">
+                <div class="design-info">
+                    <h3>XI</h3>
+                </div>
+            </a>
+            </div>
+        </div>
+    </main>
+
+    <div class="index-cards-footer-scale">
+        <section class="hero-section-3" aria-label="Services" data-translate-aria="ariaServicesSection">
+            <div class="hero-section-3-container">
+                <div class="hero-section-3-cards">
+                    <div class="hero-section-3-card">
+                        <div class="hero-section-3-icon"><i class="fas fa-square-xmark" aria-hidden="true"></i></div>
+                        <h3 class="hero-section-3-title" data-translate="svcWebTitle">Website Design</h3>
+                        <p class="hero-section-3-desc" data-translate="svcWebDesc">Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ut labore et magna aliqua.</p>
+                        <a href="#" class="hero-section-3-btn" data-translate="learnMore">LEARN MORE</a>
+                    </div>
+                    <div class="hero-section-3-card">
+                        <div class="hero-section-3-icon"><i class="fas fa-at" aria-hidden="true"></i></div>
+                        <h3 class="hero-section-3-title" data-translate="svcGoogleTitle">Google Advertise</h3>
+                        <p class="hero-section-3-desc" data-translate="svcGoogleDesc">Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ut labore et magna aliqua.</p>
+                        <a href="#" class="hero-section-3-btn" data-translate="learnMore">LEARN MORE</a>
+                    </div>
+                    <div class="hero-section-3-card">
+                        <div class="hero-section-3-icon"><i class="fas fa-envelope" aria-hidden="true"></i></div>
+                        <h3 class="hero-section-3-title" data-translate="svcEmailTitle">E-mail Hosting</h3>
+                        <p class="hero-section-3-desc" data-translate="svcEmailDesc">Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ut labore et magna aliqua.</p>
+                        <a href="#" class="hero-section-3-btn" data-translate="learnMore">LEARN MORE</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <div class="explore-footer-scale-wrap">
+    <footer class="site-footer explore-footer-editorial">
+        <div class="explore-footer-grid">
+            <div class="explore-footer-col">
+                <h2 class="explore-footer-heading" data-translate="footerNewsletter">Newsletter</h2>
+                <p class="explore-footer-note">
+                    <a href="contact.html" class="explore-footer-link explore-footer-link--underline nav-link" data-translate="footerSubscribeNewsletter">Subscribe to our newsletter</a>
+                </p>
+            </div>
+            <div class="explore-footer-col">
+                <h2 class="explore-footer-heading" data-translate="footerClientServices">Client services</h2>
+                <ul class="explore-footer-list">
+                    <li><a href="faq.html" class="explore-footer-link nav-link" data-translate="faq">FAQ</a></li>
+                    <li><a href="#" class="explore-footer-link nav-link" data-translate="footerTrackOrder">Track order</a></li>
+                    <li><a href="#" class="explore-footer-link nav-link" data-translate="footerExchanges">Exchanges and returns</a></li>
+                    <li><a href="#" class="explore-footer-link nav-link" data-translate="footerShipping">Shipping</a></li>
+                    <li><a href="#" class="explore-footer-link nav-link" data-translate="footerPayment">Payment</a></li>
+                    <li><a href="#" class="explore-footer-link nav-link" data-translate="footerResell">Re-sell program</a></li>
+                </ul>
+            </div>
+            <div class="explore-footer-col">
+                <h2 class="explore-footer-heading" data-translate="footerCompany">The company</h2>
+                <ul class="explore-footer-list">
+                    <li><a href="#" class="explore-footer-link nav-link" data-translate="footerLegal">Legal</a></li>
+                    <li><a href="#" class="explore-footer-link nav-link" data-translate="footerPrivacy">Privacy policy</a></li>
+                    <li><a href="#" class="explore-footer-link nav-link" data-translate="footerCookie">Cookie policy</a></li>
+                    <li><a href="#" class="explore-footer-link nav-link" data-translate="footerCookiesDoNotSell">Cookies settings and do not sell or share</a></li>
+                    <li><a href="what-you-need-to-know.html" class="explore-footer-link nav-link" data-translate="footerWYNTK">What you need to know</a></li>
+                </ul>
+            </div>
+            <div class="explore-footer-col">
+                <h2 class="explore-footer-heading" data-translate="footerFollow">Follow us</h2>
+                <ul class="explore-footer-list">
+                    <li><a href="#" class="explore-footer-link nav-link" target="_blank" rel="noopener noreferrer" data-translate="footerFacebook">Facebook</a></li>
+                    <li><a href="https://www.instagram.com/eeks.eye/" class="explore-footer-link nav-link" target="_blank" rel="noopener noreferrer" data-translate="footerInstagram">Instagram</a></li>
+                    <li><a href="#" class="explore-footer-link nav-link" target="_blank" rel="noopener noreferrer" data-translate="footerTikTok">TikTok</a></li>
+                    <li><a href="#" class="explore-footer-link nav-link" target="_blank" rel="noopener noreferrer" data-translate="footerPinterest">Pinterest</a></li>
+                    <li><a href="#" class="explore-footer-link nav-link" target="_blank" rel="noopener noreferrer" data-translate="footerLinkedIn">LinkedIn</a></li>
+                </ul>
+            </div>
+            <div class="explore-footer-col">
+                <h2 class="explore-footer-heading" data-translate="footerContactUs">Contact us</h2>
+                <p class="explore-footer-note" data-translate="footerAdvisorsHours">Our client advisors are available Mon–Fri 9am – 9pm ET &amp; Sat 10am – 7pm ET</p>
+                <h3 class="explore-footer-subhead" data-translate="footerLivechat">Livechat</h3>
+                <p class="explore-footer-note"><a href="contact.html" class="explore-footer-link explore-footer-link--underline nav-link" data-translate="footerUnavailable">Our client advisors are currently unavailable</a></p>
+                <h3 class="explore-footer-subhead" data-translate="footerCallUs">Call us</h3>
+                <p class="explore-footer-note"><a href="tel:+16468891895" class="explore-footer-link nav-link">+1 646 889 1895</a></p>
+                <h3 class="explore-footer-subhead" data-translate="footerEmailUs">Email us</h3>
+                <p class="explore-footer-note"><a href="contact.html" class="explore-footer-link explore-footer-link--underline nav-link" data-translate="footerEmailUs">Email us</a></p>
+            </div>
+        </div>
+        <div class="explore-footer-bottom">
+            <a href="#" id="copyright-link" data-translate="copyrightFooter">© 2026 Eeks Eye</a>
+        </div>
+    </footer>
+
+    <div class="x-line">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</div>
+    </div>
+
+    <div id="copyright-modal" style="display:none; position:fixed; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.7); z-index:99999; align-items:center; justify-content:center;">
+        <div style="background:#fff; color:#111; max-width:90vw; width:400px; padding:2rem 1.5rem; border-radius:10px; box-shadow:0 8px 32px #000a; position:relative; text-align:center;">
+            <button id="close-copyright-modal" style="position:absolute; top:10px; right:15px; background:none; border:none; font-size:1.5rem; color:#111; cursor:pointer;" aria-label="Close" data-translate-aria="ariaClose">&times;</button>
+            <h3 style="margin-bottom:1rem;" data-translate="copyrightModalTitle">Copyright Notice</h3>
+            <p style="font-size:1.05rem; line-height:1.6;" data-translate="copyrightModalBody">All content, images, and designs on this site are owned and operated by Eeks Eye. No part of this website may be copied, reproduced, or used without express written permission from Eeks Eye. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script src="js/page-transition.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Tab switching functionality
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const contentSections = document.querySelectorAll('.content-section');
+
+        tabButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons and sections
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                contentSections.forEach(section => section.classList.remove('active'));
+
+                // Add active class to clicked button
+                this.classList.add('active');
+
+                // Show corresponding section
+                const targetSection = document.getElementById(this.getAttribute('data-section'));
+                if (targetSection) {
+                    targetSection.classList.add('active');
+                }
+
+                refreshSidebarForActiveTab();
+            });
+        });
+
+        // Contact and Aesthetic dropdown - match index
+        const headerContactButton = document.getElementById('headerContactButton');
+        const headerAestheticButton = document.getElementById('headerAestheticButton');
+        const contactDropdown = document.getElementById('contactDropdown');
+        const aestheticDropdown = document.getElementById('aestheticDropdown');
+        const contactDropdownOverlay = document.getElementById('contactDropdownOverlay');
+        function updateOverlay() {
+            const contactOpen = contactDropdown && contactDropdown.classList.contains('active');
+            const aestheticOpen = aestheticDropdown && aestheticDropdown.classList.contains('active');
+            if (contactDropdownOverlay) {
+                if (contactOpen || aestheticOpen) {
+                    contactDropdownOverlay.classList.add('active');
+                } else {
+                    contactDropdownOverlay.classList.remove('active');
+                }
+            }
+        }
+        function closeContactDropdown() {
+            if (contactDropdown) contactDropdown.classList.remove('active');
+            updateOverlay();
+        }
+        function closeAestheticDropdown() {
+            if (aestheticDropdown) aestheticDropdown.classList.remove('active');
+            updateOverlay();
+        }
+        function toggleContactDropdown() {
+            if (aestheticDropdown) aestheticDropdown.classList.remove('active');
+            if (contactDropdown) contactDropdown.classList.toggle('active');
+            updateOverlay();
+        }
+        function toggleAestheticDropdown() {
+            if (contactDropdown) contactDropdown.classList.remove('active');
+            if (aestheticDropdown) aestheticDropdown.classList.toggle('active');
+            updateOverlay();
+        }
+        if (headerContactButton) {
+            headerContactButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleContactDropdown();
+            });
+        }
+        if (headerAestheticButton) {
+            headerAestheticButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleAestheticDropdown();
+            }, true);
+        }
+        if (contactDropdownOverlay) {
+            contactDropdownOverlay.addEventListener('click', function(e) {
+                if (e.target === contactDropdownOverlay) {
+                    closeContactDropdown();
+                    closeAestheticDropdown();
+                }
+            });
+        }
+        document.addEventListener('click', function(e) {
+            const isContactTrigger = headerContactButton && headerContactButton.contains(e.target);
+            const isAestheticTrigger = headerAestheticButton && headerAestheticButton.contains(e.target);
+            const isInContactDropdown = contactDropdown && contactDropdown.contains(e.target);
+            const isInAestheticDropdown = aestheticDropdown && aestheticDropdown.contains(e.target);
+            const isContactDropdownButton = e.target.closest('.contact-dropdown-button');
+            const isAestheticDropdownButton = e.target.closest('.aesthetic-dropdown-button');
+            if (isContactTrigger || isAestheticTrigger || isContactDropdownButton || isAestheticDropdownButton || isInContactDropdown || isInAestheticDropdown) return;
+            if (contactDropdown && contactDropdown.classList.contains('active')) closeContactDropdown();
+            if (aestheticDropdown && aestheticDropdown.classList.contains('active')) closeAestheticDropdown();
+        }, false);
+
+        // Currency dropdown toggle
+        const currencyButton = document.getElementById('currencyButton');
+        const currencyDropdown = document.getElementById('currencyDropdown');
+        if (currencyButton && currencyDropdown) {
+            currencyButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                currencyDropdown.classList.toggle('active');
+                const icon = currencyButton.querySelector('i');
+                if (icon) {
+                    if (currencyDropdown.classList.contains('active')) {
+                        icon.classList.remove('fa-chevron-up');
+                        icon.classList.add('fa-chevron-down');
+                    } else {
+                        icon.classList.remove('fa-chevron-down');
+                        icon.classList.add('fa-chevron-up');
+                    }
+                }
+            });
+            document.addEventListener('click', function(e) {
+                if (!currencyButton.contains(e.target) && !currencyDropdown.contains(e.target)) {
+                    currencyDropdown.classList.remove('active');
+                    const icon = currencyButton.querySelector('i');
+                    if (icon) {
+                        icon.classList.remove('fa-chevron-down');
+                        icon.classList.add('fa-chevron-up');
+                    }
+                }
+            });
+        }
+
+        function buildDesignsSidebarNavForSection(sectionEl) {
+            const nav = document.getElementById('designs-sidebar-nav');
+            if (!nav || !sectionEl) return;
+            const grid = sectionEl.querySelector('.designs-grid');
+            nav.innerHTML = '';
+            if (!grid) return;
+            const cards = grid.querySelectorAll('.design-card');
+            if (cards.length === 0) {
+                const empty = document.createElement('p');
+                empty.className = 'designs-sidebar-empty';
+                empty.setAttribute('data-translate', 'archiveEmptySidebar');
+                empty.textContent = 'Archive coming soon.';
+                if (typeof window.EeksApplyTranslations === 'function') {
+                    var lang = localStorage.getItem('selectedLanguage') || 'en';
+                    window.EeksApplyTranslations(lang);
+                }
+                nav.appendChild(empty);
+                return;
+            }
+            cards.forEach(function(card) {
+                const href = card.getAttribute('href');
+                const h3 = card.querySelector('h3');
+                const title = h3 ? h3.textContent.trim() : '';
+                if (!href || href === '#' || !title) return;
+                const link = document.createElement('a');
+                link.href = href;
+                link.className = 'designs-sidebar-link nav-link';
+                if (/\.(jpe?g|png|webp|gif)(\?|$)/i.test(href)) {
+                    link.target = '_blank';
+                    link.rel = 'noopener noreferrer';
+                }
+                const label = document.createElement('span');
+                label.textContent = title;
+                const dot = document.createElement('span');
+                dot.className = 'designs-sidebar-status';
+                dot.setAttribute('aria-hidden', 'true');
+                link.appendChild(label);
+                link.appendChild(dot);
+                nav.appendChild(link);
+            });
+        }
+
+        function refreshSidebarForActiveTab() {
+            const active = document.querySelector('.content-section.active');
+            if (active) buildDesignsSidebarNavForSection(active);
+        }
+
+        // Sort designs from most colorful (brightest) to darkest
+        (function sortDesignsByBrightness() {
+            const grid = document.querySelector('#covers-section .designs-grid');
+            if (!grid) return;
+            const cards = Array.from(grid.querySelectorAll('.design-card'));
+            if (cards.length === 0) return;
+
+            buildDesignsSidebarNavForSection(document.getElementById('covers-section'));
+
+            function getImageLuminance(src) {
+                return new Promise(function(resolve) {
+                    const img = new Image();
+                    img.onload = function() {
+                        try {
+                            const canvas = document.createElement('canvas');
+                            const size = 50;
+                            canvas.width = size;
+                            canvas.height = size;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0, size, size);
+                            const data = ctx.getImageData(0, 0, size, size).data;
+                            let sum = 0, n = 0;
+                            for (let i = 0; i < data.length; i += 4) {
+                                const r = data[i], g = data[i+1], b = data[i+2];
+                                sum += (0.299 * r + 0.587 * g + 0.114 * b);
+                                n++;
+                            }
+                            resolve(n ? sum / n : 0);
+                        } catch (e) {
+                            resolve(0);
+                        }
+                    };
+                    img.onerror = function() { resolve(0); };
+                    img.src = src;
+                });
+            }
+
+            Promise.all(cards.map(function(card) {
+                const img = card.querySelector('img');
+                const src = img ? img.currentSrc || img.getAttribute('src') : '';
+                return getImageLuminance(src).then(function(score) {
+                    return { card: card, score: score };
+                });
+            })).then(function(entries) {
+                entries.sort(function(a, b) { return b.score - a.score; });
+                entries.forEach(function(e) { grid.appendChild(e.card); });
+                buildDesignsSidebarNavForSection(document.getElementById('covers-section'));
+            });
+        })();
+    });
+
+    // Like button functionality
+    function toggleLike(button) {
+        const icon = button.querySelector('i');
+        if (icon.classList.contains('fa-regular')) {
+            icon.classList.remove('fa-regular');
+            icon.classList.add('fa-solid');
+            button.classList.add('liked');
+        } else {
+            icon.classList.remove('fa-solid');
+            icon.classList.add('fa-regular');
+            button.classList.remove('liked');
+        }
+    }
+
+    const scrollBtn = document.querySelector('.scroll-top');
+    const scrollBtnIcon = scrollBtn ? scrollBtn.querySelector('i') : null;
+    const header = document.querySelector('.site-header');
+    const scrollThresholdAdd = 30;
+    const scrollThresholdRemove = 40;
+    const topThreshold = 10;
+
+    function updateScrollButton() {
+        if (!scrollBtn || !scrollBtnIcon) return;
+        const scrollPosition = window.pageYOffset;
+
+        if (scrollPosition > 300) {
+            scrollBtn.classList.add('visible');
+        } else {
+            scrollBtn.classList.remove('visible');
+        }
+
+        var lang = localStorage.getItem('selectedLanguage') || 'en';
+        var pack = (window.EeksTranslations && window.EeksTranslations[lang]) || (window.EeksTranslations && window.EeksTranslations.en) || {};
+        if (scrollPosition < topThreshold) {
+            scrollBtnIcon.classList.remove('fa-arrow-up');
+            scrollBtnIcon.classList.add('fa-arrow-down');
+            scrollBtn.setAttribute('aria-label', pack.scrollBottom || 'Scroll to bottom');
+        } else {
+            scrollBtnIcon.classList.remove('fa-arrow-down');
+            scrollBtnIcon.classList.add('fa-arrow-up');
+            scrollBtn.setAttribute('aria-label', pack.scrollTop || 'Scroll to top');
+        }
+    }
+
+    let lastHeaderScrolled = false;
+    window.addEventListener('scroll', () => {
+        if (header) {
+            const scrollPosition = window.pageYOffset;
+
+            if (!lastHeaderScrolled && scrollPosition > scrollThresholdAdd) {
+                header.classList.add('header-scrolled');
+                lastHeaderScrolled = true;
+            } else if (lastHeaderScrolled && scrollPosition < scrollThresholdRemove) {
+                header.classList.remove('header-scrolled');
+                lastHeaderScrolled = false;
+            }
+
+            if (scrollPosition > topThreshold) {
+                header.classList.add('header-background-hidden');
+            } else {
+                header.classList.remove('header-background-hidden');
+            }
+        }
+
+        updateScrollButton();
+    });
+
+    if (scrollBtn && scrollBtnIcon) {
+        scrollBtn.addEventListener('click', () => {
+            if (scrollBtnIcon.classList.contains('fa-arrow-down')) {
+                window.scrollTo({
+                    top: document.body.scrollHeight,
+                    behavior: 'smooth'
+                });
+            } else {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }
+        });
+
+        updateScrollButton();
+    }
+
+    const headerTitle = document.querySelector('.site-header h1');
+    if (headerTitle && header) {
+        headerTitle.addEventListener('click', () => {
+            if (header.classList.contains('header-scrolled')) {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }
+        });
+    }
+
+    // Handle browser back/forward buttons
+    window.addEventListener('popstate', function() {
+        createTransition(window.location.href);
+    });
+
+    // Search functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('site-search');
+        const searchButton = document.getElementById('search-button');
+        const suggestionsDropdown = document.getElementById('suggestions-dropdown');
+        const searchContainer = document.querySelector('.search-container');
+
+        if (!searchInput || !searchButton || !suggestionsDropdown || !searchContainer) {
+            return;
+        }
+
+        // Show suggestions dropdown when input is focused
+        searchInput.addEventListener('focus', function() {
+            suggestionsDropdown.style.display = 'block';
+        });
+
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!searchContainer.contains(e.target)) {
+                suggestionsDropdown.style.display = 'none';
+            }
+        });
+
+        // Handle suggestion clicks
+        document.querySelectorAll('.suggestion-item').forEach(item => {
+            item.addEventListener('click', function() {
+                searchInput.value = this.textContent;
+                performSearch();
+                suggestionsDropdown.style.display = 'none';
+            });
+        });
+
+        function performSearch() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            const designCards = document.querySelectorAll('.design-card');
+            
+            designCards.forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                if (title.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Add event listeners
+        searchButton.addEventListener('click', performSearch);
+        
+        searchInput.addEventListener('keyup', function(e) {
+            if (e.key === 'Enter') {
+                performSearch();
+            }
+        });
+    });
+
+    // Dropdown Menu Toggle
+    document.addEventListener('DOMContentLoaded', function() {
+        const menuIcon = document.querySelector('.menu-icon.red-x');
+        const dropdownMenu = document.querySelector('.dropdown-menu');
+
+        if (menuIcon && dropdownMenu) {
+            menuIcon.addEventListener('click', function(e) {
+                e.stopPropagation();
+                dropdownMenu.classList.toggle('active');
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!menuIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                    dropdownMenu.classList.remove('active');
+                }
+            });
+        }
+    });
+
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Shift') {
+            const searchContainer = document.querySelector('.search-container');
+            if (searchContainer) {
+                if (searchContainer.style.display === 'block') {
+                    searchContainer.style.display = 'none';
+                } else {
+                    searchContainer.style.display = 'block';
+                    const input = searchContainer.querySelector('input');
+                    if (input) input.focus();
+                }
+            }
+        }
+    });
+
+    // Add Firebase SDK
+    const firebaseConfig = {
+        apiKey: "AIzaSyBuZpT46hKccS6-t2b4-gWXF93BNBu9ErQ",
+        authDomain: "eeks-eye.firebaseapp.com",
+        projectId: "eeks-eye",
+        storageBucket: "eeks-eye.firebasestorage.app",
+        messagingSenderId: "662530364021",
+        appId: "1:662530364021:web:454ba95f835655502c9e3c",
+        measurementId: "G-3Q7X3M2KRN"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const analytics = firebase.analytics();
+
+    // Copyright modal logic
+    const copyrightLink = document.getElementById('copyright-link');
+    const copyrightModal = document.getElementById('copyright-modal');
+    const closeCopyrightModal = document.getElementById('close-copyright-modal');
+    if (copyrightLink && copyrightModal && closeCopyrightModal) {
+        copyrightLink.addEventListener('click', function(e) {
+            e.preventDefault();
+            copyrightModal.style.display = 'flex';
+        });
+        closeCopyrightModal.addEventListener('click', function() {
+            copyrightModal.style.display = 'none';
+        });
+        copyrightModal.addEventListener('click', function(e) {
+            if (e.target === copyrightModal) copyrightModal.style.display = 'none';
+        });
+    }
+    </script>
+    <script src="js/cookie-consent.js"></script>
+    <script src="js/footer-links.js"></script>
+    <script src="translation-system.js"></script>
+    <script type="module">
+        import { initGoogleAuthUI } from './js/google-auth-ui.js';
+        initGoogleAuthUI({
+            button: '#googleSignInButton',
+            signedInContainer: '#googleAuthSignedIn',
+            errorEl: '#googleAuthError'
+        });
+    </script>
+</body>
+</html> 

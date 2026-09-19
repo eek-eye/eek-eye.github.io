@@ -1,0 +1,8 @@
+{
+  "name": "eekseye-website",
+  "private": true,
+  "description": "EeksEye static site with Stripe Checkout serverless handlers",
+  "dependencies": {
+    "stripe": "^17.7.0"
+  }
+}

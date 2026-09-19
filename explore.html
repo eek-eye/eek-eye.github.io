@@ -1,0 +1,1769 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explore - Eeks-Eye</title>
+    <link rel="icon" type="image/png" href="images/tags.png">
+    <link rel="stylesheet" href="css/style.css">
+    <!-- SF Pro Font -->
+    <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+    <!-- Inter Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .page-transition-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index: 9999;
+            opacity: 1;
+            pointer-events: none;
+            transition: opacity 2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .page-transition-overlay.fade-out {
+            opacity: 0;
+        }
+
+        body {
+            opacity: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        /*
+         * Explore default scale: match ~67% browser zoom at 100% for chrome (nav, buttons, cards, footer).
+         * Shirt grid (#exploreProducts) is counter-scaled so product heroes stay unchanged.
+         */
+        body.explore-page {
+            zoom: 67%;
+            transform: none; /* do not stack with style.css body { transform: scale(1) } */
+        }
+        body.explore-page #exploreProducts {
+            zoom: calc(100% / 0.67);
+        }
+        @supports not (zoom: 1) {
+            body.explore-page {
+                zoom: unset;
+                transform: scale(0.67);
+                transform-origin: top center;
+                width: calc(100% / 0.67);
+                min-height: calc(100vh / 0.67);
+                margin-left: auto;
+                margin-right: auto;
+            }
+            body.explore-page #exploreProducts {
+                zoom: unset;
+                transform: scale(calc(1 / 0.67));
+                transform-origin: top center;
+            }
+        }
+
+        .dropdown-menu.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+        .dropdown-menu a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.2rem 0.6rem;
+            color: white;
+            text-decoration: none;
+            border-radius: 999px;
+            border: 1px solid transparent;
+            transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+            min-width: 70px;
+        }
+        .dropdown-menu a:hover {
+            border-color: rgba(255, 255, 255, 0.6);
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+        
+        /* Password UI — docked inside the clicked shirt / column (fills that cell only) */
+        #explore-password-pool {
+            display: none;
+        }
+        .password-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            min-height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 10000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            box-sizing: border-box;
+        }
+        .password-overlay.password-overlay--docked {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            min-height: 100%;
+            /* Below hero chrome; raised again when .active so clicks beat .explore-top-icons-bar (10020) */
+            z-index: 35;
+        }
+        .password-overlay.password-overlay--docked.active {
+            z-index: 10025;
+        }
+        .password-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .password-overlay.success {
+            background: rgba(0, 255, 0, 0.85);
+        }
+        .password-modal.success {
+            border: 2px solid #00ff00;
+        }
+        .password-input.success {
+            border-bottom-color: #00ff00;
+            color: #00ff00;
+        }
+        .password-modal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 10001;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            text-align: center;
+            width: min(92%, 18rem);
+            max-width: 100%;
+            box-sizing: border-box;
+            padding: 0 0.5rem;
+        }
+        .password-modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .password-modal-label {
+            color: #fff;
+            font-size: clamp(0.75rem, 2.8vw, 1.5rem);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        .password-input {
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid #fff;
+            color: #fff;
+            font-size: clamp(0.65rem, 2.2vw, 1.2rem);
+            padding: 0.5rem 0;
+            width: 100%;
+            max-width: 16rem;
+            margin: 0 auto;
+            display: block;
+            text-align: center;
+            outline: none;
+            font-family: inherit;
+        }
+        .password-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+        /* Close control: child of overlay (full cell), not modal — avoids label/stacking eating clicks */
+        .password-close-btn {
+            position: absolute;
+            top: 0.5rem;
+            left: 0.5rem;
+            z-index: 10030;
+            color: #fff;
+            font-size: 1.75rem;
+            font-weight: 300;
+            cursor: pointer;
+            min-width: 44px;
+            min-height: 44px;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease, color 0.3s ease;
+            line-height: 1;
+            border: none;
+            background: rgba(0, 0, 0, 0.25);
+            border-radius: 6px;
+            padding: 0;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+        .password-overlay.active .password-close-btn {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .password-close-btn:hover {
+            transform: scale(1.2);
+            color: #ff006e;
+        }
+        @keyframes screenShake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-20px); }
+            20%, 40%, 60%, 80% { transform: translateX(20px); }
+        }
+        .password-overlay.shake {
+            animation: screenShake 0.5s ease-in-out;
+        }
+        body.shake {
+            animation: screenShake 0.5s ease-in-out;
+        }
+
+        /* Explore: one hero section per shirt */
+        .explore-hero-section {
+            position: relative;
+            width: 100%;
+            min-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 4rem 2rem;
+            cursor: pointer;
+            overflow: hidden;
+            border-bottom: 1px solid #eee;
+            transition:
+                background 0.35s ease,
+                padding 0.5s cubic-bezier(0.33, 1, 0.68, 1),
+                min-height 0.5s cubic-bezier(0.33, 1, 0.68, 1),
+                border-color 0.35s ease;
+        }
+        .explore-hero-section:hover {
+            background: transparent;
+        }
+        .explore-hero-bg {
+            position: absolute;
+            inset: 0;
+            background: transparent;
+            z-index: 0;
+        }
+        .explore-hero-img {
+            position: relative;
+            z-index: 2;
+            max-width: 100%;
+            max-height: 60vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            opacity: 1;
+            transition:
+                max-height 0.5s cubic-bezier(0.33, 1, 0.68, 1),
+                max-width 0.5s cubic-bezier(0.33, 1, 0.68, 1),
+                opacity 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        /* Extra overlay layer for hero shirts (covers entire hero section, above shirt image) */
+        .explore-hero-extra {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 3;
+            pointer-events: none;
+        }
+        .explore-hero-extra--white {
+            display: none;
+        }
+        /* Loading spinner markup kept for structure; hidden on all product heroes */
+        .explore-hero-loader {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 5;
+            pointer-events: none;
+        }
+        .explore-hero-loader img {
+            width: 64px;
+            height: 64px;
+            animation: explore-loader-spin 1s linear infinite;
+        }
+        @keyframes explore-loader-spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .explore-hero-info {
+            position: relative;
+            z-index: 4;
+            text-align: center;
+            margin-top: 0.25rem;
+        }
+        .explore-hero-title {
+            font-size: 0.6rem;
+            font-weight: 600;
+            color: #222;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+        .explore-hero-category {
+            font-size: 0.45rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        .explore-hero-price {
+            font-size: 0.55rem;
+            font-weight: 600;
+            color: #222;
+            margin-top: 0.35rem;
+        }
+
+        /* Two shirts side by side in one hero (x + y) */
+        /* One listing for both shirts — whole band is one clickable section */
+        .explore-hero-section--pair {
+            cursor: pointer;
+        }
+        .explore-hero-pair-row {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 2rem 3rem;
+            width: 100%;
+            max-width: 1400px;
+        }
+        .explore-hero-pair-col {
+            position: relative;
+            flex: 1 1 260px;
+            min-width: 0;
+            max-width: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: inherit;
+        }
+        @media (max-width: 768px) {
+            .explore-hero-pair-col {
+                max-width: 100%;
+            }
+        }
+        .explore-hero-info--pair {
+            margin-top: 1rem;
+            max-width: 56rem;
+            padding: 0 1rem;
+        }
+        .explore-hero-info--pair .explore-hero-title {
+            line-height: 1.35;
+        }
+
+        /* Product list wrapper + 3-column layout (toggle via toolbar) */
+        .explore-products {
+            display: block;
+            width: 100%;
+        }
+        .explore-products--columns-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            padding: 0 0.75rem 1rem;
+            box-sizing: border-box;
+            width: 100%;
+            transition:
+                gap 0.45s cubic-bezier(0.33, 1, 0.68, 1),
+                padding 0.45s cubic-bezier(0.33, 1, 0.68, 1);
+        }
+        .explore-products--columns-3 .explore-hero-section {
+            min-height: min(52vh, 480px);
+            padding: 1.25rem 0.75rem;
+            border-bottom: none;
+        }
+        .explore-products--columns-3 .explore-hero-img {
+            max-height: 36vh;
+        }
+        .explore-products--columns-3 .explore-hero-section--pair {
+            grid-column: 1 / -1;
+            min-height: min(60vh, 560px);
+        }
+        .explore-products--columns-3 .explore-hero-section--pair .explore-hero-img {
+            max-height: 40vh;
+        }
+        @media (max-width: 900px) {
+            .explore-products--columns-3 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 520px) {
+            .explore-products--columns-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+        .explore-products--columns-3 .explore-grid-placeholder {
+            min-height: min(52vh, 480px);
+            padding: 1.25rem 0.75rem;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: transparent;
+            border: none;
+        }
+        .explore-products--columns-3 .explore-grid-placeholder .explore-hero-info {
+            margin-top: 0.25rem;
+            width: 100%;
+            max-width: 100%;
+            padding: 0 0.15rem;
+        }
+        .explore-products--columns-3 .explore-grid-placeholder .explore-hero-title {
+            line-height: 1.3;
+            hyphens: auto;
+            overflow-wrap: break-word;
+        }
+        .explore-products--columns-3 .explore-grid-placeholder-img {
+            max-width: 100%;
+            max-height: 36vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            display: block;
+            user-select: none;
+            pointer-events: none;
+            opacity: 1;
+            transition:
+                max-height 0.5s cubic-bezier(0.33, 1, 0.68, 1),
+                max-width 0.5s cubic-bezier(0.33, 1, 0.68, 1),
+                opacity 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Service cards (copied from index hero-section-3) */
+        .hero-section-3 {
+            position: relative;
+            width: 100%;
+            min-height: auto;
+            padding: 4rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #e8e8e8;
+        }
+
+        .hero-section-3-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #fff;
+            border-radius: 0;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            padding: 3rem 2rem;
+        }
+
+        .hero-section-3-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2.5rem;
+            align-items: stretch;
+        }
+
+        .hero-section-3-card {
+            background: #fff;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            border-radius: 4px;
+        }
+
+        .hero-section-3-icon {
+            font-size: 2.5rem;
+            color: #000;
+            margin-bottom: 1.25rem;
+        }
+
+        .hero-section-3-icon i {
+            font-weight: 400;
+        }
+
+        .hero-section-3-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #000;
+            margin: 0 0 1rem 0;
+            letter-spacing: 0.02em;
+        }
+
+        .hero-section-3-desc {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #444;
+            margin: 0 0 1.5rem 0;
+            flex-grow: 1;
+        }
+
+        /* Explore: nav header controls aligned with index.html dark-theme sizing */
+        .explore-page .site-header .header-buttons-container a {
+            font-size: clamp(0.52rem, 0.95vw, 0.66rem) !important;
+            padding: 0.3rem 0.75rem !important;
+            border-radius: 0.7rem !important;
+        }
+        .explore-page .site-header .currency-button {
+            font-size: clamp(0.48rem, 0.88vw, 0.62rem) !important;
+            padding: 0.28rem 0.68rem !important;
+        }
+        .explore-page .site-header .currency-button i {
+            font-size: 0.36rem !important;
+        }
+        .explore-page .site-header .contact-dropdown-button,
+        .explore-page .site-header .aesthetic-dropdown-button {
+            font-size: clamp(0.5rem, 0.92vw, 0.64rem) !important;
+            padding: 0.28rem 0.65rem !important;
+        }
+        .explore-page .site-header .search-button {
+            padding: 0.28rem 0.55rem !important;
+        }
+        .explore-page .site-header .search-button i {
+            font-size: 0.36rem !important;
+        }
+
+        .explore-page .explore-buttons-section .btn {
+            display: inline-block;
+            box-sizing: border-box;
+            padding: 0.48rem 1.05rem;
+            background: #fff;
+            color: #000;
+            border: 1px solid #000;
+            border-radius: 3px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+            cursor: pointer;
+            text-align: center;
+            width: auto;
+            line-height: 1.2;
+            font-family: inherit;
+        }
+
+        .explore-page .hero-section-3-btn {
+            display: inline-block;
+            box-sizing: border-box;
+            padding: 0.35rem 0.85rem;
+            background: #fff;
+            color: #000;
+            border: 1px solid #000;
+            border-radius: 3px;
+            font-size: 0.62rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+            cursor: pointer;
+            text-align: center;
+            width: auto;
+            line-height: 1.15;
+            font-family: inherit;
+        }
+
+        .explore-page .explore-buttons-section .btn:hover,
+        .explore-page .hero-section-3-btn:hover {
+            background: #000;
+            color: #fff;
+            border-color: #000;
+            box-shadow: none;
+            text-shadow: none;
+        }
+
+        @media (max-width: 768px) {
+            .hero-section-3-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Small section with lots of buttons under last hero */
+        .explore-buttons-section {
+            padding: 1rem 1.25rem;
+            background: #fff;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 0.45rem;
+        }
+        .explore-buttons-section .btn {
+            white-space: nowrap;
+        }
+
+        /* Static text at top of each product hero only */
+        .explore-hero-text-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1;
+            padding: 8px 12px;
+            pointer-events: none;
+            background: #fff;
+        }
+
+        .explore-hero-text-line {
+            margin: 0 0 2px;
+            font-size: 7px;
+            color: #111;
+            font-weight: 400;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            line-height: 1.35;
+        }
+
+        /* Top-of-screen icon row — above page overlay (9999) and x-borders (9997); below password modal when open */
+        .explore-top-icons-bar {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10020;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.15rem;
+            padding: 0.45rem 0.75rem;
+            margin: 0.35rem 0 0;
+            background: transparent;
+            color: #000;
+            line-height: 1;
+            pointer-events: auto;
+            isolation: isolate;
+        }
+        .explore-layout-btn {
+            background: transparent;
+            border: none;
+            padding: 0.2rem 0.45rem;
+            margin: 0;
+            cursor: pointer;
+            color: #000;
+            line-height: 1;
+            border-radius: 4px;
+            transform: scale(1);
+            transition:
+                opacity 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.4s cubic-bezier(0.34, 1.25, 0.64, 1),
+                color 0.35s ease,
+                background-color 0.35s ease;
+        }
+        .explore-layout-btn i {
+            font-size: 0.52rem;
+            width: 1em;
+            text-align: center;
+            color: inherit;
+            pointer-events: none;
+            transition: transform 0.4s cubic-bezier(0.34, 1.25, 0.64, 1);
+        }
+        .explore-layout-btn.active {
+            opacity: 1;
+        }
+        .explore-layout-btn:not(.active) {
+            opacity: 0.42;
+        }
+        .explore-layout-btn:hover {
+            transform: scale(1.08);
+        }
+        .explore-layout-btn:not(.active):hover {
+            opacity: 0.78;
+        }
+        .explore-layout-btn.active:hover {
+            opacity: 1;
+        }
+        .explore-layout-btn:active {
+            transform: scale(0.94);
+            transition-duration: 0.12s;
+        }
+        .explore-layout-btn:focus-visible {
+            outline: 2px solid #000;
+            outline-offset: 2px;
+        }
+        .explore-layout-btn--model {
+            cursor: pointer;
+            position: relative;
+            z-index: 0;
+        }
+        .explore-layout-btn--model::before {
+            content: '';
+            position: absolute;
+            inset: 1px 3px;
+            border-radius: 999px;
+            background: rgba(0, 0, 0, 0);
+            opacity: 0;
+            transform: scale(0.88);
+            transition:
+                background 0.42s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.42s cubic-bezier(0.4, 0, 0.2, 1),
+                transform 0.42s cubic-bezier(0.34, 1.2, 0.64, 1);
+            z-index: -1;
+            pointer-events: none;
+        }
+        .explore-layout-btn--model.active::before {
+            background: rgba(0, 0, 0, 0.09);
+            opacity: 1;
+            transform: scale(1);
+        }
+        .explore-layout-btn--model i {
+            transition:
+                transform 0.42s cubic-bezier(0.34, 1.25, 0.64, 1),
+                opacity 0.35s ease;
+        }
+        .explore-layout-btn--model.active i {
+            transform: scale(1.14);
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .explore-hero-section,
+            .explore-hero-img,
+            .explore-products--columns-3,
+            .explore-products--columns-3 .explore-grid-placeholder-img {
+                transition-duration: 0.01ms !important;
+            }
+            .explore-layout-btn,
+            .explore-layout-btn i {
+                transition-duration: 0.01ms !important;
+            }
+            .explore-layout-btn:hover,
+            .explore-layout-btn:active {
+                transform: none;
+            }
+            .explore-layout-btn--model.active i {
+                transform: none;
+            }
+            .explore-layout-btn--model::before {
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body class="dark-theme explore-page">
+    <div class="page-transition-overlay"></div>
+    <div class="contact-dropdown-overlay" id="contactDropdownOverlay"></div>
+    <div class="x-border x-border-left">X</div>
+    <div class="x-border x-border-right">I</div>
+    
+    <div class="x-line">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</div>
+
+    <div class="explore-top-icons-bar" role="toolbar" aria-label="Product layout and model view. Press 1 for full width, 2 for grid, 3 for model view.">
+        <button type="button" class="explore-layout-btn explore-layout-btn--default active" id="exploreLayoutDefault" aria-pressed="true" title="Full-width layout (keyboard 1)">
+            <i class="fas fa-border-all" aria-hidden="true"></i>
+        </button>
+        <button type="button" class="explore-layout-btn explore-layout-btn--grid3" id="exploreLayoutGrid3" aria-pressed="false" title="Three products per row (keyboard 2)">
+            <i class="fas fa-grip-lines" aria-hidden="true"></i>
+        </button>
+        <button type="button" class="explore-layout-btn explore-layout-btn--model" id="exploreLayoutModel" aria-pressed="false" aria-label="Model view: show gone gone 2 on products. Press again to turn off. Keyboard 3." title="Model view (gone gone 2) — press again to turn off (keyboard 3)">
+            <i class="fas fa-user" aria-hidden="true"></i>
+        </button>
+    </div>
+
+    <template id="explore-hero-text-template">
+        <div class="explore-hero-text-fill" aria-hidden="true">
+            <p class="explore-hero-text-line">◆ EEKSEYE ◆ RUNWAY I KNOW YOU SAY YOU KNOW ME GONE GONE X I DARK SIDE · INTERSTELLA · VIBRATION SEASON 1 · 2 · 3 · 4 · 5 EXPLORE — DESIGNS — NEWS TRUTH SHOULD SET YOU FREE NO REPRODUCTION WITHOUT PERMISSION · XI · CH@0S · UNGUIDED · SEEK Rockstar · Martyr · Nightmare</p>
+            <p class="explore-hero-text-line">頑張っても手に入らないって約束する 伊克西 · 满月 · 多重人格 I メタ I eekseye I I 2026 冷笑主義 I eekseye I 2029 Eeks Eye ◆ EEKSEYE ◆ RUNWAY I KNOW YOU SAY YOU KNOW ME GONE GONE</p>
+            <p class="explore-hero-text-line">DARK SIDE · INTERSTELLA · VIBRATION SEASON 1 · 2 · 3 · 4 · 5 EXPLORE — DESIGNS — NEWS TRUTH SHOULD SET YOU FREE NO REPRODUCTION WITHOUT PERMISSION · XI · CH@0S · UNGUIDED · SEEK Rockstar · Martyr · Nightmare</p>
+            <p class="explore-hero-text-line">◆ EEKSEYE ◆ RUNWAY I KNOW YOU SAY YOU KNOW ME X I 頑張っても手に入らないって約束する 伊克西 · 满月 · 多重人格 I メタ I eekseye I I 2026 冷笑主義 I eekseye I 2029</p>
+            <p class="explore-hero-text-line">GONE GONE Eeks Eye DARK SIDE · INTERSTELLA · VIBRATION SEASON 1 · 2 · 3 · 4 · 5 EXPLORE — DESIGNS — NEWS TRUTH SHOULD SET YOU FREE NO REPRODUCTION WITHOUT PERMISSION</p>
+            <p class="explore-hero-text-line">· XI · CH@0S · UNGUIDED · SEEK Rockstar · Martyr · Nightmare ◆ EEKSEYE ◆ RUNWAY I KNOW YOU SAY YOU KNOW ME 頑張っても手に入らないって約束する 伊克西 · 满月 · 多重人格</p>
+        </div>
+    </template>
+
+    <!-- Password UI (moved into the active shirt cell when opened) -->
+    <div id="explore-password-pool" aria-hidden="true">
+        <div class="password-overlay">
+            <!-- Outside .password-modal so the full-width label cannot sit on top of the hit target -->
+            <button type="button" class="password-close-btn" aria-label="Close password dialog" onclick="event.stopPropagation(); event.preventDefault(); closePasswordModal();">&times;</button>
+            <div class="password-modal">
+                <label class="password-modal-label" for="explore-password-field" data-translate="password">Password</label>
+                <input type="password" id="explore-password-field" class="password-input" placeholder="" autocomplete="off" aria-hidden="true">
+            </div>
+        </div>
+    </div>
+
+    <main style="background:transparent;">
+        <div class="explore-products" id="exploreProducts">
+        <!-- Hero 1: First shirt -->
+        <section class="explore-hero-section" id="first-product" data-product-id="1" onclick="handleExploreProductClick(event, 1, this)">
+            <div class="explore-hero-bg"></div>
+            <img src="eekseye.png/I 伊克西 I I eeks eye I I 2026.png" alt="I 伊克西 I I eeks eye I I 2026" class="explore-hero-img">
+            <div class="explore-hero-info">
+                <div class="explore-hero-title">I Eeks Eye I 2026</div>
+                <div class="explore-hero-category">Runway</div>
+                <div class="explore-hero-price" data-price="275">$275.00</div>
+            </div>
+        </section>
+        <!-- Hero 2: Second shirt -->
+        <section class="explore-hero-section" id="second-product" data-product-id="2" onclick="handleExploreProductClick(event, 2, this)">
+            <div class="explore-hero-bg"></div>
+            <img src="eekseye.png/I 满月 I eekseye I 2026.png" alt="I 满月 I eekseye I 2026" class="explore-hero-img">
+            <div class="explore-hero-extra explore-hero-extra--white"></div>
+            <div class="explore-hero-loader">
+                <img src="images/loading.png" alt="Loading">
+            </div>
+            <div class="explore-hero-info">
+                <div class="explore-hero-title">I Full Moon I eekseye I 2026</div>
+                <div class="explore-hero-category">Runway</div>
+                <div class="explore-hero-price" data-price="275">$275.00</div>
+            </div>
+        </section>
+        <!-- Hero 3: Third shirt -->
+        <section class="explore-hero-section" id="third-product" data-product-id="3" onclick="handleExploreProductClick(event, 3, this)">
+            <div class="explore-hero-bg"></div>
+            <img src="eekseye.png/I 多重人格 I eekseye I 2026.png" alt="I 多重人格 I eekseye I 2026" class="explore-hero-img">
+            <div class="explore-hero-extra explore-hero-extra--white"></div>
+            <div class="explore-hero-loader">
+                <img src="images/loading.png" alt="Loading">
+            </div>
+            <div class="explore-hero-info">
+                <div class="explore-hero-title">I Multiple Personality I eekseye I 2026</div>
+                <div class="explore-hero-category">Runway</div>
+                <div class="explore-hero-price" data-price="275">$275.00</div>
+            </div>
+        </section>
+        <!-- Hero 4: Fourth shirt - I メタ I eekseye I I 2026 -->
+        <section class="explore-hero-section" id="fourth-product" data-product-id="4" onclick="handleExploreProductClick(event, 4, this)">
+            <div class="explore-hero-bg"></div>
+            <img src="eekseye.png/I メタ I eekseye I I 2026.png" alt="I メタ I eekseye I I 2026" class="explore-hero-img">
+            <div class="explore-hero-extra explore-hero-extra--white"></div>
+            <div class="explore-hero-loader">
+                <img src="images/loading.png" alt="Loading">
+            </div>
+            <div class="explore-hero-info">
+                <div class="explore-hero-title">I Meta I eekseye I 2026</div>
+                <div class="explore-hero-category">Runway</div>
+                <div class="explore-hero-price" data-price="275">$275.00</div>
+            </div>
+        </section>
+        <!-- Hero 5: Fifth shirt - I 冷笑主義 I eekseye I 2029 -->
+        <section class="explore-hero-section" id="fifth-product" data-product-id="5" onclick="handleExploreProductClick(event, 5, this)">
+            <div class="explore-hero-bg"></div>
+            <img src="eekseye.png/I 冷笑主義 I eekseye I 2029.png" alt="I 冷笑主義 I eekseye I 2029" class="explore-hero-img">
+            <div class="explore-hero-extra explore-hero-extra--white"></div>
+            <div class="explore-hero-loader">
+                <img src="images/loading.png" alt="Loading">
+            </div>
+            <div class="explore-hero-info">
+                <div class="explore-hero-title">I Cold Smile Ideology I eekseye I 2029</div>
+                <div class="explore-hero-category">Runway</div>
+                <div class="explore-hero-price" data-price="275">$275.00</div>
+            </div>
+        </section>
+        <!-- Hero 6: x + y sold together — one section, one password / product id -->
+        <section class="explore-hero-section explore-hero-section--pair" id="sixth-product" data-product-id="6" onclick="handleExploreProductClick(event, 6, this)">
+            <div class="explore-hero-bg"></div>
+            <div class="explore-hero-pair-row">
+                <div class="explore-hero-pair-col">
+                    <img src="eekseye.png/I x I eekseye  I 2026.png" alt="I x I eekseye  I 2026" class="explore-hero-img">
+                </div>
+                <div class="explore-hero-pair-col">
+                    <img src="eekseye.png/I y I eekseye I I 2026.png" alt="I y I eekseye I I 2026" class="explore-hero-img">
+                </div>
+            </div>
+            <div class="explore-hero-info explore-hero-info--pair">
+                <div class="explore-hero-title">I x I eekseye  I 2026 · I y I eekseye I I 2026</div>
+                <div class="explore-hero-category">Runway</div>
+                <div class="explore-hero-price" data-price="350">$350.00</div>
+            </div>
+        </section>
+        </div>
+        <section class="explore-buttons-section" aria-label="Quick links">
+            <a href="index.html" class="btn" data-translate="home">Home</a>
+            <a href="designs.html" class="btn" data-translate="designs">Designs</a>
+            <a href="about.html" class="btn" data-translate="why">Why?</a>
+            <a href="contact.html" class="btn" data-translate="contact">Contact</a>
+            <a href="faq.html" class="btn" data-translate="faq">FAQ</a>
+            <a href="news.html" class="btn" data-translate="news">News</a>
+            <a href="explore.html?season=1" class="btn">Season 1</a>
+            <a href="explore.html?season=2" class="btn">Season 2</a>
+            <a href="explore.html?season=3" class="btn">Season 3</a>
+            <a href="explore.html?season=4" class="btn">Season 4</a>
+            <a href="explore.html?season=5" class="btn">Season 5</a>
+            <a href="#" class="btn">Lookbook</a>
+            <a href="#" class="btn">Size Guide</a>
+            <a href="#" class="btn">Shipping</a>
+            <a href="#" class="btn">Returns</a>
+            <a href="#" class="btn">Store Locator</a>
+            <a href="#" class="btn">Care</a>
+            <a href="#" class="btn">Wholesale</a>
+        </section>
+        <div class="index-cards-footer-scale">
+        <section class="hero-section-3">
+            <div class="hero-section-3-container">
+                <div class="hero-section-3-cards">
+                    <div class="hero-section-3-card">
+                        <div class="hero-section-3-icon"><i class="fas fa-cog"></i></div>
+                        <h3 class="hero-section-3-title">Website Design</h3>
+                        <p class="hero-section-3-desc">Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ut labore et magna aliqua.</p>
+                        <a href="#" class="hero-section-3-btn">LEARN MORE</a>
+                    </div>
+                    <div class="hero-section-3-card">
+                        <div class="hero-section-3-icon"><i class="fas fa-at"></i></div>
+                        <h3 class="hero-section-3-title">Google Advertise</h3>
+                        <p class="hero-section-3-desc">Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ut labore et magna aliqua.</p>
+                        <a href="#" class="hero-section-3-btn">LEARN MORE</a>
+                    </div>
+                    <div class="hero-section-3-card">
+                        <div class="hero-section-3-icon"><i class="fas fa-chart-line"></i></div>
+                        <h3 class="hero-section-3-title">E-mail Hosting</h3>
+                        <p class="hero-section-3-desc">Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ut labore et magna aliqua.</p>
+                        <a href="#" class="hero-section-3-btn">LEARN MORE</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+        </div>
+    </main>
+
+    <div class="explore-footer-scale-wrap">
+    <footer class="site-footer explore-footer-editorial">
+        <div class="explore-footer-grid">
+            <div class="explore-footer-col">
+                <h2 class="explore-footer-heading">Newsletter</h2>
+                <p class="explore-footer-note">
+                    <a href="contact.html" class="explore-footer-link explore-footer-link--underline">Subscribe to our newsletter</a>
+                </p>
+            </div>
+            <div class="explore-footer-col">
+                <h2 class="explore-footer-heading">Client services</h2>
+                <ul class="explore-footer-list">
+                    <li><a href="faq.html" class="explore-footer-link">FAQ</a></li>
+                    <li><a href="#" class="explore-footer-link">Track order</a></li>
+                    <li><a href="#" class="explore-footer-link">Exchanges and returns</a></li>
+                    <li><a href="#" class="explore-footer-link">Shipping</a></li>
+                    <li><a href="#" class="explore-footer-link">Payment</a></li>
+                    <li><a href="#" class="explore-footer-link">Re-sell program</a></li>
+                </ul>
+            </div>
+            <div class="explore-footer-col">
+                <h2 class="explore-footer-heading">The company</h2>
+                <ul class="explore-footer-list">
+                    <li><a href="#" class="explore-footer-link">Legal</a></li>
+                    <li><a href="#" class="explore-footer-link">Privacy policy</a></li>
+                    <li><a href="#" class="explore-footer-link">Cookie policy</a></li>
+                    <li><a href="#" class="explore-footer-link">Cookies settings and do not sell or share</a></li>
+                    <li><a href="what-you-need-to-know.html" class="explore-footer-link">What you need to know</a></li>
+                </ul>
+            </div>
+            <div class="explore-footer-col">
+                <h2 class="explore-footer-heading">Follow us</h2>
+                <ul class="explore-footer-list">
+                    <li><a href="#" class="explore-footer-link" target="_blank" rel="noopener noreferrer">Facebook</a></li>
+                    <li><a href="https://www.instagram.com/eeks.eye/" class="explore-footer-link" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+                    <li><a href="#" class="explore-footer-link" target="_blank" rel="noopener noreferrer">TikTok</a></li>
+                    <li><a href="#" class="explore-footer-link" target="_blank" rel="noopener noreferrer">Pinterest</a></li>
+                    <li><a href="#" class="explore-footer-link" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+                </ul>
+            </div>
+            <div class="explore-footer-col">
+                <h2 class="explore-footer-heading">Contact us</h2>
+                <p class="explore-footer-note">Our client advisors are available Mon–Fri 9am – 9pm ET &amp; Sat 10am – 7pm ET</p>
+                <h3 class="explore-footer-subhead">Livechat</h3>
+                <p class="explore-footer-note"><a href="contact.html" class="explore-footer-link explore-footer-link--underline">Our client advisors are currently unavailable</a></p>
+                <h3 class="explore-footer-subhead">Call us</h3>
+                <p class="explore-footer-note"><a href="tel:+16468891895" class="explore-footer-link">+1 646 889 1895</a></p>
+                <h3 class="explore-footer-subhead">Email us</h3>
+                <p class="explore-footer-note"><a href="contact.html" class="explore-footer-link explore-footer-link--underline">Email us</a></p>
+            </div>
+        </div>
+        <div class="explore-footer-bottom">
+            <a href="#" id="copyright-link">&copy; 2026 Eeks Eye</a>
+        </div>
+    </footer>
+    </div>
+    
+    <div class="x-line">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</div>
+
+    <div id="copyright-modal" style="display:none; position:fixed; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.9); z-index:999999; align-items:center; justify-content:center; flex-direction:column; overflow-y:auto;">
+        <div style="background:#fff; color:#111; max-width:90vw; width:400px; padding:2rem 1.5rem; border-radius:10px; box-shadow:0 8px 32px #000a; position:relative; text-align:center; z-index:1000000; margin:auto;">
+            <button id="close-copyright-modal" style="position:absolute; top:10px; right:15px; background:none; border:none; font-size:1.5rem; color:#111; cursor:pointer; z-index:1000001;">&times;</button>
+            <h3 style="margin-bottom:1rem;">Copyright Notice</h3>
+            <p style="font-size:1.05rem; line-height:1.6;">All content, images, and designs on this site are owned and operated by Eeks Eye. No part of this website may be copied, reproduced, or used without express written permission from Eeks Eye. All rights reserved.</p>
+        </div>
+    </div>
+
+    <div class="logo-transition-overlay"></div>
+    <div class="transition-text">XI</div>
+
+    <script src="js/page-transition.js"></script>
+    <script>
+        (function () {
+            /*
+             * Toolbar: (1) full-width vs (2) multi-column grid — mutually exclusive.
+             * (3) Model view — independent toggle; shows images/gone gone 2.png on all product
+             * heroes (and placeholder slots use the same image while model view is on).
+             * Press (3) again to leave model view. At most two controls look “active”: one
+             * layout + optional model.
+             *
+             * Grid placeholders: see prior comment — incomplete rows get Unavailable title / model
+             * image depending on model toggle.
+             */
+            var wrap = document.getElementById('exploreProducts');
+            var btnDefault = document.getElementById('exploreLayoutDefault');
+            var btnGrid3 = document.getElementById('exploreLayoutGrid3');
+            var btnModel = document.getElementById('exploreLayoutModel');
+            if (!wrap || !btnDefault || !btnGrid3 || !btnModel) return;
+
+            var PREFS_KEY = 'eekseye_explore_prefs';
+            var layoutGrid = false;
+            var modelView = false;
+            try {
+                var rawPrefs = localStorage.getItem(PREFS_KEY);
+                if (rawPrefs) {
+                    var p = JSON.parse(rawPrefs);
+                    if (p && typeof p === 'object') {
+                        if (p.layoutGrid === true) layoutGrid = true;
+                        if (p.modelView === true) modelView = true;
+                    }
+                }
+            } catch (e) {}
+
+            function persistExplorePrefs() {
+                try {
+                    localStorage.setItem(
+                        PREFS_KEY,
+                        JSON.stringify({ layoutGrid: layoutGrid, modelView: modelView })
+                    );
+                } catch (e) {}
+            }
+            var MODEL_SRC = 'images/gone%20gone%202.png';
+            /* Grid slot thumbnail when not in model view — file: eekseye.png/I Unavailable I EEKSEYE I XXX.png */
+            var PLACEHOLDER_UNAVAILABLE_SRC = 'eekseye.png/I%20Unavailable%20I%20EEKSEYE%20I%20XXX.png';
+
+            function colsForWidth() {
+                var w = window.innerWidth;
+                if (w <= 520) return 1;
+                if (w <= 900) return 2;
+                return 3;
+            }
+
+            function ensureProductImageBackrefs() {
+                wrap.querySelectorAll('.explore-hero-section .explore-hero-img').forEach(function (img) {
+                    if (!img.dataset.productSrc) {
+                        img.dataset.productSrc = img.getAttribute('src') || '';
+                    }
+                });
+            }
+
+            function clearGridPlaceholders() {
+                wrap.querySelectorAll('.explore-grid-placeholder').forEach(function (el) {
+                    el.remove();
+                });
+            }
+
+            function placeholderThumbSrc() {
+                return modelView ? MODEL_SRC : PLACEHOLDER_UNAVAILABLE_SRC;
+            }
+
+            var EXPLORE_IMG_FADE_MS = 320;
+
+            function prefersExploreReducedMotion() {
+                return window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            }
+
+            function exploreUrlsEquivalent(a, b) {
+                if (a === b) return true;
+                try {
+                    var na = decodeURIComponent(String(a || '').split('?')[0]);
+                    var nb = decodeURIComponent(String(b || '').split('?')[0]);
+                    return na === nb;
+                } catch (e) {
+                    return false;
+                }
+            }
+
+            function crossfadeImgSrc(img, newSrc) {
+                if (exploreUrlsEquivalent(img.getAttribute('src'), newSrc)) return;
+                var gen = String((parseInt(img.dataset.exploreCrossfadeGen, 10) || 0) + 1);
+                img.dataset.exploreCrossfadeGen = gen;
+                img.style.opacity = '0';
+                window.setTimeout(function () {
+                    if (img.dataset.exploreCrossfadeGen !== gen) return;
+                    function finish() {
+                        if (img.dataset.exploreCrossfadeGen !== gen) return;
+                        img.style.opacity = '1';
+                    }
+                    img.onload = function () {
+                        img.onload = null;
+                        finish();
+                    };
+                    img.onerror = function () {
+                        img.onerror = null;
+                        finish();
+                    };
+                    img.src = newSrc;
+                    if (img.complete) {
+                        window.requestAnimationFrame(finish);
+                    }
+                }, EXPLORE_IMG_FADE_MS);
+            }
+
+            function updateGridPlaceholders() {
+                clearGridPlaceholders();
+                if (!wrap.classList.contains('explore-products--columns-3')) return;
+                var cols = colsForWidth();
+                var singles = Array.prototype.filter.call(
+                    wrap.querySelectorAll(':scope > .explore-hero-section'),
+                    function (s) {
+                        return !s.classList.contains('explore-hero-section--pair');
+                    }
+                );
+                var singleCount = singles.length;
+                if (singleCount === 0 || cols <= 1) return;
+                var rem = singleCount % cols;
+                var need = rem === 0 ? 0 : cols - rem;
+                if (need === 0) return;
+                var pair = wrap.querySelector(':scope > .explore-hero-section--pair');
+                var thumb = placeholderThumbSrc();
+                for (var i = 0; i < need; i++) {
+                    var ph = document.createElement('div');
+                    ph.className = 'explore-grid-placeholder';
+                    ph.innerHTML =
+                        '<img src="' + thumb + '" alt="" class="explore-grid-placeholder-img" decoding="async">' +
+                        '<div class="explore-hero-info">' +
+                        '<div class="explore-hero-title">I Unavailable I EEKSEYE I X/X/X</div>' +
+                        '<div class="explore-hero-category">Coming Soon...</div>' +
+                        '</div>';
+                    if (pair) {
+                        wrap.insertBefore(ph, pair);
+                    } else {
+                        wrap.appendChild(ph);
+                    }
+                }
+            }
+
+            function applyModelImages(useFade) {
+                ensureProductImageBackrefs();
+                wrap.querySelectorAll('.explore-hero-section .explore-hero-img').forEach(function (img) {
+                    var next = modelView ? MODEL_SRC : img.dataset.productSrc;
+                    if (!useFade) {
+                        img.style.opacity = '1';
+                        img.src = next;
+                        return;
+                    }
+                    crossfadeImgSrc(img, next);
+                });
+            }
+
+            function updatePlaceholderThumbsOnly(useFade) {
+                var thumb = placeholderThumbSrc();
+                wrap.querySelectorAll('.explore-grid-placeholder-img').forEach(function (img) {
+                    if (!useFade) {
+                        img.style.opacity = '1';
+                        img.src = thumb;
+                        return;
+                    }
+                    crossfadeImgSrc(img, thumb);
+                });
+            }
+
+            function syncToolbar() {
+                btnDefault.classList.toggle('active', !layoutGrid);
+                btnGrid3.classList.toggle('active', layoutGrid);
+                btnModel.classList.toggle('active', modelView);
+                btnDefault.setAttribute('aria-pressed', String(!layoutGrid));
+                btnGrid3.setAttribute('aria-pressed', String(layoutGrid));
+                btnModel.setAttribute('aria-pressed', String(modelView));
+            }
+
+            function applyLayout() {
+                if (layoutGrid) {
+                    wrap.classList.add('explore-products--columns-3');
+                    updateGridPlaceholders();
+                } else {
+                    wrap.classList.remove('explore-products--columns-3');
+                    clearGridPlaceholders();
+                }
+                syncToolbar();
+                persistExplorePrefs();
+            }
+
+            /** Same as clicking layout buttons — avoids redundant DOM clears; keeps toolbar in sync */
+            function setLayoutGrid(wantGrid) {
+                if (layoutGrid === wantGrid) {
+                    syncToolbar();
+                    return;
+                }
+                layoutGrid = wantGrid;
+                applyLayout();
+            }
+
+            function toggleModelView() {
+                modelView = !modelView;
+                wrap.classList.toggle('explore-model-view', modelView);
+                var useFade = !prefersExploreReducedMotion();
+                applyModelImages(useFade);
+                if (layoutGrid) {
+                    updatePlaceholderThumbsOnly(useFade);
+                }
+                syncToolbar();
+                persistExplorePrefs();
+            }
+
+            var resizeTimer;
+            window.addEventListener('resize', function () {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(function () {
+                    if (wrap.classList.contains('explore-products--columns-3')) {
+                        updateGridPlaceholders();
+                    }
+                }, 120);
+            });
+
+            function onLayoutDefaultClick(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                setLayoutGrid(false);
+            }
+            function onLayoutGridClick(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                setLayoutGrid(true);
+            }
+            function onLayoutModelClick(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleModelView();
+            }
+
+            btnDefault.addEventListener('click', onLayoutDefaultClick, true);
+            btnGrid3.addEventListener('click', onLayoutGridClick, true);
+            btnModel.addEventListener('click', onLayoutModelClick, true);
+
+            function exploreLayoutHotkeysAllowed(e) {
+                if (e.altKey || e.ctrlKey || e.metaKey) return false;
+                var t = e.target;
+                if (!t) return true;
+                var tag = (t.tagName || '').toUpperCase();
+                if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return false;
+                if (t.isContentEditable) return false;
+                if (document.querySelector('.password-modal.active')) return false;
+                if (document.querySelector('.password-overlay.active')) return false;
+                var cm = document.getElementById('copyright-modal');
+                if (cm && cm.style.display === 'flex') return false;
+                return true;
+            }
+
+            function exploreLayoutKeydown(e) {
+                if (!exploreLayoutHotkeysAllowed(e)) return;
+                var code = e.code || '';
+                var key = e.key || '';
+                var kc = e.keyCode != null ? e.keyCode : e.which;
+                var is1 = key === '1' || code === 'Digit1' || code === 'Numpad1' || kc === 49 || kc === 97;
+                var is2 = key === '2' || code === 'Digit2' || code === 'Numpad2' || kc === 50 || kc === 98;
+                var is3 = key === '3' || code === 'Digit3' || code === 'Numpad3' || kc === 51 || kc === 99;
+                if (is1) {
+                    e.preventDefault();
+                    setLayoutGrid(false);
+                } else if (is2) {
+                    e.preventDefault();
+                    setLayoutGrid(true);
+                } else if (is3) {
+                    if (e.repeat) return;
+                    e.preventDefault();
+                    toggleModelView();
+                }
+            }
+
+            window.addEventListener('keydown', exploreLayoutKeydown, true);
+
+            function initExploreToolbarAndLayout() {
+                ensureProductImageBackrefs();
+                applyLayout();
+                wrap.classList.toggle('explore-model-view', modelView);
+                applyModelImages(false);
+                syncToolbar();
+            }
+
+            initExploreToolbarAndLayout();
+            /* After body zoom / paint: re-sync toolbar + placeholders so first key/click matches visible layout */
+            requestAnimationFrame(function () {
+                requestAnimationFrame(function () {
+                    syncToolbar();
+                    if (layoutGrid) {
+                        updateGridPlaceholders();
+                    }
+                });
+            });
+
+            window.refreshExploreProductGridPlaceholders = function () {
+                if (wrap.classList.contains('explore-products--columns-3')) {
+                    updateGridPlaceholders();
+                }
+            };
+        })();
+
+        // Scroll to top/bottom functionality
+        const scrollBtn = document.querySelector('.scroll-top');
+        const scrollBtnIcon = scrollBtn ? scrollBtn.querySelector('i') : null;
+        const topThreshold = 10;
+
+        function updateScrollButton() {
+            if (!scrollBtn || !scrollBtnIcon) return;
+            
+            const scrollPosition = window.pageYOffset;
+            const windowHeight = window.innerHeight;
+            const bodyHeight = document.body.offsetHeight;
+
+            if (scrollPosition > 300) {
+                scrollBtn.classList.add('visible');
+            } else {
+                scrollBtn.classList.remove('visible');
+            }
+
+            if (scrollPosition < topThreshold) {
+                scrollBtnIcon.classList.remove('fa-arrow-up');
+                scrollBtnIcon.classList.add('fa-arrow-down');
+                scrollBtn.setAttribute('aria-label', 'Scroll to bottom');
+            } else {
+                scrollBtnIcon.classList.remove('fa-arrow-down');
+                scrollBtnIcon.classList.add('fa-arrow-up');
+                scrollBtn.setAttribute('aria-label', 'Scroll to top');
+            }
+        }
+
+        window.addEventListener('scroll', () => {
+            updateScrollButton();
+        });
+        
+        if (scrollBtn) {
+        scrollBtn.addEventListener('click', () => {
+            if (scrollBtnIcon.classList.contains('fa-arrow-down')) {
+                    // Scroll to bottom
+                window.scrollTo({
+                    top: document.body.scrollHeight,
+                    behavior: 'smooth'
+                });
+            } else {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            }
+        });
+        }
+
+        // Initial check in case page loads scrolled
+        updateScrollButton(); 
+
+        (function () {
+            function injectExploreHeroText() {
+                var tpl = document.getElementById('explore-hero-text-template');
+                if (!tpl || !tpl.content) return;
+                document.querySelectorAll('.explore-hero-section').forEach(function (section) {
+                    if (section.querySelector('.explore-hero-text-fill')) return;
+                    var bg = section.querySelector('.explore-hero-bg');
+                    var node = tpl.content.firstElementChild.cloneNode(true);
+                    if (bg && bg.parentNode) {
+                        bg.parentNode.insertBefore(node, bg.nextSibling);
+                    } else {
+                        section.insertBefore(node, section.firstChild);
+                    }
+                });
+            }
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', injectExploreHeroText);
+            } else {
+                injectExploreHeroText();
+            }
+        })();
+
+        // Dropdown Menu Toggle
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuIcon = document.querySelector('.menu-icon.red-x');
+        const dropdownMenu = document.querySelector('.dropdown-menu');
+
+            if (menuIcon && dropdownMenu) {
+                menuIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+            dropdownMenu.classList.toggle('active');
+        });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!menuIcon.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                dropdownMenu.classList.remove('active');
+                    }
+                });
+            }
+        });
+
+        // Add search functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('site-search');
+            const searchButton = document.getElementById('search-button');
+            const suggestionsDropdown = document.getElementById('suggestions-dropdown');
+
+            // Show suggestions dropdown when input is focused
+            searchInput.addEventListener('focus', function() {
+                suggestionsDropdown.style.display = 'block';
+            });
+
+            // Hide suggestions when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!searchInput.contains(e.target) && !suggestionsDropdown.contains(e.target)) {
+                    suggestionsDropdown.style.display = 'none';
+                }
+            });
+
+            // Handle suggestion clicks
+            document.querySelectorAll('.suggestion-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    searchInput.value = this.textContent;
+                    window.location.href = 'designs.html';
+                    suggestionsDropdown.style.display = 'none';
+                });
+            });
+
+            // Add event listeners
+            searchButton.addEventListener('click', function() {
+                window.location.href = 'designs.html';
+            });
+            
+            searchInput.addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    window.location.href = 'designs.html';
+                }
+            });
+        });
+
+        // Add Firebase SDK
+        const firebaseConfig = {
+            apiKey: "AIzaSyBuZpT46hKccS6-t2b4-gWXF93BNBu9ErQ",
+            authDomain: "eeks-eye.firebaseapp.com",
+            projectId: "eeks-eye",
+            storageBucket: "eeks-eye.firebasestorage.app",
+            messagingSenderId: "662530364021",
+            appId: "1:662530364021:web:454ba95f835655502c9e3c",
+            measurementId: "G-3Q7X3M2KRN"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+        const analytics = firebase.analytics();
+
+        // Store current product number - global scope
+        var currentProductNumber = null;
+        // Track password attempts per page load
+        var passwordAttempts = 0;
+        var maxPasswordAttempts = 3;
+        /** After × / backdrop / ESC close, ignore hero clicks briefly (avoids ghost reopen on touch). */
+        var explorePasswordIgnoreHeroClickUntil = 0;
+
+        // Ignore clicks that originate inside the password UI so hero onclick does not reopen the modal
+        function handleExploreProductClick(e, productNumber, el) {
+            if (Date.now() < explorePasswordIgnoreHeroClickUntil) {
+                if (e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }
+                return;
+            }
+            if (e && e.target && e.target.closest && e.target.closest('.password-overlay')) {
+                return;
+            }
+            showPasswordModal(productNumber, el);
+        }
+
+        // Password modal — overlay fills the clicked hero section (single shirt or whole x+y pair)
+        function showPasswordModal(productNumber, el) {
+            currentProductNumber = Number(productNumber);
+            const pool = document.getElementById('explore-password-pool');
+            const passwordOverlay = document.querySelector('.password-overlay');
+            const passwordModal = passwordOverlay ? passwordOverlay.querySelector('.password-modal') : null;
+            const passwordInput = passwordOverlay ? passwordOverlay.querySelector('.password-input') : null;
+            const passwordCloseBtn = passwordOverlay ? passwordOverlay.querySelector('.password-close-btn') : null;
+
+            if (!passwordOverlay || !passwordModal || !pool) return;
+
+            const sectionIdMap = {
+                1: 'first-product',
+                2: 'second-product',
+                3: 'third-product',
+                4: 'fourth-product',
+                5: 'fifth-product',
+                6: 'sixth-product',
+                /* legacy / shared listing: x+y pair is product 6 only */
+                7: 'sixth-product'
+            };
+            const targetId = sectionIdMap[currentProductNumber] || sectionIdMap[1];
+            const targetSection = document.getElementById(targetId);
+
+            var host = targetSection;
+            if (el && el.classList) {
+                if (el.classList.contains('explore-hero-pair-col')) {
+                    host = el;
+                } else if (el.classList.contains('explore-hero-section')) {
+                    host = el;
+                }
+            }
+
+            if (!host) return;
+
+            host.appendChild(passwordOverlay);
+            passwordOverlay.classList.add('password-overlay--docked');
+            passwordOverlay.style.top = '';
+            passwordOverlay.style.left = '';
+            passwordOverlay.style.width = '';
+            passwordOverlay.style.height = '';
+            passwordModal.style.top = '';
+            passwordModal.style.left = '';
+
+            passwordOverlay.classList.remove('success', 'shake');
+            passwordModal.classList.remove('success');
+            if (passwordInput) {
+                passwordInput.classList.remove('success');
+            }
+
+            passwordOverlay.classList.add('active');
+            passwordModal.classList.add('active');
+            if (passwordInput) {
+                passwordInput.removeAttribute('aria-hidden');
+            }
+            if (passwordCloseBtn) {
+                passwordCloseBtn.style.opacity = '1';
+                passwordCloseBtn.style.pointerEvents = 'auto';
+            }
+            if (passwordInput) {
+                passwordInput.value = '';
+                setTimeout(function () {
+                    passwordInput.focus();
+                }, 100);
+                passwordInput.onkeypress = function (e) {
+                    if (e.key === 'Enter' || e.keyCode === 13) {
+                        e.preventDefault();
+                        checkPassword();
+                    }
+                };
+                passwordInput.onkeydown = function (e) {
+                    if (e.key === 'Enter' || e.keyCode === 13) {
+                        e.preventDefault();
+                        checkPassword();
+                    }
+                };
+            }
+        }
+        
+        // Close password modal - global function for inline onclick
+        function closePasswordModal() {
+            explorePasswordIgnoreHeroClickUntil = Date.now() + 450;
+            const pool = document.getElementById('explore-password-pool');
+            const passwordOverlay = document.querySelector('.password-overlay');
+            const passwordModal = passwordOverlay ? passwordOverlay.querySelector('.password-modal') : document.querySelector('.password-modal');
+            const passwordInput = passwordOverlay ? passwordOverlay.querySelector('.password-input') : document.querySelector('.password-input');
+            const passwordCloseBtn = passwordOverlay ? passwordOverlay.querySelector('.password-close-btn') : document.querySelector('.password-close-btn');
+
+            if (passwordOverlay) {
+                passwordOverlay.classList.remove('active', 'success', 'shake', 'password-overlay--docked');
+                passwordOverlay.style.top = '';
+                passwordOverlay.style.left = '';
+                passwordOverlay.style.width = '';
+                passwordOverlay.style.height = '';
+                if (pool) {
+                    pool.appendChild(passwordOverlay);
+                }
+            }
+            if (passwordModal) {
+                passwordModal.classList.remove('active', 'success');
+                passwordModal.style.top = '';
+                passwordModal.style.left = '';
+            }
+            if (passwordCloseBtn) {
+                passwordCloseBtn.style.opacity = '0';
+                passwordCloseBtn.style.pointerEvents = 'none';
+            }
+            if (passwordInput) {
+                passwordInput.value = '';
+                passwordInput.blur();
+                passwordInput.setAttribute('aria-hidden', 'true');
+            }
+        }
+        
+        function checkPassword() {
+            const passwordInput = document.querySelector('.password-input');
+            const passwordOverlay = document.querySelector('.password-overlay');
+            const correctPassword = 'overlay';
+            
+            if (!passwordInput) return;
+
+            // Enforce max attempts per page load
+            if (passwordAttempts >= maxPasswordAttempts) {
+                alert('Maximum password attempts reached. Please refresh the page to try again.');
+                return;
+            }
+            
+            var input = (passwordInput.value || '').trim();
+            if (input === correctPassword) {
+                // Correct password - turn modal green
+                if (passwordOverlay) {
+                    passwordOverlay.classList.add('success');
+                }
+                const passwordModal = document.querySelector('.password-modal');
+                if (passwordModal) {
+                    passwordModal.classList.add('success');
+                }
+                if (passwordInput) {
+                    passwordInput.classList.add('success');
+                }
+                
+                // Close modal and redirect after showing green effect
+                setTimeout(() => {
+                    closePasswordModal();
+                    // Small delay before redirect to allow modal to close
+                    setTimeout(() => {
+                        const productNum = currentProductNumber || 1;
+                        const productPage = 'product.html?id=' + encodeURIComponent(productNum);
+                        window.location.href = productPage;
+                    }, 300);
+                }, 500);
+            } else {
+                passwordAttempts++;
+                // Wrong password - shake the whole screen and turn input line red
+                if (passwordOverlay) {
+                    passwordOverlay.classList.add('shake');
+                    setTimeout(() => {
+                        passwordOverlay.classList.remove('shake');
+                    }, 500);
+                }
+                
+                // Also shake the body
+                document.body.classList.add('shake');
+                setTimeout(() => {
+                    document.body.classList.remove('shake');
+                }, 500);
+                
+                // Turn input line red
+                passwordInput.style.borderBottomColor = '#ff0000';
+                
+                // Clear the input
+                passwordInput.value = '';
+                
+                // Keep the red line for 2 seconds, then return to white
+                setTimeout(() => {
+                    passwordInput.style.borderBottomColor = '#fff';
+                }, 2000);
+            }
+        }
+        
+        // Close modal when clicking overlay; stop propagation so host section onclick does not reopen
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordOverlay = document.querySelector('.password-overlay');
+            const passwordModal = passwordOverlay ? passwordOverlay.querySelector('.password-modal') : null;
+            const passwordCloseBtn = passwordOverlay ? passwordOverlay.querySelector('.password-close-btn') : null;
+
+            if (passwordOverlay) {
+                passwordOverlay.addEventListener('click', function(e) {
+                    if (e.target === passwordOverlay) {
+                        e.stopPropagation();
+                        closePasswordModal();
+                    }
+                });
+            }
+            if (passwordModal) {
+                passwordModal.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                });
+            }
+            if (passwordCloseBtn) {
+                passwordCloseBtn.addEventListener('mousedown', function(e) {
+                    e.stopPropagation();
+                }, true);
+                /* click handled by inline onclick on the button (always closes overlay) */
+                passwordCloseBtn.addEventListener('touchend', function(e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    closePasswordModal();
+                }, { passive: false });
+            }
+        });
+
+        // Close modal when pressing ESC (global listener)
+        document.addEventListener('keydown', function(e) {
+            const isEsc =
+                e.key === 'Escape' ||
+                e.key === 'Esc' ||
+                e.code === 'Escape' ||
+                e.keyCode === 27;
+            if (!isEsc) return;
+            if (!document.querySelector('.password-overlay.active')) return;
+
+            closePasswordModal();
+        });
+
+// Copyright modal logic (match index.html footer behavior)
+const copyrightLink = document.getElementById('copyright-link');
+const copyrightModal = document.getElementById('copyright-modal');
+const closeCopyrightModal = document.getElementById('close-copyright-modal');
+if (copyrightLink && copyrightModal && closeCopyrightModal) {
+    let scrollPosition = 0;
+    copyrightLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        scrollPosition = window.scrollY || window.pageYOffset;
+        copyrightModal.style.top = scrollPosition + 'px';
+        copyrightModal.style.display = 'flex';
+        copyrightModal.style.zIndex = '999999';
+        copyrightModal.style.position = 'fixed';
+        copyrightModal.style.left = '0';
+        copyrightModal.style.width = '100vw';
+        copyrightModal.style.height = '100vh';
+        document.body.style.overflow = 'hidden';
+        document.body.style.position = 'fixed';
+        document.body.style.width = '100%';
+        document.body.style.top = `-${scrollPosition}px`;
+    });
+    closeCopyrightModal.addEventListener('click', function() {
+        const savedScroll = scrollPosition;
+        copyrightModal.style.display = 'none';
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
+        document.body.style.top = '';
+        if (savedScroll !== undefined) {
+            window.scrollTo(0, savedScroll);
+        }
+    });
+    copyrightModal.addEventListener('click', function(e) {
+        if (e.target === copyrightModal) {
+            const savedScroll = scrollPosition;
+            copyrightModal.style.display = 'none';
+            document.body.style.overflow = '';
+            document.body.style.position = '';
+            document.body.style.width = '';
+            document.body.style.top = '';
+            if (savedScroll !== undefined) {
+                window.scrollTo(0, savedScroll);
+            }
+        }
+    });
+}
+
+    </script>
+    <script src="js/explore-data.js"></script>
+    <script src="js/product-i18n.js"></script>
+    <script src="js/cookie-consent.js"></script>
+    <script src="js/footer-links.js"></script>
+    <script src="translation-system.js"></script>
+</body>
+</html> 

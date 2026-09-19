@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Sitemap location for search engines
+Sitemap: https://eekseye.com/sitemap.xml

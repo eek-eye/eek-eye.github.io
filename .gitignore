@@ -1,0 +1,10 @@
+*.zip
+.cursor/
+.env
+.env
+.env.local
+.env.local
+.vercel
+.vercel
+node_modules/
+node_modules/

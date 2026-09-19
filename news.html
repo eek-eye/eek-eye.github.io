@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News - Eeks-Eye</title>
+    <link rel="icon" type="image/png" href="images/tags.png">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Oswald:wght@500;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body.news-page {
+            margin: 0;
+            min-height: 100vh;
+            background: #1a0808;
+            color: #111;
+            font-family: 'Libre Baskerville', Georgia, 'Times New Roman', serif;
+            overflow-x: hidden;
+        }
+
+        :root {
+            --blood: #8b0000;
+            --blood-bright: #c41e1e;
+            --blood-dark: #4a0000;
+            --blood-dry: #5c1010;
+        }
+
+        /* Blood splatter SVG tile */
+        .blood-splatter {
+            position: absolute;
+            pointer-events: none;
+            background-repeat: no-repeat;
+            background-size: contain;
+            opacity: 0.85;
+            mix-blend-mode: multiply;
+            z-index: 4;
+        }
+
+        .blood-splatter--1 {
+            width: 180px;
+            height: 140px;
+            top: 8%;
+            left: 5%;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 90'%3E%3Cellipse cx='55' cy='45' rx='48' ry='38' fill='%238b0000'/%3E%3Cellipse cx='30' cy='30' rx='18' ry='14' fill='%23a01010'/%3E%3Cellipse cx='85' cy='55' rx='22' ry='16' fill='%23660000'/%3E%3Cpath d='M60 10 Q65 35 58 50 Q70 40 75 20' fill='%23c41e1e'/%3E%3C/svg%3E");
+            transform: rotate(-25deg);
+        }
+
+        .blood-splatter--2 {
+            width: 220px;
+            height: 160px;
+            top: 35%;
+            right: 3%;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 100'%3E%3Cellipse cx='70' cy='50' rx='55' ry='42' fill='%237a0a0a'/%3E%3Ccircle cx='40' cy='35' r='20' fill='%23990000'/%3E%3Ccircle cx='100' cy='60' r='25' fill='%23550000'/%3E%3C/svg%3E");
+            transform: rotate(15deg);
+        }
+
+        .blood-splatter--3 {
+            width: 150px;
+            height: 120px;
+            bottom: 18%;
+            left: 8%;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 80'%3E%3Cellipse cx='50' cy='40' rx='42' ry='32' fill='%238b0000'/%3E%3Cellipse cx='25' cy='55' rx='15' ry='12' fill='%23a01010'/%3E%3C/svg%3E");
+            transform: rotate(40deg);
+        }
+
+        .blood-splatter--4 {
+            width: 100px;
+            height: 200px;
+            top: 15%;
+            right: 18%;
+            opacity: 0.7;
+        }
+
+        .blood-drip {
+            position: absolute;
+            width: 8px;
+            background: linear-gradient(180deg, var(--blood-bright) 0%, var(--blood-dark) 100%);
+            border-radius: 0 0 50% 50%;
+            pointer-events: none;
+            z-index: 5;
+            box-shadow: 0 0 6px rgba(139, 0, 0, 0.6);
+        }
+
+        .blood-drip--1 { left: 12%; top: 0; height: 90px; animation: bloodDrip 4s ease-in infinite; }
+        .blood-drip--2 { left: 78%; top: 0; height: 120px; width: 10px; animation: bloodDrip 5.5s ease-in 1s infinite; }
+        .blood-drip--3 { left: 45%; top: 0; height: 60px; width: 6px; animation: bloodDrip 3.5s ease-in 0.5s infinite; }
+        .blood-drip--4 { right: 25%; top: 0; height: 75px; width: 7px; animation: bloodDrip 6s ease-in 2s infinite; }
+
+        @keyframes bloodDrip {
+            0%, 100% { transform: scaleY(1); opacity: 0.9; }
+            50% { transform: scaleY(1.15); opacity: 1; }
+        }
+
+        .blood-pool {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 80px;
+            background: radial-gradient(ellipse 80% 100% at 50% 100%, rgba(139,0,0,0.75) 0%, rgba(74,0,0,0.4) 45%, transparent 70%);
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .blood-vignette {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at center, transparent 30%, rgba(60,0,0,0.55) 100%);
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* Street / pole scene */
+        .news-scene {
+            position: relative;
+            min-height: 100vh;
+            padding: 2rem 1rem 3rem;
+            background:
+                radial-gradient(ellipse at 50% 0%, rgba(139,0,0,0.35) 0%, transparent 55%),
+                linear-gradient(180deg, rgba(40,0,0,0.6) 0%, transparent 20%, transparent 75%, rgba(30,0,0,0.7) 100%),
+                linear-gradient(90deg, #3a2020 0%, #5c4040 35%, #4a3030 65%, #2a1515 100%);
+        }
+
+        .news-scene::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+            pointer-events: none;
+            opacity: 0.55;
+        }
+
+        .news-back {
+            position: relative;
+            z-index: 6;
+            display: inline-block;
+            margin: 0 auto 1.25rem;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #ffd0d0;
+            text-decoration: none;
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.72rem;
+            letter-spacing: 0.22em;
+            text-transform: uppercase;
+            border: 1px solid rgba(196, 30, 30, 0.7);
+            padding: 0.45rem 0.85rem;
+            background: rgba(40, 0, 0, 0.65);
+            box-shadow: 0 0 12px rgba(139, 0, 0, 0.5);
+        }
+
+        .news-back::after {
+            content: '';
+            position: absolute;
+            inset: -4px -8px auto auto;
+            width: 28px;
+            height: 28px;
+            background: radial-gradient(circle, var(--blood-bright) 0%, transparent 70%);
+            border-radius: 50%;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        .news-back:hover {
+            background: rgba(80, 0, 0, 0.85);
+            color: #fff;
+            border-color: var(--blood-bright);
+        }
+
+        /* Central pole */
+        .news-pole-wrap {
+            position: relative;
+            z-index: 1;
+            max-width: 420px;
+            margin: 0 auto;
+            min-height: 1200px;
+        }
+
+        .news-pole {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 52px;
+            transform: translateX(-50%);
+            background: linear-gradient(90deg, #4a3030 0%, #6a4545 35%, #7a5050 50%, #5a3535 70%, #3a2020 100%);
+            box-shadow:
+                inset 4px 0 8px rgba(255,255,255,0.08),
+                inset -4px 0 10px rgba(0,0,0,0.45),
+                0 0 40px rgba(139, 0, 0, 0.45);
+            border-radius: 2px;
+            overflow: visible;
+        }
+
+        .news-pole::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+            height: 45px;
+            background: radial-gradient(ellipse, var(--blood-bright) 0%, var(--blood-dark) 50%, transparent 72%);
+            border-radius: 50%;
+            opacity: 0.95;
+            z-index: 2;
+        }
+
+        .pole-drip {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 9px;
+            background: linear-gradient(180deg, var(--blood-bright), var(--blood-dark));
+            border-radius: 0 0 40% 40%;
+            z-index: 3;
+            box-shadow: 0 2px 8px rgba(139, 0, 0, 0.7);
+        }
+
+        .pole-drip--1 { top: 80px; height: 140px; width: 11px; }
+        .pole-drip--2 { top: 280px; height: 95px; left: calc(50% + 8px); width: 7px; opacity: 0.9; }
+        .pole-drip--3 { top: 480px; height: 110px; left: calc(50% - 10px); width: 8px; }
+        .pole-drip--4 { top: 680px; height: 85px; width: 10px; }
+        .pole-drip--5 { top: 920px; height: 120px; left: calc(50% + 6px); width: 9px; opacity: 0.85; }
+
+        .news-pole::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: repeating-linear-gradient(
+                180deg,
+                transparent 0,
+                transparent 38px,
+                rgba(0,0,0,0.08) 38px,
+                rgba(0,0,0,0.08) 40px
+            );
+        }
+
+        /* Flyer stack */
+        .flyer-stack {
+            position: relative;
+            z-index: 2;
+            padding: 0.5rem 0 4rem;
+        }
+
+        .flyer {
+            position: relative;
+            width: min(100%, 360px);
+            margin: 0 auto 1.35rem;
+            padding: 1rem 1.1rem 1.15rem;
+            background: #f7f3ea;
+            color: #111;
+            border: 2px solid #111;
+            box-shadow:
+                3px 4px 0 rgba(0,0,0,0.55),
+                8px 12px 24px rgba(0,0,0,0.28),
+                inset 0 0 40px rgba(139, 0, 0, 0.08);
+            filter: contrast(1.12) saturate(1.15);
+            transform-origin: center top;
+            overflow: visible;
+        }
+
+        .flyer::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 45% 35% at 85% 15%, rgba(139, 0, 0, 0.55) 0%, transparent 55%),
+                radial-gradient(ellipse 35% 28% at 12% 88%, rgba(100, 0, 0, 0.5) 0%, transparent 50%),
+                radial-gradient(ellipse 25% 20% at 55% 45%, rgba(139, 0, 0, 0.2) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 0;
+            mix-blend-mode: multiply;
+        }
+
+        .flyer::after {
+            content: '';
+            position: absolute;
+            top: -8px;
+            right: 15%;
+            width: 55px;
+            height: 70px;
+            background: radial-gradient(ellipse, var(--blood-bright) 0%, var(--blood) 40%, transparent 68%);
+            opacity: 0.75;
+            pointer-events: none;
+            z-index: 1;
+            transform: rotate(12deg);
+        }
+
+        .flyer > * {
+            position: relative;
+            z-index: 2;
+        }
+
+        .flyer__blood-smear {
+            position: absolute;
+            pointer-events: none;
+            z-index: 1;
+            background: var(--blood);
+            opacity: 0.7;
+            border-radius: 40% 60% 50% 50%;
+            mix-blend-mode: multiply;
+        }
+
+        .flyer__blood-smear--a { width: 70px; height: 35px; bottom: 8px; left: -5px; transform: rotate(-8deg); }
+        .flyer__blood-smear--b { width: 45px; height: 55px; top: 30%; right: -8px; transform: rotate(20deg); background: var(--blood-bright); opacity: 0.65; }
+        .flyer__blood-smear--c { width: 90px; height: 25px; top: 55%; left: 10%; transform: rotate(3deg); opacity: 0.55; }
+        .flyer__blood-smear--d { width: 35px; height: 80px; bottom: 20%; right: 5%; transform: rotate(-15deg); }
+
+        .flyer__headline {
+            font-family: 'Oswald', sans-serif;
+            font-weight: 700;
+            font-size: clamp(1.55rem, 6vw, 2.15rem);
+            line-height: 0.95;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            margin: 0 0 0.65rem;
+            border-bottom: 3px solid var(--blood-dark);
+            padding-bottom: 0.45rem;
+            text-shadow: 2px 2px 0 rgba(139, 0, 0, 0.25);
+        }
+
+        .flyer__headline--drip {
+            position: relative;
+        }
+
+        .flyer__headline--drip::after {
+            content: '';
+            position: absolute;
+            bottom: -18px;
+            left: 20%;
+            width: 6px;
+            height: 22px;
+            background: linear-gradient(180deg, var(--blood-bright), var(--blood-dark));
+            border-radius: 0 0 50% 50%;
+        }
+
+        .flyer--paper-a { background: #f5ece8; }
+        .flyer--paper-b { background: #ebe0d8; }
+        .flyer--paper-c { background: #f0e4e0; }
+
+        .flyer--tilt-l { transform: rotate(-1.8deg); margin-left: -0.35rem; }
+        .flyer--tilt-r { transform: rotate(1.4deg); margin-left: 0.35rem; }
+        .flyer--tilt-slight { transform: rotate(-0.6deg); }
+
+        .flyer--overlap-up {
+            margin-top: -0.85rem;
+            z-index: 3;
+        }
+
+        .flyer--torn-top {
+            clip-path: polygon(
+                0% 3%, 4% 0%, 11% 2%, 19% 0%, 28% 3%, 37% 1%, 46% 2%, 55% 0%,
+                64% 3%, 73% 1%, 82% 2%, 91% 0%, 97% 3%, 100% 1%,
+                100% 100%, 0% 100%
+            );
+        }
+
+        .flyer--torn-bottom {
+            clip-path: polygon(
+                0% 0%, 100% 0%, 100% 97%, 96% 100%, 88% 98%, 79% 100%, 70% 97%,
+                61% 99%, 52% 97%, 43% 100%, 34% 98%, 25% 100%, 16% 97%, 8% 99%, 0% 96%
+            );
+        }
+
+        .flyer__stamp {
+            position: absolute;
+            top: 0.65rem;
+            right: 0.75rem;
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.58rem;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            border: 1.5px solid var(--blood-dark);
+            padding: 0.15rem 0.35rem;
+            opacity: 0.85;
+            transform: rotate(8deg);
+            color: var(--blood-dark);
+            background: rgba(255, 220, 220, 0.5);
+        }
+
+        .flyer__stamp::after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            right: 2px;
+            width: 5px;
+            height: 14px;
+            background: var(--blood-bright);
+            border-radius: 0 0 50% 50%;
+        }
+
+        .flyer--dark .flyer__headline {
+            border-bottom-color: var(--blood-bright);
+            color: #ffd0d0;
+            text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5), 0 0 20px rgba(196, 30, 30, 0.4);
+        }
+
+        .flyer--dark {
+            background: #1a0808;
+            color: #f5e0e0;
+            border-color: var(--blood-dark);
+            box-shadow:
+                3px 4px 0 rgba(0,0,0,0.75),
+                8px 12px 24px rgba(139, 0, 0, 0.35),
+                inset 0 0 60px rgba(139, 0, 0, 0.25);
+        }
+
+        .flyer--dark::before {
+            background:
+                radial-gradient(ellipse 50% 40% at 90% 10%, rgba(196, 30, 30, 0.7) 0%, transparent 55%),
+                radial-gradient(ellipse 40% 35% at 5% 95%, rgba(139, 0, 0, 0.65) 0%, transparent 50%);
+        }
+
+        .flyer__kicker {
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.68rem;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            margin: 0 0 0.5rem;
+        }
+
+        .flyer__big-num {
+            font-family: 'Oswald', sans-serif;
+            font-size: clamp(2.4rem, 12vw, 3.4rem);
+            line-height: 0.85;
+            font-weight: 700;
+            margin: 0.15rem 0 0.5rem;
+            letter-spacing: -0.02em;
+        }
+
+        .flyer p {
+            margin: 0 0 0.65rem;
+            font-size: 0.72rem;
+            line-height: 1.45;
+        }
+
+        .flyer p:last-child {
+            margin-bottom: 0;
+        }
+
+        .flyer ul {
+            margin: 0.5rem 0 0.65rem;
+            padding-left: 1.1rem;
+            font-size: 0.68rem;
+            line-height: 1.4;
+        }
+
+        .flyer li {
+            margin-bottom: 0.35rem;
+        }
+
+        .flyer__tag {
+            display: inline-block;
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.62rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            background: var(--blood-dark);
+            color: #ffd0d0;
+            padding: 0.2rem 0.45rem;
+            margin-bottom: 0.55rem;
+        }
+
+        .flyer--dark .flyer__tag {
+            background: var(--blood-bright);
+            color: #1a0808;
+        }
+
+        .flyer__quote {
+            font-style: italic;
+            font-size: 0.78rem;
+            border-left: 3px solid var(--blood-dark);
+            padding-left: 0.65rem;
+            margin: 0.75rem 0;
+        }
+
+        .flyer--dark .flyer__quote {
+            border-left-color: var(--blood-bright);
+        }
+
+        .flyer__grid-cell {
+            aspect-ratio: 1;
+            background: #ddd;
+            border: 1px solid #111;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Oswald', sans-serif;
+            font-size: 0.55rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            text-align: center;
+            padding: 0.2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .flyer__grid-cell:nth-child(odd)::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 70% 30%, rgba(139,0,0,0.45) 0%, transparent 55%);
+            pointer-events: none;
+        }
+
+        .flyer__link {
+            color: inherit;
+            font-weight: 700;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        .flyer__grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4px;
+            margin: 0.65rem 0;
+            border: 2px solid var(--blood-dark);
+        }
+
+        .flyer__phone {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.05rem;
+            letter-spacing: 0.06em;
+            margin-top: 0.35rem;
+        }
+
+        .flyer__tape {
+            position: absolute;
+            width: 54px;
+            height: 18px;
+            background: rgba(255,220,220,0.4);
+            border: 1px solid rgba(139,0,0,0.25);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+            opacity: 0.85;
+        }
+
+        .flyer__tape--bloody::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 60% 50%, rgba(139,0,0,0.6) 0%, transparent 70%);
+        }
+
+        /* Footer: blood-soaked street pole palette */
+        .news-page .explore-footer-scale-wrap {
+            position: relative;
+            z-index: 3;
+            background: #3a1515;
+            filter: none;
+        }
+
+        .news-page .explore-footer-scale-wrap::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 30% 80% at 10% 50%, rgba(139,0,0,0.5) 0%, transparent 60%),
+                radial-gradient(ellipse 25% 70% at 90% 30%, rgba(100,0,0,0.45) 0%, transparent 55%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .news-page .site-footer.explore-footer-editorial {
+            background: #e8d8d4;
+            color: #2a0808;
+            border-top: 4px solid var(--blood-dark);
+            position: relative;
+        }
+
+        .news-page .site-footer.explore-footer-editorial::after {
+            content: '';
+            position: absolute;
+            top: -12px;
+            left: 15%;
+            width: 8px;
+            height: 35px;
+            background: linear-gradient(180deg, var(--blood-bright), var(--blood-dark));
+            border-radius: 0 0 50% 50%;
+            opacity: 0.85;
+        }
+
+        .flyer__tape--top {
+            top: -9px;
+            left: 50%;
+            transform: translateX(-50%) rotate(-2deg);
+        }
+
+        .flyer__tape--corner {
+            top: -6px;
+            right: 12%;
+            transform: rotate(14deg);
+        }
+
+        .news-page .explore-footer-col {
+            border-right-color: var(--blood-dark);
+        }
+
+        .news-page .explore-footer-heading,
+        .news-page .explore-footer-subhead {
+            color: var(--blood-dark);
+        }
+
+        .news-page .explore-footer-list li,
+        .news-page .explore-footer-note {
+            color: #3a1515;
+        }
+
+        .news-page .explore-footer-link,
+        .news-page .explore-footer-bottom a {
+            color: var(--blood-dark);
+        }
+
+        .news-page .explore-footer-link:hover,
+        .news-page .explore-footer-bottom a:hover {
+            color: var(--blood-bright);
+            opacity: 1;
+        }
+
+        .news-page .explore-footer-bottom {
+            border-top-color: var(--blood-dark);
+            color: #3a1515;
+        }
+
+        @media (max-width: 900px) {
+            .news-page .explore-footer-col {
+                border-bottom-color: #111;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .news-page .explore-footer-col {
+                border-bottom-color: #111;
+            }
+        }
+
+        .page-transition-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 9999;
+            opacity: 1;
+            pointer-events: none;
+            transition: opacity 2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .page-transition-overlay.fade-out { opacity: 0; }
+        .logo-transition-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            opacity: 0;
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 999;
+            pointer-events: none;
+        }
+        .logo-transition-overlay.active { opacity: 1; }
+        .transition-text {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
+            color: #fff;
+            opacity: 0;
+            z-index: 1001;
+            pointer-events: none;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @media (max-width: 480px) {
+            .news-pole-wrap { max-width: 100%; }
+            .flyer { width: calc(100% - 0.5rem); }
+            .flyer--tilt-l,
+            .flyer--tilt-r { margin-left: auto; transform: rotate(-0.4deg); }
+        }
+    </style>
+</head>
+<body class="news-page">
+    <div class="page-transition-overlay"></div>
+
+    <div class="news-scene">
+        <div class="blood-vignette" aria-hidden="true"></div>
+        <div class="blood-pool" aria-hidden="true"></div>
+        <div class="blood-splatter blood-splatter--1" aria-hidden="true"></div>
+        <div class="blood-splatter blood-splatter--2" aria-hidden="true"></div>
+        <div class="blood-splatter blood-splatter--3" aria-hidden="true"></div>
+        <div class="blood-drip blood-drip--1" aria-hidden="true"></div>
+        <div class="blood-drip blood-drip--2" aria-hidden="true"></div>
+        <div class="blood-drip blood-drip--3" aria-hidden="true"></div>
+        <div class="blood-drip blood-drip--4" aria-hidden="true"></div>
+
+        <a href="index.html" class="news-back nav-link">← Eeks Eye</a>
+
+        <div class="news-pole-wrap">
+            <div class="news-pole" aria-hidden="true">
+                <span class="pole-drip pole-drip--1" aria-hidden="true"></span>
+                <span class="pole-drip pole-drip--2" aria-hidden="true"></span>
+                <span class="pole-drip pole-drip--3" aria-hidden="true"></span>
+                <span class="pole-drip pole-drip--4" aria-hidden="true"></span>
+                <span class="pole-drip pole-drip--5" aria-hidden="true"></span>
+            </div>
+
+            <div class="flyer-stack">
+                <article class="flyer flyer--paper-a flyer--torn-top flyer--tilt-l">
+                    <span class="flyer__blood-smear flyer__blood-smear--a" aria-hidden="true"></span>
+                    <span class="flyer__tape flyer__tape--top flyer__tape--bloody" aria-hidden="true"></span>
+                    <p class="flyer__kicker">Eeks Eye · News &amp; Updates</p>
+                    <h1 class="flyer__headline flyer__headline--drip">Latest<br>News</h1>
+                    <p>Fresh drops, behind-the-scenes, and creative insights from the studio. Pasted here for whoever reads the pole.</p>
+                </article>
+
+                <article class="flyer flyer--paper-b flyer--tilt-r flyer--overlap-up">
+                    <span class="flyer__blood-smear flyer__blood-smear--b" aria-hidden="true"></span>
+                    <span class="flyer__blood-smear flyer__blood-smear--c" aria-hidden="true"></span>
+                    <span class="flyer__stamp">New drop</span>
+                    <span class="flyer__tag">Rockstar &amp; Seek</span>
+                    <h2 class="flyer__headline flyer__headline--drip" style="font-size:1.35rem;">Unveiling the Unexpected</h2>
+                    <p>We are thrilled to announce the launch of our <strong>Rockstar &amp; Seek</strong> collection — a bold fusion of rebellion and introspection. Each piece is designed to challenge the norm and inspire a new wave of creative expression.</p>
+                    <ul>
+                        <li>Limited edition prints and apparel</li>
+                        <li>Hand-finished details on every item</li>
+                        <li>Exclusive BTS content for subscribers</li>
+                    </ul>
+                    <p>Discover the story behind the art, the process, and the vision that brought this collection to life.</p>
+                </article>
+
+                <article class="flyer flyer--dark flyer--tilt-slight flyer--torn-bottom">
+                    <span class="flyer__blood-smear flyer__blood-smear--d" aria-hidden="true"></span>
+                    <p class="flyer__kicker">Save the date</p>
+                    <h2 class="flyer__headline flyer__headline--drip">Upcoming Events</h2>
+                    <p>Mark your calendars! Eeks-Eye hosts a <strong>Live Art Session</strong> — July 20, 2025. Art, music, and fashion collide.</p>
+                    <ul>
+                        <li>Live painting &amp; Q&amp;A with the artist</li>
+                        <li>Exclusive merch giveaways</li>
+                        <li>Virtual gallery tour</li>
+                    </ul>
+                    <p class="flyer__phone">Subscribe for your invite →</p>
+                </article>
+
+                <article class="flyer flyer--paper-c flyer--tilt-l flyer--overlap-up">
+                    <span class="flyer__blood-smear flyer__blood-smear--a" aria-hidden="true"></span>
+                    <span class="flyer__tape flyer__tape--corner flyer__tape--bloody" aria-hidden="true"></span>
+                    <h2 class="flyer__headline" style="font-size:1.2rem;">Behind the Scenes</h2>
+                    <p>Ever wondered what goes into creating an Eeks-Eye piece? Our latest post pulls back the curtain — from initial sketches to final product.</p>
+                    <p class="flyer__quote">"Creativity is not a talent, it's a way of operating."</p>
+                    <p>Read the <a href="#" class="flyer__link">full story</a> and get inspired to start your own creative journey.</p>
+                </article>
+
+                <article class="flyer flyer--paper-a flyer--tilt-r">
+                    <span class="flyer__blood-smear flyer__blood-smear--b" aria-hidden="true"></span>
+                    <div class="flyer__grid" aria-hidden="true">
+                        <div class="flyer__grid-cell">@artbyluna</div>
+                        <div class="flyer__grid-cell">Rockstar</div>
+                        <div class="flyer__grid-cell">Seek</div>
+                        <div class="flyer__grid-cell">Studio</div>
+                        <div class="flyer__grid-cell">@visualvibe</div>
+                        <div class="flyer__grid-cell">XI</div>
+                    </div>
+                    <h2 class="flyer__headline" style="font-size:1.15rem;">Community Spotlight</h2>
+                    <p>Tag us on Instagram <strong>@eeks.eye</strong> for a chance to be featured. This month's favorites:</p>
+                    <ul>
+                        <li><strong>@artbyluna</strong> — "The Rockstar tee is my new go-to for gigs!"</li>
+                        <li><strong>@visualvibe</strong> — "Seek print looks insane in my studio."</li>
+                    </ul>
+                    <p>Keep sharing your looks. We're building something special — together.</p>
+                </article>
+
+                <article class="flyer flyer--paper-b flyer--tilt-slight flyer--overlap-up">
+                    <span class="flyer__blood-smear flyer__blood-smear--c" aria-hidden="true"></span>
+                    <span class="flyer__blood-smear flyer__blood-smear--d" aria-hidden="true"></span>
+                    <p class="flyer__kicker">Eeks Eye official</p>
+                    <p class="flyer__big-num" style="color:var(--blood-dark);text-shadow:3px 3px 0 rgba(139,0,0,0.3);">2026</p>
+                    <p style="font-family:'Oswald',sans-serif;font-size:0.75rem;letter-spacing:0.14em;text-transform:uppercase;">Runway · Designs · News · Explore</p>
+                    <p class="flyer__phone"><a href="https://www.instagram.com/eeks.eye/" class="flyer__link" target="_blank" rel="noopener noreferrer">@eeks.eye</a></p>
+                </article>
+            </div>
+        </div>
+    </div>
+
+    <div class="explore-footer-scale-wrap">
+    <footer class="site-footer explore-footer-editorial">
+        <div class="explore-footer-grid">
+            <div class="explore-footer-col">
+                <h2 class="explore-footer-heading">Newsletter</h2>
+                <p class="explore-footer-note">
+                    <a href="contact.html" class="explore-footer-link explore-footer-link--underline">Subscribe to our newsletter</a>
+                </p>
+            </div>
+            <div class="explore-footer-col">
+                <h2 class="explore-footer-heading">Client services</h2>
+                <ul class="explore-footer-list">
+                    <li><a href="faq.html" class="explore-footer-link">FAQ</a></li>
+                    <li><a href="#" class="explore-footer-link">Track order</a></li>
+                    <li><a href="#" class="explore-footer-link">Exchanges and returns</a></li>
+                    <li><a href="#" class="explore-footer-link">Shipping</a></li>
+                    <li><a href="#" class="explore-footer-link">Payment</a></li>
+                    <li><a href="#" class="explore-footer-link">Re-sell program</a></li>
+                </ul>
+            </div>
+            <div class="explore-footer-col">
+                <h2 class="explore-footer-heading">The company</h2>
+                <ul class="explore-footer-list">
+                    <li><a href="#" class="explore-footer-link">Legal</a></li>
+                    <li><a href="#" class="explore-footer-link">Privacy policy</a></li>
+                    <li><a href="#" class="explore-footer-link">Cookie policy</a></li>
+                    <li><a href="#" class="explore-footer-link">Cookies settings and do not sell or share</a></li>
+                    <li><a href="what-you-need-to-know.html" class="explore-footer-link">What you need to know</a></li>
+                </ul>
+            </div>
+            <div class="explore-footer-col">
+                <h2 class="explore-footer-heading">Follow us</h2>
+                <ul class="explore-footer-list">
+                    <li><a href="#" class="explore-footer-link" target="_blank" rel="noopener noreferrer">Facebook</a></li>
+                    <li><a href="https://www.instagram.com/eeks.eye/" class="explore-footer-link" target="_blank" rel="noopener noreferrer">Instagram</a></li>
+                    <li><a href="#" class="explore-footer-link" target="_blank" rel="noopener noreferrer">TikTok</a></li>
+                    <li><a href="#" class="explore-footer-link" target="_blank" rel="noopener noreferrer">Pinterest</a></li>
+                    <li><a href="#" class="explore-footer-link" target="_blank" rel="noopener noreferrer">LinkedIn</a></li>
+                </ul>
+            </div>
+            <div class="explore-footer-col">
+                <h2 class="explore-footer-heading">Contact us</h2>
+                <p class="explore-footer-note">Our client advisors are available Mon–Fri 9am – 9pm ET &amp; Sat 10am – 7pm ET</p>
+                <h3 class="explore-footer-subhead">Livechat</h3>
+                <p class="explore-footer-note"><a href="contact.html" class="explore-footer-link explore-footer-link--underline">Our client advisors are currently unavailable</a></p>
+                <h3 class="explore-footer-subhead">Call us</h3>
+                <p class="explore-footer-note"><a href="tel:+16468891895" class="explore-footer-link">+1 646 889 1895</a></p>
+                <h3 class="explore-footer-subhead">Email us</h3>
+                <p class="explore-footer-note"><a href="contact.html" class="explore-footer-link explore-footer-link--underline">Email us</a></p>
+            </div>
+        </div>
+        <div class="explore-footer-bottom">
+            <a href="#" id="copyright-link">© 2026 Eeks Eye</a>
+        </div>
+    </footer>
+    </div>
+
+    <div id="copyright-modal" style="display:none; position:fixed; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.9); z-index:999999; align-items:center; justify-content:center; flex-direction:column; overflow-y:auto;">
+        <div style="background:#fff; color:#111; max-width:90vw; width:400px; padding:2rem 1.5rem; border-radius:10px; box-shadow:0 8px 32px #000a; position:relative; text-align:center; z-index:1000000; margin:auto;">
+            <button id="close-copyright-modal" style="position:absolute; top:10px; right:15px; background:none; border:none; font-size:1.5rem; color:#111; cursor:pointer; z-index:1000001;" aria-label="Close">&times;</button>
+            <h3 style="margin-bottom:1rem;">Copyright Notice</h3>
+            <p style="font-size:1.05rem; line-height:1.6;">All content, images, and designs on this site are owned and operated by Eeks Eye. No part of this website may be copied, reproduced, or used without express written permission from Eeks Eye. All rights reserved.</p>
+        </div>
+    </div>
+
+    <div class="logo-transition-overlay"></div>
+    <div class="transition-text">XI</div>
+    <script src="js/page-transition.js"></script>
+    <script src="js/footer-links.js"></script>
+    <script src="js/cookie-consent.js"></script>
+    <script>
+        const copyrightLink = document.getElementById('copyright-link');
+        const copyrightModal = document.getElementById('copyright-modal');
+        const closeCopyrightModal = document.getElementById('close-copyright-modal');
+        if (copyrightLink && copyrightModal && closeCopyrightModal) {
+            let scrollPosition = 0;
+            copyrightLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                scrollPosition = window.scrollY || window.pageYOffset;
+                copyrightModal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            });
+            closeCopyrightModal.addEventListener('click', function() {
+                copyrightModal.style.display = 'none';
+                document.body.style.overflow = '';
+                window.scrollTo(0, scrollPosition);
+            });
+        }
+    </script>
+    <script src="translation-system.js"></script>
+</body>
+</html>

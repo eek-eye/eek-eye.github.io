@@ -1,0 +1,3252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EeksEye Official Store | Custom Dice, Digital Tools & TTRPG Designs</title>
+    <meta name="description" content="Shop EeksEye for custom dice, digital tools, and original tabletop RPG-inspired designs. Explore unique products built for players, collectors, and creators.">
+    <meta name="keywords" content="EeksEye, custom dice, tabletop RPG, TTRPG accessories, dice shop, fantasy dice, DnD dice, digital tabletop tools, RPG designs, gaming merchandise, geek gifts">
+    <meta name="robots" content="index, follow, max-image-preview:large">
+    <link rel="canonical" href="https://eekseye.com/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="EeksEye">
+    <meta property="og:title" content="EeksEye Official Store | Custom Dice, Digital Tools & TTRPG Designs">
+    <meta property="og:description" content="Discover custom dice, digital tools, and original tabletop RPG-inspired products at EeksEye.">
+    <meta property="og:url" content="https://eekseye.com/">
+    <meta property="og:image" content="https://eekseye.com/images/tags.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="EeksEye Official Store | Custom Dice, Digital Tools & TTRPG Designs">
+    <meta name="twitter:description" content="Discover custom dice, digital tools, and original tabletop RPG-inspired products at EeksEye.">
+    <meta name="twitter:image" content="https://eekseye.com/images/tags.png">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "EeksEye",
+        "url": "https://eekseye.com/",
+        "logo": "https://eekseye.com/images/tags.png",
+        "description": "EeksEye creates custom dice, digital tools, and tabletop RPG-inspired products and designs."
+      }
+    </script>
+    <script>
+      (function() {
+        var path = window.location.pathname;
+        if (path.indexOf('index.html') !== -1) {
+          var cleanPath = path.replace(/\/?index\.html.*$/, '') || '/';
+          if (cleanPath !== '/' && !cleanPath.endsWith('/')) cleanPath += '/';
+          window.history.replaceState({}, document.title, window.location.origin + cleanPath + window.location.search + window.location.hash);
+        }
+      })();
+    </script>
+    <link rel="icon" type="image/png" href="images/tags.png">
+    <link rel="stylesheet" href="css/style.css">
+    <!-- SF Pro Font -->
+    <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
+    <!-- Inter Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .page-transition-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index: 9999;
+            opacity: 1;
+            pointer-events: none;
+            transition: opacity 2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .page-transition-overlay.fade-out {
+            opacity: 0;
+        }
+
+        body {
+            opacity: 1;
+            position: relative;
+            z-index: 1;
+            background-color: #000;
+        }
+
+        .transition-text {
+            position: fixed;
+            top: 50vh;
+            left: 50vw;
+            transform: translate(-50%, -50%);
+            font-size: 4rem;
+            color: white;
+            opacity: 0;
+            z-index: 1001;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
+        }
+
+        .generations {
+            width: 100%;
+            max-width: 100%;
+            padding: 0;
+            margin: 0;
+            position: relative;
+            background: url('images/Dice-Background.png') center/cover no-repeat fixed;
+            background-attachment: fixed;
+        }
+        .generations::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1;
+        }
+        .generations > * {
+            position: relative;
+            z-index: 2;
+        }
+        .generations h2 {
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            font-size: 2.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        .generations-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+            width: 100%;
+            max-width: 100%;
+            padding: 0 2rem;
+        }
+        .generation-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: center;
+            width: 100%;
+            max-width: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .generation-image {
+            width: 100%;
+            overflow: hidden;
+            padding: 2rem;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .generation-image img {
+            width: auto;
+            max-width: 100%;
+            height: auto;
+            max-height: 500px;
+            object-fit: contain;
+            display: block;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .generation-info {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+        }
+
+        .generation-info h3 {
+            color: white;
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+
+        .generation-info p {
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+        }
+
+        .managed-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.5rem;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 4px;
+            position: relative;
+        }
+
+        .managed-header .about-button {
+            margin: 0;
+            padding: 0.5rem 1rem;
+        }
+
+        .managed-header .menu-icon-container {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .managed-header .menu-icon {
+            font-size: 0.75rem;
+            padding: 0.25rem;
+            color: white;
+            transition: transform 0.3s;
+        }
+
+        .managed-header .menu-icon:hover {
+            transform: scale(1.1);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            right: 0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 1.25rem;
+            padding: 0.35rem 1.5rem;
+            background: transparent;
+            border-top: none;
+            border-bottom: none;
+            text-align: center;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            font-size: 0.78rem;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(-14px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            z-index: 1200;
+            flex-wrap: wrap;
+        }
+
+        .site-header.header-scrolled .dropdown-menu {
+            bottom: -1.4rem;
+            font-size: 0.7rem;
+            gap: 1rem;
+        }
+
+        .dropdown-menu.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+        }
+
+        .dropdown-menu a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.2rem 0.6rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+            border-radius: 999px;
+            border: 1px solid transparent;
+            transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+            min-width: 70px;
+        }
+
+        .dropdown-menu a::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('images/bloody-x.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+            pointer-events: none;
+        }
+        .dropdown-menu a:hover {
+            border-color: rgba(255, 255, 255, 0.6);
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+        .dropdown-menu a:hover::after {
+            opacity: 1;
+        }
+
+        .menu-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .menu-icon {
+            cursor: pointer;
+            padding: 5px;
+            color: white;
+            font-size: 0.75rem;
+        }
+
+        .menu-icon i {
+            color: #ff0000;
+        }
+
+        .menu-icon:hover i {
+            color: #ff4444;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.95);
+            min-width: 200px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1000;
+            border-radius: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .dropdown-content a {
+            color: white;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            padding-left: 24px;
+        }
+
+        .show {
+            display: block;
+        }
+
+        /* Contact Dropdown Menu - appears under header buttons (USD, Designs, Aesthetic, Why?, Contact) */
+        .contact-dropdown {
+            display: none;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 0;
+            margin-top: 0;
+            background: transparent;
+            pointer-events: auto;
+            transition: opacity 0.2s ease;
+            order: 2;
+        }
+
+        .contact-dropdown.active {
+            display: flex !important;
+            pointer-events: auto !important;
+        }
+        
+        .contact-dropdown.active * {
+            pointer-events: auto !important;
+        }
+        
+        .contact-dropdown.active .contact-dropdown-button {
+            pointer-events: auto !important;
+            cursor: pointer !important;
+        }
+
+        .contact-dropdown-button {
+            width: auto;
+            padding: 0.3rem 0.8rem;
+            margin: 0;
+            background: transparent;
+            border: none;
+            border-radius: 1rem;
+            color: white;
+            font-size: 0.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+            text-shadow: 0 0 6px #ff006e, 0 0 14px #ff006e, 0 0 28px rgba(255, 0, 110, 0.85);
+            pointer-events: auto !important;
+            z-index: 10003;
+        }
+
+        .contact-dropdown-button::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('images/bloody-x.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 0.2s ease-in-out;
+            pointer-events: none;
+        }
+
+        .contact-dropdown-button:hover {
+            background: transparent;
+            color: #ff006e;
+            text-shadow: 0 0 10px #ff006e, 0 0 22px #ff006e, 0 0 44px rgba(255, 0, 110, 0.95);
+            transform: translateY(-2px);
+        }
+
+        .contact-dropdown-button:hover::after {
+            opacity: 1;
+        }
+
+        .contact-dropdown-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: transparent;
+            z-index: 9999;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+        
+        .contact-dropdown-overlay.active {
+            pointer-events: auto;
+        }
+
+        .contact-dropdown-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Aesthetic dropdown - seasons in a row; hugs right edge of nav (wraps on narrow widths) */
+        .aesthetic-dropdown {
+            display: none;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 0.5rem;
+            width: auto;
+            max-width: 100%;
+            padding: 0;
+            margin-top: 0;
+            margin-right: 0;
+            margin-left: auto;
+            background: transparent;
+            pointer-events: auto;
+            transition: opacity 0.2s ease;
+            order: 2;
+            align-self: flex-end;
+        }
+        .aesthetic-dropdown.active {
+            display: flex !important;
+            pointer-events: auto !important;
+            position: relative;
+            z-index: 10002;
+        }
+        .aesthetic-dropdown-button {
+            width: auto;
+            padding: 0.3rem 0.8rem;
+            margin: 0;
+            background: transparent;
+            border: none;
+            border-radius: 1rem;
+            color: white;
+            font-size: 0.5rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            position: relative;
+            overflow: hidden;
+            text-shadow: 0 0 6px #ff006e, 0 0 14px #ff006e, 0 0 28px rgba(255, 0, 110, 0.85);
+            pointer-events: auto !important;
+            z-index: 10003;
+        }
+        .aesthetic-dropdown-button:hover {
+            background: transparent;
+            color: #ff006e;
+            text-shadow: 0 0 10px #ff006e, 0 0 22px #ff006e, 0 0 44px rgba(255, 0, 110, 0.95);
+            transform: translateY(-2px);
+        }
+
+
+        .site-header,
+        .site-header.header-scrolled,
+        .site-header.header-background-hidden {
+            position: sticky;
+            top: 0;
+            z-index: 10001;
+        }
+        .site-header {
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            opacity: 1;
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .site-header.fade-out {
+            opacity: 0.15;
+            pointer-events: none;
+        }
+        .nav-header {
+            position: absolute;
+            top: 1.25rem;
+            right: 1.25rem;
+            padding: 0;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            z-index: 1000;
+            background: transparent;
+        }
+        .site-header .site-logo {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 1.25rem;
+            animation: slowSpin 8s linear infinite;
+        }
+        .site-header h1 {
+            font-size: 1.35rem;
+            letter-spacing: clamp(0.06rem, 0.165vw, 0.26rem);
+            font-kerning: normal;
+            color: white;
+            margin-bottom: 0.35rem;
+            text-align: center;
+        }
+        .site-header h1 .eye-text {
+            margin-left: 0.1rem;
+        }
+        .header-subtitle {
+            color: white;
+            font-size: 0.3rem;
+            text-align: center;
+            margin-bottom: 1.25rem;
+        }
+
+        .site-header.header-scrolled {
+            padding: 0.08rem 0.25rem;
+            min-height: 28px;
+            margin-bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+        }
+        .site-header.header-scrolled .site-logo {
+            width: 20px;
+            height: 20px;
+        }
+        .site-header.header-scrolled h1 {
+            font-size: 0.65rem;
+            margin-top: 0.15rem;
+            letter-spacing: clamp(0.03rem, 0.09vw, 0.125rem);
+        }
+        .site-header.header-scrolled .header-subtitle {
+            font-size: 0.28rem;
+            display: none;
+        }
+        .nav-header.header-scrolled .index-header-buttons {
+            position: absolute;
+            top: 0.15rem;
+            left: 0.5rem;
+            right: auto;
+            display: flex;
+            flex-direction: row;
+            gap: 0.1rem;
+            z-index: 1100;
+            background: transparent;
+            backdrop-filter: none;
+            border-radius: 0.75rem;
+            box-shadow: none;
+            padding: 0.15rem 0.5rem;
+            margin: 0;
+            align-items: center;
+            border: none;
+            opacity: 0.9;
+        }
+        .nav-header.header-scrolled + .search-container {
+            display: none;
+        }
+
+        /* Ink splash overlay effect */
+        .ink-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 110%;
+            max-width: 600px;
+            min-width: 120px;
+            height: auto;
+            pointer-events: none;
+            opacity: 0.8;
+            transform: translate(-50%, -50%) rotate(-7deg);
+            z-index: 3;
+            filter: drop-shadow(0 0 12px #fff3);
+            transition: opacity 0.4s;
+        }
+
+        /* Home index only: nav actions (scoped — avoids shared css/style.css .header-buttons-container) */
+        .nav-header .index-header-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            align-items: center;
+            position: relative;
+            pointer-events: auto;
+            z-index: 10001;
+            opacity: 1 !important;
+            margin: 0;
+            padding: 0;
+            border: none;
+            background: transparent;
+            list-style: none;
+            margin-top: 0;
+            isolation: isolate;
+            transition:
+                gap 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+                padding 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 0.4s ease,
+                transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+            backface-visibility: hidden;
+        }
+        .nav-header.header-scrolled .index-header-buttons {
+            opacity: 1;
+        }
+
+        .site-header .logo-container {
+            transition: opacity 0.4s;
+        }
+        .site-header.header-scrolled .logo-container {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .site-header.header-scrolled .site-logo {
+            width: 0;
+            height: 0;
+        }
+        .site-header.header-scrolled h1 {
+            font-size: 0.78rem;
+            margin-top: 0.15rem;
+        }
+        .site-header.header-scrolled .header-subtitle {
+            font-size: 0.45rem;
+        }
+        .nav-header.header-scrolled .index-header-buttons {
+            margin-top: 0.5rem;
+        }
+
+        .nav-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            padding: 1.25rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.5rem;
+            z-index: 10000;
+            background: transparent;
+            transition: transform 0.55s cubic-bezier(0.22, 1, 0.32, 1);
+            will-change: transform;
+            opacity: 1 !important;
+            pointer-events: auto;
+        }
+        .nav-header-top-row {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            gap: 1rem;
+            box-sizing: border-box;
+        }
+        .nav-header .header-top-left {
+            position: relative;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+        .nav-header .index-header-buttons a {
+            font-size: 0.46rem;
+            padding: 0.26rem 0.68rem;
+            border-radius: 1rem;
+            color: white;
+            border: none;
+            transition: background-color 0.35s ease, color 0.35s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, text-shadow 0.35s ease;
+            pointer-events: auto;
+            cursor: pointer;
+            z-index: 10002;
+            opacity: 1 !important;
+        }
+        .nav-header .index-header-buttons a:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        .nav-header.header-scrolled .index-header-buttons a {
+            font-size: 0.48rem;
+            padding: 0.2rem 0.58rem;
+            border-radius: 0.75rem;
+            text-shadow: 0 0 6px #ff006e, 0 0 14px #ff006e, 0 0 28px rgba(255, 0, 110, 0.85);
+            box-shadow: none;
+            transition: background-color 0.35s ease, color 0.35s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), text-shadow 0.35s ease;
+            color: #ff006e;
+            background: transparent;
+        }
+
+        .nav-header.header-scrolled .index-header-buttons a:hover {
+            text-shadow: 0 0 10px #ff006e, 0 0 22px #ff006e, 0 0 44px rgba(255, 0, 110, 0.95);
+            transform: translateY(-1px);
+            box-shadow: none;
+        }
+
+        .site-header.header-scrolled .menu-icon.red-x {
+            display: none;
+        }
+
+        .search-container {
+            display: none;
+            max-width: 100%;
+            width: calc(100% + 2rem);
+            margin: 0 -1rem;
+            padding: 0;
+            position: relative;
+            left: calc(50% + 0.5rem);
+            transform: translateX(-50%);
+        }
+        .search-input {
+            padding: 0.4rem 1rem;
+            padding-right: 2.5rem;
+            height: auto;
+            border-radius: 0;
+        }
+
+        /* Header background video (blurred) */
+        .site-header.header-scrolled .header-video {
+            display: block;
+            opacity: 0.8;
+            filter: blur(6px) brightness(0.7);
+            -webkit-filter: blur(6px) brightness(0.7);
+        }
+
+        .header-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -1;
+            filter: blur(6px);
+            -webkit-filter: blur(6px);
+        }
+
+        .site-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Slim header (index): no full-viewport splash, video, or dark wash — nav bar only */
+        body.dark-theme .header-video {
+            display: none !important;
+        }
+
+        /* No spacer — hero fills from top; fixed nav stacks above hero */
+        body.dark-theme .index-nav-spacer {
+            display: none;
+            height: 0;
+            width: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        /* Nav overlays hero — stronger bar + larger tap targets (readability) */
+        body.dark-theme .nav-header {
+            position: fixed !important;
+            top: 0;
+            left: 0;
+            right: 0;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            z-index: 10020;
+            transform: none !important;
+            background: rgba(0, 0, 0, 0.58);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        body.dark-theme .nav-header .index-header-buttons a {
+            font-size: clamp(0.46rem, 0.82vw, 0.58rem);
+            padding: 0.24rem 0.62rem;
+        }
+
+        body.dark-theme .nav-header .currency-button {
+            font-size: clamp(0.44rem, 0.78vw, 0.56rem);
+            padding: 0.22rem 0.56rem;
+        }
+
+        body.dark-theme .nav-header .currency-button i {
+            font-size: 0.32rem;
+        }
+
+        body.dark-theme .nav-header .nav-header-top-row {
+            flex-wrap: wrap;
+            row-gap: 0.5rem;
+        }
+
+        body.dark-theme .nav-header .header-top-left {
+            display: flex;
+            align-items: center;
+            flex: 0 1 auto;
+            min-width: 0;
+        }
+
+        body.dark-theme .nav-header .index-header-buttons {
+            flex: 0 1 auto;
+            margin-left: auto;
+            justify-content: flex-end;
+        }
+
+        /* Pre-Hero Space Styles */
+        .pre-hero-space {
+            width: 100%;
+            height: 500px;
+            background: #000;
+            border-left: 2px solid #fff;
+            border-top: 2px solid #fff;
+            border-bottom: 1px solid #fff;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .pre-hero-image {
+            max-width: 80%;
+            max-height: 80%;
+            height: auto;
+            width: auto;
+            object-fit: contain;
+            z-index: 2;
+            position: relative;
+        }
+
+        /* Hero Section Styles */
+        .hero-section {
+            position: relative;
+            width: 100%;
+            height: 120vh;
+            overflow: hidden;
+            display: block;
+            background: #000;
+        }
+
+        body.dark-theme .hero-section {
+            height: 100vh;
+            min-height: 100vh;
+        }
+
+        /* Edge vignette: keeps center (figure) slightly lifted vs pure black void */
+        body.dark-theme .hero-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: 2;
+            pointer-events: none;
+            background:
+                radial-gradient(ellipse 70% 60% at 50% 50%, transparent 0%, transparent 42%, rgba(0, 0, 0, 0.55) 100%),
+                linear-gradient(to bottom, rgba(0, 0, 0, 0.4) 0%, transparent 18%, transparent 82%, rgba(0, 0, 0, 0.55) 100%);
+        }
+        /*
+         * Global style.css adds .hero-section::after (z-index:2, mix-blend overlay).
+         * It stacks above the scale-root (z-index auto), so it sat on top of the whole hero.
+         */
+        .hero-section::after {
+            display: none;
+        }
+        /*
+         * Hero content at ~25% browser-zoom composition at 100% zoom: large black field,
+         * small centered cluster (matches Ctrl/Cmd minus until ~25% on hero only).
+         */
+        .hero-section-scale-root {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            width: 400%;
+            height: 400%;
+            transform: translate(-50%, -50%) scale(0.25);
+            transform-origin: center center;
+            pointer-events: auto;
+            z-index: 1;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .hero-section-scale-root {
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                transform: none;
+            }
+        }
+        
+        .hero-section-3 {
+            position: relative;
+            width: 100%;
+            min-height: auto;
+            padding: 4rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+        }
+
+        body.dark-theme .hero-section-3 {
+            padding: 1.75rem 2rem 3rem;
+            margin-top: 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        body.dark-theme .hero-section-3::before {
+            content: '';
+            position: absolute;
+            top: 0.85rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2.5rem;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.22);
+            pointer-events: none;
+        }
+
+        .hero-section-3-container {
+            position: relative;
+            z-index: 1;
+            overflow: hidden;
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: #1a1a1a;
+            border-radius: 0;
+            box-shadow: 0 4px 28px rgba(0, 0, 0, 0.35);
+            padding: 3rem 2rem;
+        }
+
+        .hero-section-3-cards {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2.5rem;
+            align-items: stretch;
+        }
+
+        .hero-section-3-card {
+            background: #262626;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: 0 2px 16px rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        .hero-section-3-icon {
+            font-size: 2.5rem;
+            color: #f0f0f0;
+            margin-bottom: 1.25rem;
+        }
+
+        .hero-section-3-icon i {
+            font-weight: 400;
+        }
+
+        .hero-section-3-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #fff;
+            margin: 0 0 1rem 0;
+            letter-spacing: 0.02em;
+        }
+
+        .hero-section-3-desc {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #b8b8b8;
+            margin: 0 0 1.5rem 0;
+            flex-grow: 1;
+        }
+
+        .hero-section-3-btn {
+            display: inline-block;
+            padding: 0.6rem 1.5rem;
+            background: #0d0d0d;
+            color: #fff;
+            border: 1px solid #fff;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: background 0.2s, color 0.2s, border-color 0.2s;
+        }
+
+        .hero-section-3-btn:hover {
+            background: #fff;
+            color: #111;
+            border-color: #111;
+        }
+
+        @media (max-width: 768px) {
+            .hero-section-3-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .hero-geometric-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+            opacity: 0.6;
+            pointer-events: none;
+            display: none;
+        }
+        
+        .geometric-shape {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .geometric-shape:nth-child(1) {
+            width: 120px;
+            height: 120px;
+            top: 10%;
+            left: 5%;
+            transform: rotate(15deg);
+        }
+        
+        .geometric-shape:nth-child(2) {
+            width: 80px;
+            height: 150px;
+            top: 20%;
+            left: 15%;
+            transform: rotate(-10deg);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .geometric-shape:nth-child(3) {
+            width: 100px;
+            height: 100px;
+            top: 15%;
+            right: 10%;
+            transform: rotate(25deg);
+            background: rgba(240, 240, 240, 0.12);
+        }
+        
+        .geometric-shape:nth-child(4) {
+            width: 60px;
+            height: 180px;
+            top: 30%;
+            left: 25%;
+            transform: rotate(-20deg);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .geometric-shape:nth-child(5) {
+            width: 140px;
+            height: 90px;
+            top: 40%;
+            right: 20%;
+            transform: rotate(10deg);
+            background: rgba(250, 250, 250, 0.1);
+        }
+        
+        .geometric-shape:nth-child(6) {
+            width: 90px;
+            height: 90px;
+            top: 50%;
+            left: 10%;
+            transform: rotate(30deg);
+            background: rgba(255, 255, 255, 0.12);
+        }
+        
+        .geometric-shape:nth-child(7) {
+            width: 70px;
+            height: 160px;
+            top: 55%;
+            right: 15%;
+            transform: rotate(-15deg);
+            background: rgba(240, 240, 240, 0.1);
+        }
+        
+        .geometric-shape:nth-child(8) {
+            width: 110px;
+            height: 110px;
+            top: 65%;
+            left: 20%;
+            transform: rotate(20deg);
+            background: rgba(255, 255, 255, 0.08);
+        }
+        
+        .geometric-shape:nth-child(9) {
+            width: 85px;
+            height: 130px;
+            top: 70%;
+            right: 25%;
+            transform: rotate(-25deg);
+            background: rgba(250, 250, 250, 0.12);
+        }
+        
+        .geometric-shape:nth-child(10) {
+            width: 100px;
+            height: 100px;
+            top: 80%;
+            left: 15%;
+            transform: rotate(15deg);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .geometric-shape:nth-child(11) {
+            width: 95px;
+            height: 140px;
+            top: 25%;
+            left: 50%;
+            transform: rotate(-30deg);
+            background: rgba(240, 240, 240, 0.09);
+        }
+        
+        .geometric-shape:nth-child(12) {
+            width: 130px;
+            height: 75px;
+            top: 45%;
+            left: 45%;
+            transform: rotate(18deg);
+            background: rgba(255, 255, 255, 0.11);
+        }
+        
+        .geometric-shape:nth-child(13) {
+            width: 65px;
+            height: 170px;
+            top: 60%;
+            left: 55%;
+            transform: rotate(-12deg);
+            background: rgba(250, 250, 250, 0.1);
+        }
+        
+        .geometric-shape:nth-child(14) {
+            width: 105px;
+            height: 105px;
+            top: 35%;
+            left: 70%;
+            transform: rotate(22deg);
+            background: rgba(255, 255, 255, 0.13);
+        }
+        
+        .geometric-shape:nth-child(15) {
+            width: 75px;
+            height: 145px;
+            top: 75%;
+            left: 60%;
+            transform: rotate(-18deg);
+            background: rgba(240, 240, 240, 0.08);
+        }
+
+        #hero-three-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .hero-gone-image {
+            position: absolute;
+            z-index: 3;
+            width: auto;
+            height: 180vh;
+            max-width: none;
+            max-height: none;
+            object-fit: contain;
+            opacity: 0;
+            clip-path: inset(0 0 100% 0);
+            -webkit-clip-path: inset(0 0 100% 0);
+            transition: opacity 2.5s ease-in-out, clip-path 2.5s ease-in-out;
+        }
+
+        .hero-gone-image-1,
+        .hero-gone-image-2 {
+            top: 2%;
+            left: 50%;
+            transform: translateX(-50%) scale(5);
+            transform-origin: center top;
+        }
+
+        .hero-gone-image.hero-gone-image--visible {
+            pointer-events: auto;
+        }
+
+        .hero-gone-image.hero-gone-image--hiding {
+            pointer-events: none;
+        }
+
+        .hero-gone-click-box {
+            position: absolute;
+            top: 52%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(5);
+            transform-origin: center center;
+            width: min(40vw, 520px);
+            height: min(72vh, 760px);
+            z-index: 4;
+            opacity: 0;
+            text-decoration: none;
+            color: inherit;
+            cursor: pointer;
+        }
+
+        .hero-gone-click-box.hero-gone-image--visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .hero-gone-click-box.hero-gone-image--hiding {
+            pointer-events: none;
+        }
+
+        /* gone gone fades out bottom -> top (top edge lowers) */
+        .hero-gone-image-1.hero-gone-image--visible {
+            opacity: 1;
+            clip-path: inset(0 0 0 0);
+            -webkit-clip-path: inset(0 0 0 0);
+        }
+        .hero-gone-image-1.hero-gone-image--hiding {
+            opacity: 0;
+            clip-path: inset(100% 0 0 0);
+            -webkit-clip-path: inset(100% 0 0 0);
+        }
+
+        /* gone gone 2 fades in top -> bottom (bottom edge lowers) */
+        .hero-gone-image-2.hero-gone-image--visible {
+            opacity: 1;
+            clip-path: inset(0 0 0 0);
+            -webkit-clip-path: inset(0 0 0 0);
+        }
+        .hero-gone-image-2.hero-gone-image--hiding {
+            opacity: 0;
+            clip-path: inset(0 0 100% 0);
+            -webkit-clip-path: inset(0 0 100% 0);
+        }
+
+        /* Mini versions in top-right of hero */
+        .hero-gone-mini-wrapper {
+            position: absolute;
+            z-index: 4;
+            top: calc(5.5% + 2in);
+            right: 4%;
+            width: 140px;
+            height: 140px;
+            transform: scale(3.2);
+            transform-origin: top right;
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-sizing: border-box;
+            overflow-y: auto;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            scroll-snap-type: y mandatory;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.35) transparent;
+        }
+
+        .hero-gone-mini-wrapper::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .hero-gone-mini-wrapper::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .hero-gone-mini-wrapper::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.35);
+            border-radius: 999px;
+        }
+
+        .hero-gone-mini-stage {
+            position: relative;
+            width: 100%;
+            height: 140px;
+            flex-shrink: 0;
+            scroll-snap-align: start;
+        }
+
+        .hero-gone-image-mini {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            clip-path: inset(0 0 100% 0);
+            -webkit-clip-path: inset(0 0 100% 0);
+            transition: opacity 2.5s ease-in-out, clip-path 2.5s ease-in-out;
+        }
+
+        .hero-gone-extra-image {
+            display: block;
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            flex-shrink: 0;
+            scroll-snap-align: start;
+        }
+
+        .hero-gone-extra-image-button {
+            position: relative;
+            display: block;
+            width: 100%;
+            padding: 0;
+            border: none;
+            background: transparent;
+            cursor: zoom-in;
+            flex-shrink: 0;
+            scroll-snap-align: start;
+        }
+
+        .hero-gone-extra-image-button:focus,
+        .hero-gone-extra-image-button:focus-visible {
+            outline: none;
+        }
+
+        .hero-gone-extra-image-button .hero-gone-extra-image {
+            scroll-snap-align: unset;
+        }
+
+        .hero-gone-zoom-icon {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.35);
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1.1rem;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            pointer-events: none;
+        }
+
+        .hero-gone-extra-image-button:hover .hero-gone-zoom-icon,
+        .hero-gone-extra-image-button:focus-visible .hero-gone-zoom-icon {
+            opacity: 1;
+        }
+
+        .hero-gone-image-modal {
+            position: fixed;
+            inset: 0;
+            z-index: 1000001;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.9);
+            padding: 2rem;
+        }
+
+        .hero-gone-image-modal.is-open {
+            display: flex;
+        }
+
+        .hero-gone-image-modal img {
+            max-width: min(94vw, 1300px);
+            max-height: 90vh;
+            width: auto;
+            height: auto;
+            object-fit: contain;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+        }
+
+        .hero-gone-image-modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            border: none;
+            background: transparent;
+            color: #fff;
+            font-size: 2rem;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .hero-gone-image--instant {
+            transition: none !important;
+        }
+
+        .hero-gone-image-mini-1.hero-gone-image--visible {
+            opacity: 1;
+            clip-path: inset(0 0 0 0);
+            -webkit-clip-path: inset(0 0 0 0);
+        }
+        .hero-gone-image-mini-1.hero-gone-image--hiding {
+            opacity: 0;
+            clip-path: inset(100% 0 0 0);
+            -webkit-clip-path: inset(100% 0 0 0);
+        }
+
+        .hero-gone-image-mini-2.hero-gone-image--visible {
+            opacity: 1;
+            clip-path: inset(0 0 0 0);
+            -webkit-clip-path: inset(0 0 0 0);
+        }
+        .hero-gone-image-mini-2.hero-gone-image--hiding {
+            opacity: 0;
+            clip-path: inset(0 0 100% 0);
+            -webkit-clip-path: inset(0 0 100% 0);
+        }
+
+        .hero-gone-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%) scale(4.2);
+            transform-origin: center center;
+            z-index: 5;
+            width: auto;
+            height: auto;
+            border: none;
+            border-radius: 0;
+            background: transparent;
+            color: #fff;
+            font-size: 0.62rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            padding: 0;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
+
+        .hero-gone-nav:hover {
+            opacity: 0.75;
+            transform: translateY(-50%) scale(4.326);
+        }
+
+        .hero-gone-nav:focus-visible {
+            outline: 2px solid rgba(255, 255, 255, 0.95);
+            outline-offset: 2px;
+        }
+
+        .hero-gone-nav-prev {
+            left: 24%;
+        }
+
+        .hero-gone-nav-next {
+            right: 24%;
+        }
+
+        .hero-gone-product-label {
+            position: absolute;
+            top: 11%;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 6;
+            margin: 0;
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 1.05rem;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            font-weight: 700;
+            font-style: italic;
+            font-family: "Brush Script MT", "Lucida Handwriting", cursive;
+            text-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+        }
+
+        .hero-shirts-grid {
+            position: relative;
+            z-index: 4;
+            display: none; /* hidden for now */
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2.5rem;
+            max-width: 1600px;
+            margin: 0 auto;
+            margin-top: -32vh;
+            padding: 3rem;
+            align-items: center;
+            justify-items: center;
+        }
+
+        .hero-shirts-grid img {
+            width: 100%;
+            max-width: 420px;
+            height: auto;
+            object-fit: contain;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+        }
+
+        @media (max-width: 900px) {
+            .hero-shirts-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 2rem;
+            }
+
+            .hero-shirts-grid img {
+                max-width: 340px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .hero-shirts-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .hero-shirts-grid img {
+                max-width: 320px;
+            }
+        }
+
+        .year-marquee {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            overflow: hidden;
+            background: #000;
+            border-bottom: 2px solid #333;
+            z-index: 5;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .marquee-content {
+            display: flex;
+            white-space: nowrap;
+            animation: scroll 20s linear infinite;
+        }
+
+        .marquee-content span {
+            display: inline-block;
+            padding-right: 100px;
+            font-size: 2.5rem;
+            color: #ff0000;
+            font-weight: bold;
+            letter-spacing: 0.3em;
+            font-family: 'Courier New', monospace;
+            text-shadow: 
+                0 0 5px #ff0000,
+                0 0 10px #ff0000,
+                0 0 15px #ff0000,
+                0 0 20px #ff0000;
+            filter: brightness(1.2);
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            text-rendering: optimizeSpeed;
+            -webkit-font-smoothing: none;
+            font-smooth: never;
+        }
+
+        @keyframes scroll {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%);
+            }
+        }
+
+        /* Shirt Marquee Styles */
+        .shirt-marquee {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            overflow: hidden;
+            background: #000;
+            border-bottom: 2px solid #333;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            z-index: 5;
+        }
+
+        .shirt-marquee-content {
+            display: flex;
+            white-space: nowrap;
+            animation: scroll 20s linear infinite;
+            align-items: center;
+        }
+
+        .shirt-marquee-content img {
+            height: 100px;
+            width: auto;
+            object-fit: contain;
+            padding-right: 80px;
+            display: inline-block;
+            flex-shrink: 0;
+        }
+
+        .floating-character {
+            position: absolute;
+            font-size: 2rem;
+            pointer-events: none;
+            z-index: 10;
+            animation: dropFromSky 3s linear forwards, whiteRedGradient 3s linear infinite;
+            opacity: 1;
+            background: linear-gradient(90deg, #ffffff, #ff0000, #ffffff, #ff0000);
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+            will-change: transform, opacity;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+        }
+
+        @keyframes whiteRedGradient {
+            0% {
+                background-position: 0% 50%;
+            }
+            100% {
+                background-position: 200% 50%;
+            }
+        }
+        
+        /* Reduce motion for users who prefer it */
+        @media (prefers-reduced-motion: reduce) {
+            .floating-character {
+                animation: dropFromSky 3s linear forwards;
+            }
+        }
+
+        @keyframes dropFromSky {
+            0% { 
+                opacity: 0;
+                transform: translate3d(0, 0, 0) rotate(var(--rotation, 0deg));
+            }
+            5% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+                transform: translate3d(0, var(--final-y, calc(120vh - 100px)), 0) rotate(var(--rotation, 0deg));
+            }
+            100% { 
+                opacity: 0;
+                transform: translate3d(0, var(--final-y, calc(120vh - 100px)), 0) rotate(var(--rotation, 0deg));
+            }
+        }
+        
+        @keyframes dropFromSkyFadeMiddle {
+            0% { 
+                opacity: 0;
+                transform: translate3d(0, 0, 0) rotate(var(--rotation, 0deg));
+            }
+            5% {
+                opacity: 1;
+            }
+            45% {
+                opacity: 1;
+                transform: translate3d(0, var(--middle-y, 50vh), 0) rotate(var(--rotation, 0deg));
+            }
+            55% {
+                opacity: 0;
+                transform: translate3d(0, var(--middle-y, 50vh), 0) rotate(var(--rotation, 0deg));
+            }
+            100% { 
+                opacity: 0;
+                transform: translate3d(0, var(--middle-y, 50vh), 0) rotate(var(--rotation, 0deg));
+            }
+        }
+        
+        .floating-character.fade-middle {
+            animation: dropFromSkyFadeMiddle 2s linear forwards, whiteRedGradient 3s linear infinite;
+        }
+
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 2;
+            mix-blend-mode: normal;
+        }
+
+        /* Moving sign (marquee) - hero section top/bottom */
+        .hero-sign-marquee {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 32px;
+            overflow: hidden;
+            background: #000;
+            border-top: 1px solid #333;
+            border-bottom: 1px solid #333;
+            z-index: 6;
+            display: flex;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        .hero-sign-marquee.top {
+            top: 0;
+        }
+
+        .hero-sign-marquee.bottom {
+            bottom: 0;
+        }
+
+        .hero-sign-marquee .marquee-content {
+            display: flex;
+            flex-wrap: nowrap;
+            width: max-content;
+            white-space: nowrap;
+            animation: scroll 55s linear infinite;
+            will-change: transform;
+        }
+
+        .hero-sign-marquee .marquee-content span {
+            display: inline-block;
+            flex-shrink: 0;
+            padding-right: 72px;
+            font-size: 0.8rem;
+            color: #fff;
+            font-weight: 700;
+            letter-spacing: 0.25em;
+            text-transform: uppercase;
+            animation: heroSignPulse 1.6s linear infinite;
+        }
+
+        .hero-sign-marquee {
+            animation: heroSignPulseBorder 1.6s linear infinite;
+        }
+
+        @keyframes heroSignPulse {
+            0% { color: #fff; text-shadow: 0 0 0 rgba(255,0,0,0); }
+            50% { color: #ff0000; text-shadow: 0 0 12px rgba(255,0,0,0.6); }
+            100% { color: #fff; text-shadow: 0 0 0 rgba(255,0,0,0); }
+        }
+
+        @keyframes heroSignPulseBorder {
+            0% { border-top-color: #fff; border-bottom-color: #fff; }
+            50% { border-top-color: #ff0000; border-bottom-color: #ff0000; }
+            100% { border-top-color: #fff; border-bottom-color: #fff; }
+        }
+
+        @media (max-width: 768px) {
+            .hero-sign-marquee {
+                height: 28px;
+            }
+            .hero-sign-marquee .marquee-content span {
+                font-size: 0.7rem;
+                padding-right: 60px;
+            }
+        }
+
+
+        .hero-video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 1;
+            filter: blur(8px) brightness(0.6) contrast(1.2);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: white;
+            padding: 4rem;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero-content h1 {
+            font-size: 4.5rem;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-content p {
+            font-size: 1.8rem;
+            opacity: 0.9;
+        }
+
+        .hero-buttons-venn {
+            position: absolute;
+            left: 51%;
+            bottom: 13rem;
+            z-index: 2;
+            transform: translateX(-50%);
+            display: flex;
+            align-items: center;
+            z-index: 3;
+            gap: 0;
+        }
+        .hero-explore-btn, .hero-designs-btn {
+            position: static;
+            border-radius: 50%;
+            width: 15rem;
+            height: 15rem;
+            font-size: 1rem;
+            font-weight: 700;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 18px 0 rgba(0,0,0,0.18);
+            border: 2px solid #fff;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            text-decoration: none;
+            transition: background 0.3s, color 0.3s, box-shadow 0.3s, transform 0.3s;
+            mix-blend-mode: screen;
+            margin-left: -2.5rem;
+        }
+        .hero-explore-btn {
+            background: #ff006e;
+            color: #fff;
+            z-index: 2;
+        }
+        .hero-designs-btn {
+            background: rgba(255,255,255,0.7);
+            color: #ff006e;
+            z-index: 2;
+        }
+        .hero-explore-btn:hover, .hero-designs-btn:hover {
+            filter: brightness(1.1) drop-shadow(0 0 8px #fff);
+            transform: scale(1.05);
+        }
+        @media (max-width: 768px) {
+            .hero-buttons-venn {
+                bottom: 3rem;
+            }
+            .hero-explore-btn, .hero-designs-btn {
+                width: 9rem;
+                height: 9rem;
+                font-size: 0.65rem;
+                margin-left: -1.2rem;
+            }
+        }
+
+        .hero-description-box {
+            position: absolute;
+            top: 2.5rem;
+            right: 3.5rem;
+            max-width: 340px;
+            background: rgba(30, 30, 30, 0.75);
+            color: #fff;
+            font-size: 1.1rem;
+            font-weight: 400;
+            padding: 1.2rem 1.6rem;
+            border-radius: 1.5rem;
+            box-shadow: 0 4px 18px 0 rgba(0,0,0,0.14);
+            border: 1px solid rgba(255,255,255,0.10);
+            z-index: 4;
+            text-align: right;
+            letter-spacing: 0.01em;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+            .hero-content p {
+                font-size: 1.2rem;
+            }
+            .hero-description-box {
+                top: 1rem;
+                right: 1rem;
+                max-width: 90vw;
+                font-size: 1rem;
+                padding: 0.8rem 1rem;
+            }
+        }
+
+        .nav-header.header-scrolled .header-top-right {
+            position: absolute;
+            top: 0.1rem;
+            right: 0.6rem;
+        }
+
+        /* Currency Selector - Part of header buttons */
+        .nav-header .header-top-left .currency-selector {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .nav-header .currency-selector {
+            position: relative;
+        }
+        
+        /* Currency selector base styles */
+        .currency-selector {
+            position: relative;
+        }
+        
+        /* Prevent body flex from affecting it */
+        body.dark-theme > .currency-selector {
+            position: fixed !important;
+            align-self: auto !important;
+            order: 9999 !important;
+        }
+
+        .currency-button {
+            font-size: 0.46rem;
+            padding: 0.26rem 0.68rem;
+            border-radius: 1rem;
+            color: white;
+            border: none;
+            background: transparent;
+            transition: background-color 0.35s ease, color 0.35s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s ease, text-shadow 0.35s ease;
+            pointer-events: auto;
+            cursor: pointer;
+            z-index: 10002;
+            opacity: 1 !important;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-family: inherit;
+            text-decoration: none;
+        }
+
+        .currency-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .nav-header.header-scrolled .currency-button {
+            font-size: 0.48rem;
+            padding: 0.2rem 0.58rem;
+            border-radius: 0.75rem;
+            text-shadow: 0 0 6px #ff006e, 0 0 14px #ff006e, 0 0 28px rgba(255, 0, 110, 0.85);
+            box-shadow: none;
+            transition: all 0.3s ease;
+            color: #ff006e;
+            background: transparent;
+        }
+
+        .nav-header.header-scrolled .currency-button:hover {
+            text-shadow: 0 0 10px #ff006e, 0 0 22px #ff006e, 0 0 44px rgba(255, 0, 110, 0.95);
+            transform: translateY(-1px);
+            box-shadow: none;
+        }
+
+        .currency-button i {
+            font-size: 0.48rem;
+        }
+        
+        .nav-header.header-scrolled .currency-button i {
+            font-size: 0.32rem;
+        }
+
+        .currency-dropdown {
+            position: absolute;
+            top: calc(100% + 0.5rem);
+            left: -15%;
+            background: transparent;
+            border: none;
+            border-radius: 0.5rem;
+            min-width: 150px;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            backdrop-filter: none;
+            box-shadow: none;
+        }
+
+        .currency-dropdown.active {
+            display: flex;
+        }
+
+        .currency-option {
+            padding: 0.5rem 0.8rem;
+            color: white;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .currency-option:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .currency-option.active {
+            background: rgba(255, 0, 110, 0.2);
+            color: #ff006e;
+        }
+
+        .currency-option .currency-info {
+            display: flex;
+            flex-direction: column;
+            gap: 0.1rem;
+        }
+
+        .currency-option .currency-info span:first-child {
+            font-size: 0.55rem;
+        }
+
+        .currency-option .currency-code {
+            font-size: 0.45rem;
+            opacity: 0.8;
+        }
+
+        /* Cookie consent: stay stuck to bottom of viewport above header layers */
+        .cookie-consent-banner {
+            position: fixed !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            top: auto !important;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            z-index: 10050 !important;
+            margin: 0;
+            padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px)) !important;
+        }
+    
+        /* Google auth header control */
+        .google-auth-signed-in {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            color: #f5f5f5;
+            font-size: 0.85rem;
+        }
+        .google-auth-signed-in[hidden],
+        .google-auth-error[hidden] { display: none !important; }
+        .google-auth-photo {
+            width: 1.35rem;
+            height: 1.35rem;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .google-auth-identity { white-space: nowrap; }
+        .google-auth-error {
+            color: #ff8a80;
+            font-size: 0.75rem;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body class="dark-theme">
+    <div class="page-transition-overlay"></div>
+    <div class="contact-dropdown-overlay" id="contactDropdownOverlay"></div>
+    <div class="x-border x-border-left">X</div>
+    <div class="x-border x-border-right">I</div>
+    
+    <div class="x-line">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX</div>
+
+    <div class="index-nav-spacer" aria-hidden="true"></div>
+    <div class="nav-header" role="navigation" aria-label="Site menu" data-translate-aria="ariaSiteMenu">
+            <div class="nav-header-top-row">
+                <div class="header-top-left">
+                    <div class="currency-selector" style="position: relative;">
+                    <button class="currency-button" id="currencyButton">
+                        <span id="currencyDisplay">US (USD $)</span>
+                        <i class="fas fa-chevron-up"></i>
+                    </button>
+                    <div class="currency-dropdown" id="currencyDropdown">
+                        <div class="currency-option active" data-currency="USD" data-country="US" data-symbol="$" data-lang="en">
+                            <div class="currency-info">
+                                <span data-translate="currencyLineUS">US (USD $)</span>
+                                <span class="currency-code" data-translate-currency="usdName">United States Dollar</span>
+                            </div>
+                        </div>
+                        <div class="currency-option" data-currency="CAD" data-country="CA" data-symbol="$" data-lang="fr">
+                            <div class="currency-info">
+                                <span data-translate="currencyLineCAFr">Canada - French (CAD $)</span>
+                                <span class="currency-code" data-translate-currency="cadName">Canadian Dollar</span>
+                            </div>
+                        </div>
+                        <div class="currency-option" data-currency="CAD" data-country="CA" data-symbol="$" data-lang="en">
+                            <div class="currency-info">
+                                <span data-translate="currencyLineCAEn">Canada - English (CAD $)</span>
+                                <span class="currency-code" data-translate-currency="cadName">Canadian Dollar</span>
+                            </div>
+                        </div>
+                        <div class="currency-option" data-currency="EUR" data-country="FR" data-symbol="€" data-lang="fr">
+                            <div class="currency-info">
+                                <span data-translate="currencyLineFR">France (EUR €)</span>
+                                <span class="currency-code" data-translate-currency="eurName">Euro</span>
+                            </div>
+                        </div>
+                        <div class="currency-option" data-currency="EUR" data-country="DE" data-symbol="€" data-lang="de">
+                            <div class="currency-info">
+                                <span data-translate="currencyLineDE">Germany (EUR €)</span>
+                                <span class="currency-code" data-translate-currency="eurName">Euro</span>
+                            </div>
+                        </div>
+                        <div class="currency-option" data-currency="EUR" data-country="ES" data-symbol="€" data-lang="es">
+                            <div class="currency-info">
+                                <span data-translate="currencyLineES">Spain (EUR €)</span>
+                                <span class="currency-code" data-translate-currency="eurName">Euro</span>
+                            </div>
+                        </div>
+                        <div class="currency-option" data-currency="EUR" data-country="IT" data-symbol="€" data-lang="it">
+                            <div class="currency-info">
+                                <span data-translate="currencyLineIT">Italy (EUR €)</span>
+                                <span class="currency-code" data-translate-currency="eurName">Euro</span>
+                            </div>
+                        </div>
+                        <div class="currency-option" data-currency="CNY" data-country="CN" data-symbol="¥" data-lang="zh">
+                            <div class="currency-info">
+                                <span data-translate="currencyLineCN">China (CNY ¥)</span>
+                                <span class="currency-code" data-translate-currency="cnyName">Chinese Yuan</span>
+                            </div>
+                        </div>
+                        <div class="currency-option" data-currency="JPY" data-country="JP" data-symbol="¥" data-lang="ja">
+                            <div class="currency-info">
+                                <span data-translate="currencyLineJP">Japan (JPY ¥)</span>
+                                <span class="currency-code" data-translate-currency="jpyName">Japanese Yen</span>
+                            </div>
+                        </div>
+                        <div class="currency-option" data-currency="KRW" data-country="KR" data-symbol="₩" data-lang="ko">
+                            <div class="currency-info">
+                                <span data-translate="currencyLineKR">South Korea (KRW ₩)</span>
+                                <span class="currency-code" data-translate-currency="krwName">South Korean Won</span>
+                            </div>
+                        </div>
+                        <div class="currency-option" data-currency="GBP" data-country="GB" data-symbol="£" data-lang="en">
+                            <div class="currency-info">
+                                <span data-translate="currencyLineGB">United Kingdom (GBP £)</span>
+                                <span class="currency-code" data-translate-currency="gbpName">British Pound</span>
+                            </div>
+                        </div>
+                        <div class="currency-option" data-currency="AUD" data-country="AU" data-symbol="$" data-lang="en">
+                            <div class="currency-info">
+                                <span data-translate="currencyLineAU">Australia (AUD $)</span>
+                                <span class="currency-code" data-translate-currency="audName">Australian Dollar</span>
+                            </div>
+                        </div>
+                        <div class="currency-option" data-currency="NZD" data-country="NZ" data-symbol="$" data-lang="en">
+                            <div class="currency-info">
+                                <span data-translate="currencyLineNZ">New Zealand (NZD $)</span>
+                                <span class="currency-code" data-translate-currency="nzdName">New Zealand Dollar</span>
+                            </div>
+                        </div>
+                        <div class="currency-option" data-currency="MXN" data-country="MX" data-symbol="$" data-lang="es">
+                            <div class="currency-info">
+                                <span data-translate="currencyLineMX">MX (MXN $)</span>
+                                <span class="currency-code" data-translate-currency="mxnName">Mexican Peso</span>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
+                </div>
+                <nav class="index-header-buttons" aria-label="Site sections" data-translate-aria="ariaSections">
+                <a href="designs.html" class="explore-button nav-link" data-translate="designs">Designs</a>
+                <a href="#" class="explore-button nav-link aesthetic-button" id="headerAestheticButton" data-translate="aesthetic">Aesthetic</a>
+                <a href="about.html" class="about-button nav-link" data-translate="why">Why?</a>
+                <a href="#" class="explore-button nav-link contact-button" id="headerContactButton" data-translate="contact">Contact</a>
+                <a href="#" class="explore-button nav-link" id="googleSignInButton" role="button">Continue with Google</a>
+                <div id="googleAuthSignedIn" class="google-auth-signed-in" hidden aria-live="polite"></div>
+                <div id="googleAuthError" class="google-auth-error" hidden role="alert"></div>
+                </nav>
+            </div>
+            <div class="contact-dropdown" id="contactDropdown">
+                <a href="contact.html" class="contact-dropdown-button nav-link" data-translate="contact">Contact</a>
+                <a href="news.html" class="contact-dropdown-button nav-link" data-translate="news">News</a>
+                <a href="#" class="contact-dropdown-button nav-link" data-translate="button3">Button 3</a>
+                <a href="#" class="contact-dropdown-button nav-link" data-translate="button4">Button 4</a>
+            </div>
+            <div class="aesthetic-dropdown" id="aestheticDropdown">
+                <a href="explore.html?season=1" class="aesthetic-dropdown-button nav-link" data-translate="season1">Season 1</a>
+                <a href="explore.html?season=2" class="aesthetic-dropdown-button nav-link" data-translate="season2">Season 2</a>
+                <a href="explore.html?season=3" class="aesthetic-dropdown-button nav-link" data-translate="season3">Season 3</a>
+                <a href="explore.html?season=4" class="aesthetic-dropdown-button nav-link" data-translate="season4">Season 4</a>
+                <a href="explore.html?season=5" class="aesthetic-dropdown-button nav-link" data-translate="season5">Season 5</a>
+            </div>
+    </div>
+    <div class="search-container">
+            <input type="search" id="site-search" name="q" placeholder="What are you looking for..." class="search-input" data-translate-placeholder="searchPlaceholder">
+            <button type="submit" class="search-button" id="search-button"><i class="fas fa-search"></i></button>
+            <div class="suggestions-dropdown" id="suggestions-dropdown">
+                <div class="suggestion-header" data-translate="popularSearches">Popular Searches:</div>
+                <div class="suggestion-item" data-translate="suggestionDarkSide">Dark Side</div>
+                <div class="suggestion-item" data-translate="suggestionInterstella">Interstella</div>
+                <div class="suggestion-item" data-translate="suggestionVibration">Vibration</div>
+                <div class="suggestion-item" data-translate="suggestionRockstar">Rockstar</div>
+            </div>
+        </div>
+
+    <div class="logo-transition-overlay"></div>
+    <div class="transition-text" data-translate="transitionMark">XI</div>
+
+    <section class="hero-section">
+        <div class="hero-section-scale-root">
+        <canvas id="hero-three-canvas" aria-hidden="true"></canvas>
+        <div class="hero-sign-marquee top" aria-hidden="true">
+            <div class="marquee-content">
+                <!-- Two identical halves so translateX(-50%) loops seamlessly -->
+                <span data-translate="mq1">頑張っても手に入らないって約束する</span><span data-translate="mq2">◆ EEKSEYE ◆</span><span data-translate="mq3">RUNWAY</span><span data-translate="mq4">I KNOW YOU SAY YOU KNOW ME</span><span data-translate="mq5">GONE GONE</span><span data-translate="mq6">X I</span><span data-translate="mq7">伊克西 · 满月 · 多重人格</span><span data-translate="mq8">DARK SIDE · INTERSTELLA · VIBRATION</span><span data-translate="mq9">SEASON 1 · 2 · 3 · 4 · 5</span><span data-translate="mq1">頑張っても手に入らないって約束する</span><span data-translate="mq10">EXPLORE — DESIGNS — NEWS</span><span data-translate="mq11">I メタ I eekseye I I 2026</span><span data-translate="mq12">冷笑主義 I eekseye I 2029</span><span data-translate="mq13">TRUTH SHOULD SET YOU FREE</span><span data-translate="mq14">NO REPRODUCTION WITHOUT PERMISSION</span><span data-translate="mq15">Eeks Eye</span><span data-translate="mq1">頑張っても手に入らないって約束する</span><span data-translate="mq16">· XI ·</span><span data-translate="mq17">CH@0S · UNGUIDED · SEEK</span><span data-translate="mq18">Rockstar · Martyr · Nightmare</span>
+                <span data-translate="mq1">頑張っても手に入らないって約束する</span><span data-translate="mq2">◆ EEKSEYE ◆</span><span data-translate="mq3">RUNWAY</span><span data-translate="mq4">I KNOW YOU SAY YOU KNOW ME</span><span data-translate="mq5">GONE GONE</span><span data-translate="mq6">X I</span><span data-translate="mq7">伊克西 · 满月 · 多重人格</span><span data-translate="mq8">DARK SIDE · INTERSTELLA · VIBRATION</span><span data-translate="mq9">SEASON 1 · 2 · 3 · 4 · 5</span><span data-translate="mq1">頑張っても手に入らないって約束する</span><span data-translate="mq10">EXPLORE — DESIGNS — NEWS</span><span data-translate="mq11">I メタ I eekseye I I 2026</span><span data-translate="mq12">冷笑主義 I eekseye I 2029</span><span data-translate="mq13">TRUTH SHOULD SET YOU FREE</span><span data-translate="mq14">NO REPRODUCTION WITHOUT PERMISSION</span><span data-translate="mq15">Eeks Eye</span><span data-translate="mq1">頑張っても手に入らないって約束する</span><span data-translate="mq16">· XI ·</span><span data-translate="mq17">CH@0S · UNGUIDED · SEEK</span><span data-translate="mq18">Rockstar · Martyr · Nightmare</span>
+            </div>
+        </div>
+        <div class="hero-geometric-bg">
+            <div class="geometric-shape"></div>
+            <div class="geometric-shape"></div>
+            <div class="geometric-shape"></div>
+            <div class="geometric-shape"></div>
+            <div class="geometric-shape"></div>
+            <div class="geometric-shape"></div>
+            <div class="geometric-shape"></div>
+            <div class="geometric-shape"></div>
+            <div class="geometric-shape"></div>
+            <div class="geometric-shape"></div>
+            <div class="geometric-shape"></div>
+            <div class="geometric-shape"></div>
+            <div class="geometric-shape"></div>
+            <div class="geometric-shape"></div>
+            <div class="geometric-shape"></div>
+        </div>
+        <div class="hero-shirts-grid">
+            <img src="eekseye.png/I 伊克西 I I eeks eye I I 2026.png" alt="I 伊克西 I I eeks eye I I 2026">
+            <img src="eekseye.png/I 满月 I eekseye I 2026.png" alt="I 满月 I eekseye I 2026">
+            <img src="eekseye.png/I 多重人格 I eekseye I 2026.png" alt="I 多重人格 I eekseye I 2026">
+            <img src="eekseye.png/I メタ I eekseye I I 2026.png" alt="I メタ I eekseye I I 2026">
+        </div>
+        <img src="images/gone gone.png" alt="Gone gone" class="hero-gone-image hero-gone-image-1 hero-gone-image--visible">
+        <img src="images/gone gone 3.png" alt="Gone gone 3" class="hero-gone-image hero-gone-image-2 hero-gone-image--hiding">
+        <a href="explore.html" class="hero-gone-click-box hero-gone-click-box-1 hero-gone-image--visible" aria-label="Open gone gone in explore page" data-translate-aria="ariaOpenGone1"></a>
+        <a href="explore.html" class="hero-gone-click-box hero-gone-click-box-2 hero-gone-image--hiding" aria-label="Open gone gone 3 in explore page" data-translate-aria="ariaOpenGone2"></a>
+        <button type="button" class="hero-gone-nav hero-gone-nav-prev" aria-label="Past image" data-translate="heroPast" data-translate-aria="ariaPastImage">Past</button>
+        <button type="button" class="hero-gone-nav hero-gone-nav-next" aria-label="Present image" data-translate="heroPresent" data-translate-aria="ariaPresentImage">Present</button>
+        <div class="hero-gone-mini-wrapper">
+            <button type="button" class="hero-gone-extra-image-button" aria-label="Open original image" data-translate-aria="ariaOpenOriginal">
+                <img src="eekseye.png/I 伊克西 I I eeks eye I I 2026.png" alt="I 伊克西 I I eeks eye I I 2026" class="hero-gone-extra-image">
+                <span class="hero-gone-zoom-icon"><i class="fas fa-search-plus" aria-hidden="true"></i></span>
+            </button>
+            <div class="hero-gone-mini-stage">
+                <img src="images/gone gone.png" alt="Gone gone mini" class="hero-gone-image-mini hero-gone-image-mini-1 hero-gone-image--visible">
+                <img src="images/gone gone 3.png" alt="Gone gone 3 mini" class="hero-gone-image-mini hero-gone-image-mini-2 hero-gone-image--hiding">
+            </div>
+        </div>
+        <div class="hero-sign-marquee bottom" aria-hidden="true">
+            <div class="marquee-content">
+                <span data-translate="mq1">頑張っても手に入らないって約束する</span><span data-translate="mq2">◆ EEKSEYE ◆</span><span data-translate="mq3">RUNWAY</span><span data-translate="mq4">I KNOW YOU SAY YOU KNOW ME</span><span data-translate="mq5">GONE GONE</span><span data-translate="mq6">X I</span><span data-translate="mq7">伊克西 · 满月 · 多重人格</span><span data-translate="mq8">DARK SIDE · INTERSTELLA · VIBRATION</span><span data-translate="mq9">SEASON 1 · 2 · 3 · 4 · 5</span><span data-translate="mq1">頑張っても手に入らないって約束する</span><span data-translate="mq10">EXPLORE — DESIGNS — NEWS</span><span data-translate="mq11">I メタ I eekseye I I 2026</span><span data-translate="mq12">冷笑主義 I eekseye I 2029</span><span data-translate="mq13">TRUTH SHOULD SET YOU FREE</span><span data-translate="mq14">NO REPRODUCTION WITHOUT PERMISSION</span><span data-translate="mq15">Eeks Eye</span><span data-translate="mq1">頑張っても手に入らないって約束する</span><span data-translate="mq16">· XI ·</span><span data-translate="mq17">CH@0S · UNGUIDED · SEEK</span><span data-translate="mq18">Rockstar · Martyr · Nightmare</span>
+                <span data-translate="mq1">頑張っても手に入らないって約束する</span><span data-translate="mq2">◆ EEKSEYE ◆</span><span data-translate="mq3">RUNWAY</span><span data-translate="mq4">I KNOW YOU SAY YOU KNOW ME</span><span data-translate="mq5">GONE GONE</span><span data-translate="mq6">X I</span><span data-translate="mq7">伊克西 · 满月 · 多重人格</span><span data-translate="mq8">DARK SIDE · INTERSTELLA · VIBRATION</span><span data-translate="mq9">SEASON 1 · 2 · 3 · 4 · 5</span><span data-translate="mq1">頑張っても手に入らないって約束する</span><span data-translate="mq10">EXPLORE — DESIGNS — NEWS</span><span data-translate="mq11">I メタ I eekseye I I 2026</span><span data-translate="mq12">冷笑主義 I eekseye I 2029</span><span data-translate="mq13">TRUTH SHOULD SET YOU FREE</span><span data-translate="mq14">NO REPRODUCTION WITHOUT PERMISSION</span><span data-translate="mq15">Eeks Eye</span><span data-translate="mq1">頑張っても手に入らないって約束する</span><span data-translate="mq16">· XI ·</span><span data-translate="mq17">CH@0S · UNGUIDED · SEEK</span><span data-translate="mq18">Rockstar · Martyr · Nightmare</span>
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <div class="hero-gone-image-modal" id="heroGoneImageModal" aria-hidden="true">
+        <button type="button" class="hero-gone-image-modal-close" id="heroGoneImageModalClose" aria-label="Close image preview" data-translate-aria="ariaCloseModal">&times;</button>
+        <img src="eekseye.png/I 伊克西 I I eeks eye I I 2026.png" alt="I 伊克西 I I eeks eye I I 2026 original view">
+    </div>
+
+    <div class="index-cards-footer-scale">
+    <section class="hero-section-3">
+        <div class="hero-section-3-container">
+            <div class="hero-section-3-cards">
+                <div class="hero-section-3-card">
+                    <div class="hero-section-3-icon"><i class="fas fa-cog"></i></div>
+                    <h3 class="hero-section-3-title" data-translate="svcWebTitle">Website Design</h3>
+                    <p class="hero-section-3-desc" data-translate="svcWebDesc">Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ut labore et magna aliqua.</p>
+                    <a href="#" class="hero-section-3-btn" data-translate="learnMore">LEARN MORE</a>
+                </div>
+                <div class="hero-section-3-card">
+                    <div class="hero-section-3-icon"><i class="fas fa-at"></i></div>
+                    <h3 class="hero-section-3-title" data-translate="svcGoogleTitle">Google Advertise</h3>
+                    <p class="hero-section-3-desc" data-translate="svcGoogleDesc">Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ut labore et magna aliqua.</p>
+                    <a href="#" class="hero-section-3-btn" data-translate="learnMore">LEARN MORE</a>
+                </div>
+                <div class="hero-section-3-card">
+                    <div class="hero-section-3-icon"><i class="fas fa-chart-line"></i></div>
+                    <h3 class="hero-section-3-title" data-translate="svcEmailTitle">E-mail Hosting</h3>
+                    <p class="hero-section-3-desc" data-translate="svcEmailDesc">Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor ut labore et magna aliqua.</p>
+                    <a href="#" class="hero-section-3-btn" data-translate="learnMore">LEARN MORE</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    </div>
+
+    <div class="explore-footer-scale-wrap">
+    <footer class="site-footer explore-footer-editorial">
+        <div class="explore-footer-grid">
+            <div class="explore-footer-col">
+                <h2 class="explore-footer-heading" data-translate="footerNewsletter">Newsletter</h2>
+                <p class="explore-footer-note">
+                    <a href="contact.html" class="explore-footer-link explore-footer-link--underline" data-translate="footerSubscribeNewsletter">Subscribe to our newsletter</a>
+                </p>
+            </div>
+            <div class="explore-footer-col">
+                <h2 class="explore-footer-heading" data-translate="footerClientServices">Client services</h2>
+                <ul class="explore-footer-list">
+                    <li><a href="faq.html" class="explore-footer-link" data-translate="faq">FAQ</a></li>
+                    <li><a href="#" class="explore-footer-link" data-translate="footerTrackOrder">Track order</a></li>
+                    <li><a href="#" class="explore-footer-link" data-translate="footerExchanges">Exchanges and returns</a></li>
+                    <li><a href="#" class="explore-footer-link" data-translate="footerShipping">Shipping</a></li>
+                    <li><a href="#" class="explore-footer-link" data-translate="footerPayment">Payment</a></li>
+                    <li><a href="#" class="explore-footer-link" data-translate="footerResell">Re-sell program</a></li>
+                </ul>
+            </div>
+            <div class="explore-footer-col">
+                <h2 class="explore-footer-heading" data-translate="footerCompany">The company</h2>
+                <ul class="explore-footer-list">
+                    <li><a href="#" class="explore-footer-link" data-translate="footerLegal">Legal</a></li>
+                    <li><a href="#" class="explore-footer-link" data-translate="footerPrivacy">Privacy policy</a></li>
+                    <li><a href="#" class="explore-footer-link" data-translate="footerCookie">Cookie policy</a></li>
+                    <li><a href="#" class="explore-footer-link" data-translate="footerCookiesDoNotSell">Cookies settings and do not sell or share</a></li>
+                    <li><a href="what-you-need-to-know.html" class="explore-footer-link" data-translate="footerWYNTK">What you need to know</a></li>
+                </ul>
+            </div>
+            <div class="explore-footer-col">
+                <h2 class="explore-footer-heading" data-translate="footerFollow">Follow us</h2>
+                <ul class="explore-footer-list">
+                    <li><a href="#" class="explore-footer-link" target="_blank" rel="noopener noreferrer" data-translate="footerFacebook">Facebook</a></li>
+                    <li><a href="https://www.instagram.com/eeks.eye/" class="explore-footer-link" target="_blank" rel="noopener noreferrer" data-translate="footerInstagram">Instagram</a></li>
+                    <li><a href="#" class="explore-footer-link" target="_blank" rel="noopener noreferrer" data-translate="footerTikTok">TikTok</a></li>
+                    <li><a href="#" class="explore-footer-link" target="_blank" rel="noopener noreferrer" data-translate="footerPinterest">Pinterest</a></li>
+                    <li><a href="#" class="explore-footer-link" target="_blank" rel="noopener noreferrer" data-translate="footerLinkedIn">LinkedIn</a></li>
+                </ul>
+            </div>
+            <div class="explore-footer-col">
+                <h2 class="explore-footer-heading" data-translate="footerContactUs">Contact us</h2>
+                <p class="explore-footer-note" data-translate="footerAdvisorsHours">Our client advisors are available Mon–Fri 9am – 9pm ET &amp; Sat 10am – 7pm ET</p>
+                <h3 class="explore-footer-subhead" data-translate="footerLivechat">Livechat</h3>
+                <p class="explore-footer-note"><a href="contact.html" class="explore-footer-link explore-footer-link--underline" data-translate="footerUnavailable">Our client advisors are currently unavailable</a></p>
+                <h3 class="explore-footer-subhead" data-translate="footerCallUs">Call us</h3>
+                <p class="explore-footer-note"><a href="tel:+16468891895" class="explore-footer-link">+1 646 889 1895</a></p>
+                <h3 class="explore-footer-subhead" data-translate="footerEmailUs">Email us</h3>
+                <p class="explore-footer-note"><a href="contact.html" class="explore-footer-link explore-footer-link--underline" data-translate="footerEmailUs">Email us</a></p>
+            </div>
+        </div>
+        <div class="explore-footer-bottom">
+            <a href="#" id="copyright-link" data-translate="copyrightFooter">© 2026 Eeks Eye</a>
+        </div>
+    </footer>
+
+    <div class="x-line">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</div>
+    </div>
+
+    <div id="copyright-modal" style="display:none; position:fixed; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.9); z-index:999999; align-items:center; justify-content:center; flex-direction:column; overflow-y:auto;">
+        <div style="background:#fff; color:#111; max-width:90vw; width:400px; padding:2rem 1.5rem; border-radius:10px; box-shadow:0 8px 32px #000a; position:relative; text-align:center; z-index:1000000; margin:auto;">
+            <button id="close-copyright-modal" style="position:absolute; top:10px; right:15px; background:none; border:none; font-size:1.5rem; color:#111; cursor:pointer; z-index:1000001;" aria-label="Close" data-translate-aria="ariaClose">&times;</button>
+            <h3 style="margin-bottom:1rem;" data-translate="copyrightModalTitle">Copyright Notice</h3>
+            <p style="font-size:1.05rem; line-height:1.6;" data-translate="copyrightModalBody">All content, images, and designs on this site are owned and operated by Eeks Eye. No part of this website may be copied, reproduced, or used without express written permission from Eeks Eye. All rights reserved.</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+    <script src="js/eeks-translations.js"></script>
+    <script src="js/cookie-consent.js"></script>
+    <script src="js/footer-links.js"></script>
+    <script src="js/product-i18n.js"></script>
+    <script src="js/mix-player.js"></script>
+    <script src="js/page-transition.js"></script>
+<script>
+(function() {
+    var canvas = document.getElementById('hero-three-canvas');
+    if (!canvas || typeof THREE === 'undefined') return;
+    var scene = new THREE.Scene();
+    function heroViewportSize() {
+        var el = canvas.closest('.hero-section');
+        if (!el) {
+            return { w: window.innerWidth, h: window.innerHeight };
+        }
+        var w = Math.max(1, Math.floor(el.clientWidth));
+        var h = Math.max(1, Math.floor(el.clientHeight));
+        return { w: w, h: h };
+    }
+    var vp = heroViewportSize();
+    // Bigger FOV number = wider lens (more zoomed out)
+    var camera = new THREE.PerspectiveCamera(
+        120,
+        vp.w / vp.h,
+        0.1,
+        1000
+    );
+    camera.position.z = 5;
+    var renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true, antialias: true });
+    renderer.setSize(vp.w, vp.h);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setClearColor(0x000000, 0);
+    function onResize() {
+        var next = heroViewportSize();
+        camera.aspect = next.w / next.h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(next.w, next.h);
+    }
+    window.addEventListener('resize', onResize);
+    function animate() {
+        requestAnimationFrame(animate);
+        renderer.render(scene, camera);
+    }
+    animate();
+})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Background video 1.2x speed
+            const headerVideo = document.querySelector('.header-video');
+            if (headerVideo) {
+                headerVideo.playbackRate = 1.2;
+            }
+
+            // Gone gone / Gone gone 2 fade cycle (bottom-to-top vs top-to-bottom)
+            const gone1 = document.querySelector('.hero-gone-image-1');
+            const gone2 = document.querySelector('.hero-gone-image-2');
+            const mini1 = document.querySelector('.hero-gone-image-mini-1');
+            const mini2 = document.querySelector('.hero-gone-image-mini-2');
+            const clickBox1 = document.querySelector('.hero-gone-click-box-1');
+            const clickBox2 = document.querySelector('.hero-gone-click-box-2');
+            const gonePrev = document.querySelector('.hero-gone-nav-prev');
+            const goneNext = document.querySelector('.hero-gone-nav-next');
+            const goneExtraButton = document.querySelector('.hero-gone-extra-image-button');
+            const goneImageModal = document.getElementById('heroGoneImageModal');
+            const goneImageModalClose = document.getElementById('heroGoneImageModalClose');
+
+            if (goneExtraButton && goneImageModal && goneImageModalClose) {
+                goneExtraButton.addEventListener('click', () => {
+                    goneImageModal.classList.add('is-open');
+                    goneImageModal.setAttribute('aria-hidden', 'false');
+                });
+
+                goneImageModalClose.addEventListener('click', () => {
+                    goneImageModal.classList.remove('is-open');
+                    goneImageModal.setAttribute('aria-hidden', 'true');
+                });
+
+                goneImageModal.addEventListener('click', (event) => {
+                    if (event.target === goneImageModal) {
+                        goneImageModal.classList.remove('is-open');
+                        goneImageModal.setAttribute('aria-hidden', 'true');
+                    }
+                });
+
+                document.addEventListener('keydown', (event) => {
+                    if (event.key === 'Escape' && goneImageModal.classList.contains('is-open')) {
+                        goneImageModal.classList.remove('is-open');
+                        goneImageModal.setAttribute('aria-hidden', 'true');
+                    }
+                });
+            }
+
+            if (gone1 && gone2) {
+                const showFirst = () => {
+                    gone1.classList.add('hero-gone-image--visible');
+                    gone1.classList.remove('hero-gone-image--hiding');
+                    gone2.classList.add('hero-gone-image--hiding');
+                    gone2.classList.remove('hero-gone-image--visible');
+
+                    if (clickBox1 && clickBox2) {
+                        clickBox1.classList.add('hero-gone-image--visible');
+                        clickBox1.classList.remove('hero-gone-image--hiding');
+                        clickBox2.classList.add('hero-gone-image--hiding');
+                        clickBox2.classList.remove('hero-gone-image--visible');
+                    }
+
+                    if (mini1 && mini2) {
+                        mini1.classList.add('hero-gone-image--visible');
+                        mini1.classList.remove('hero-gone-image--hiding');
+                        mini2.classList.add('hero-gone-image--hiding');
+                        mini2.classList.remove('hero-gone-image--visible');
+                    }
+                };
+
+                const showSecond = () => {
+                    gone1.classList.remove('hero-gone-image--visible');
+                    gone1.classList.add('hero-gone-image--hiding');
+                    gone2.classList.remove('hero-gone-image--hiding');
+                    gone2.classList.add('hero-gone-image--visible');
+
+                    if (clickBox1 && clickBox2) {
+                        clickBox1.classList.remove('hero-gone-image--visible');
+                        clickBox1.classList.add('hero-gone-image--hiding');
+                        clickBox2.classList.remove('hero-gone-image--hiding');
+                        clickBox2.classList.add('hero-gone-image--visible');
+                    }
+
+                    if (mini1 && mini2) {
+                        mini1.classList.remove('hero-gone-image--visible');
+                        mini1.classList.add('hero-gone-image--hiding');
+                        mini2.classList.remove('hero-gone-image--hiding');
+                        mini2.classList.add('hero-gone-image--visible');
+                    }
+                };
+
+                let showingFirst = true;
+                const INTERVAL_MS = 6000; // slow cycle
+                showFirst();
+
+                const runCycle = () => {
+                    if (showingFirst) {
+                        showSecond();
+                    } else {
+                        showFirst();
+                    }
+                    showingFirst = !showingFirst;
+                };
+
+                let cycleTimer = setInterval(runCycle, INTERVAL_MS);
+
+                const resetCycleTimer = () => {
+                    clearInterval(cycleTimer);
+                    cycleTimer = setInterval(runCycle, INTERVAL_MS);
+                };
+
+                const switchInstantly = (showSecondImage) => {
+                    const instantTargets = [gone1, gone2, mini1, mini2, clickBox1, clickBox2].filter(Boolean);
+                    instantTargets.forEach((el) => el.classList.add('hero-gone-image--instant'));
+
+                    if (showSecondImage) {
+                        showingFirst = false;
+                        showSecond();
+                    } else {
+                        showingFirst = true;
+                        showFirst();
+                    }
+
+                    requestAnimationFrame(() => {
+                        instantTargets.forEach((el) => el.classList.remove('hero-gone-image--instant'));
+                    });
+                };
+
+                if (gonePrev) {
+                    gonePrev.addEventListener('click', () => {
+                        switchInstantly(false);
+                        resetCycleTimer();
+                    });
+                }
+
+                if (goneNext) {
+                    goneNext.addEventListener('click', () => {
+                        switchInstantly(true);
+                        resetCycleTimer();
+                    });
+                }
+            }
+        });
+
+        // Dropdown menu functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const menuIcon = document.querySelector('.menu-icon');
+            const dropdownContent = document.querySelector('.dropdown-content');
+
+            if (menuIcon && dropdownContent) {
+                menuIcon.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    dropdownContent.classList.toggle('show');
+                });
+
+                // Close dropdown when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (!menuIcon.contains(e.target) && !dropdownContent.contains(e.target)) {
+                        dropdownContent.classList.remove('show');
+                    }
+                });
+            }
+        });
+
+(function () {
+    var navDisplayY = null;
+    var navRafId = null;
+    var smooth = 0.24;
+    var settleEps = 0.4;
+    var navEase = 'transform 0.55s cubic-bezier(0.22, 1, 0.32, 1)';
+
+    function navUsesFixedSplashLayout() {
+        return document.body && !document.body.classList.contains('dark-theme');
+    }
+
+    function navTargetY() {
+        var s = window.pageYOffset || 0;
+        return s === 0 ? window.innerHeight * 0.05 : s;
+    }
+
+    function tickNav() {
+        var nav = document.querySelector('.nav-header');
+        if (!nav) {
+            navRafId = null;
+            return;
+        }
+        if (!navUsesFixedSplashLayout()) {
+            nav.style.transition = '';
+            nav.style.transform = '';
+            navRafId = null;
+            return;
+        }
+        var target = navTargetY();
+        if (navDisplayY === null) {
+            navDisplayY = target;
+        }
+        navDisplayY += (target - navDisplayY) * smooth;
+        if (Math.abs(target - navDisplayY) < settleEps) {
+            navDisplayY = target;
+        }
+        nav.style.transition = 'none';
+        nav.style.transform = 'translateY(' + navDisplayY + 'px)';
+        if (Math.abs(target - navDisplayY) > settleEps * 0.85) {
+            navRafId = requestAnimationFrame(tickNav);
+        } else {
+            navRafId = null;
+            nav.style.transition = navEase;
+        }
+    }
+
+    function kickNav() {
+        if (!navRafId) {
+            navRafId = requestAnimationFrame(tickNav);
+        }
+    }
+
+    window.addEventListener('scroll', kickNav, { passive: true });
+    window.addEventListener('resize', function () {
+        var nav = document.querySelector('.nav-header');
+        if (!nav) {
+            return;
+        }
+        if (!navUsesFixedSplashLayout()) {
+            nav.style.transition = '';
+            nav.style.transform = '';
+            return;
+        }
+        navDisplayY = navTargetY();
+        nav.style.transition = 'none';
+        nav.style.transform = 'translateY(' + navDisplayY + 'px)';
+        nav.style.transition = navEase;
+    });
+
+    function initNavY() {
+        var nav = document.querySelector('.nav-header');
+        if (!nav) {
+            return;
+        }
+        if (!navUsesFixedSplashLayout()) {
+            nav.style.transition = '';
+            nav.style.transform = '';
+            return;
+        }
+        navDisplayY = navTargetY();
+        nav.style.transition = 'none';
+        nav.style.transform = 'translateY(' + navDisplayY + 'px)';
+        nav.style.transition = navEase;
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initNavY);
+    } else {
+        initNavY();
+    }
+})();
+
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('site-search');
+    const searchButton = document.getElementById('search-button');
+    const suggestionsDropdown = document.getElementById('suggestions-dropdown');
+
+    // Show suggestions dropdown when input is focused
+    searchInput.addEventListener('focus', function() {
+        suggestionsDropdown.style.display = 'block';
+    });
+
+    // Hide suggestions when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!searchInput.contains(e.target) && !suggestionsDropdown.contains(e.target)) {
+            suggestionsDropdown.style.display = 'none';
+        }
+    });
+
+    // Handle suggestion clicks
+    function goToDesignsWithTransition() {
+        var dest = new URL('designs.html', window.location.href).href;
+        if (typeof window.createTransition === 'function') {
+            window.createTransition(dest);
+        } else {
+            window.location.href = dest;
+        }
+    }
+
+    document.querySelectorAll('.suggestion-item').forEach(item => {
+        item.addEventListener('click', function() {
+            searchInput.value = this.textContent;
+            goToDesignsWithTransition();
+            suggestionsDropdown.style.display = 'none';
+        });
+    });
+
+    // Add event listeners
+    searchButton.addEventListener('click', function() {
+        goToDesignsWithTransition();
+    });
+    
+    searchInput.addEventListener('keyup', function(e) {
+        if (e.key === 'Enter') {
+            goToDesignsWithTransition();
+        }
+    });
+});
+
+// Dropdown Menu Toggle (menu icon and dropdown removed - no login required)
+document.addEventListener('DOMContentLoaded', function() {
+    // Contact and Aesthetic dropdown toggles
+    const headerContactButton = document.getElementById('headerContactButton');
+    const headerAestheticButton = document.getElementById('headerAestheticButton');
+    const contactDropdown = document.getElementById('contactDropdown');
+    const aestheticDropdown = document.getElementById('aestheticDropdown');
+    const contactDropdownOverlay = document.getElementById('contactDropdownOverlay');
+
+    function updateOverlay() {
+        const contactOpen = contactDropdown && contactDropdown.classList.contains('active');
+        const aestheticOpen = aestheticDropdown && aestheticDropdown.classList.contains('active');
+        if (contactDropdownOverlay) {
+            if (contactOpen || aestheticOpen) {
+                contactDropdownOverlay.classList.add('active');
+            } else {
+                contactDropdownOverlay.classList.remove('active');
+            }
+        }
+    }
+
+    function closeContactDropdown() {
+        if (contactDropdown) contactDropdown.classList.remove('active');
+        updateOverlay();
+    }
+
+    function closeAestheticDropdown() {
+        if (aestheticDropdown) aestheticDropdown.classList.remove('active');
+        updateOverlay();
+    }
+
+    function toggleContactDropdown() {
+        if (aestheticDropdown) aestheticDropdown.classList.remove('active');
+        if (contactDropdown) {
+            contactDropdown.classList.toggle('active');
+        }
+        updateOverlay();
+    }
+
+    function toggleAestheticDropdown() {
+        if (contactDropdown) contactDropdown.classList.remove('active');
+        if (aestheticDropdown) {
+            aestheticDropdown.classList.toggle('active');
+        }
+        updateOverlay();
+    }
+
+    // Add click listener for header Contact button
+    if (headerContactButton) {
+        headerContactButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleContactDropdown();
+        });
+    }
+
+    // Add click listener for header Aesthetic button (capture phase so it runs first and dropdown always opens)
+    if (headerAestheticButton) {
+        headerAestheticButton.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            toggleAestheticDropdown();
+        }, true);
+    }
+
+    // Close both dropdowns when clicking overlay
+    if (contactDropdownOverlay) {
+        contactDropdownOverlay.addEventListener('click', function(e) {
+            if (e.target === contactDropdownOverlay) {
+                closeContactDropdown();
+                closeAestheticDropdown();
+            }
+        });
+    }
+
+    // Close dropdowns when clicking outside (but allow clicks on dropdown buttons and trigger buttons)
+    document.addEventListener('click', function(e) {
+        const isContactTrigger = headerContactButton && headerContactButton.contains(e.target);
+        const isAestheticTrigger = headerAestheticButton && headerAestheticButton.contains(e.target);
+        const isInContactDropdown = contactDropdown && contactDropdown.contains(e.target);
+        const isInAestheticDropdown = aestheticDropdown && aestheticDropdown.contains(e.target);
+        const isContactDropdownButton = e.target.closest('.contact-dropdown-button');
+        const isAestheticDropdownButton = e.target.closest('.aesthetic-dropdown-button');
+
+        if (isContactTrigger || isAestheticTrigger || isContactDropdownButton || isAestheticDropdownButton || isInContactDropdown || isInAestheticDropdown) {
+            return;
+        }
+        if (contactDropdown && contactDropdown.classList.contains('active')) {
+            closeContactDropdown();
+        }
+        if (aestheticDropdown && aestheticDropdown.classList.contains('active')) {
+            closeAestheticDropdown();
+        }
+    }, false);
+
+    // Make contact dropdown buttons clickable
+    const contactDropdownButtons = document.querySelectorAll('.contact-dropdown-button');
+    contactDropdownButtons.forEach((button, index) => {
+        button.addEventListener('click', function(e) {
+            console.log('Button clicked:', index + 1, this.href);
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            
+            // Button 1 (index 0) should navigate to contact.html
+            // Button 2 (index 1) should navigate to news.html
+            if ((index === 0 && this.href && this.href.includes('contact.html')) ||
+                (index === 1 && this.href && this.href.includes('news.html'))) {
+                // Use the transition effect for navigation
+                const destination = this.href;
+                if (destination) {
+                    closeContactDropdown();
+                    if (window.createTransition) window.createTransition(destination);
+                }
+                return;
+            }
+            // For other buttons, handle custom behavior
+            console.log(`Button ${index + 1} clicked`);
+            // You can add specific functionality for each button here
+        }, true); // Use capture phase to run BEFORE other handlers
+    });
+
+    // Aesthetic dropdown buttons (seasons) - close dropdown then run same transition
+    const aestheticDropdownButtons = document.querySelectorAll('.aesthetic-dropdown-button');
+    aestheticDropdownButtons.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.stopImmediatePropagation();
+            const destination = this.href;
+            closeAestheticDropdown();
+            if (destination && destination !== '#' && !destination.endsWith('#')) {
+                if (window.createTransition) window.createTransition(destination);
+            }
+        }, true);
+    });
+});
+
+let keysPressed = {};
+let lastToggleTime = 0;
+document.addEventListener('keydown', function(e) {
+    const key = e.key.toLowerCase();
+    keysPressed[key] = true;
+    
+    if (keysPressed['x'] && keysPressed['i']) {
+        const now = Date.now();
+        // Prevent rapid toggling and typing
+        if (now - lastToggleTime > 200) {
+            e.preventDefault();
+            e.stopPropagation();
+            const searchContainer = document.querySelector('.search-container');
+            const input = searchContainer ? searchContainer.querySelector('input') : null;
+            
+            if (searchContainer) {
+                if (searchContainer.style.display === 'block') {
+                    // Clear the input when closing
+                    if (input) {
+                        input.value = '';
+                    }
+                    searchContainer.style.display = 'none';
+                } else {
+                    searchContainer.style.display = 'block';
+                    if (input) {
+                        input.value = '';
+                        input.focus();
+                    }
+                }
+            }
+            lastToggleTime = now;
+        }
+    }
+});
+
+document.addEventListener('keyup', function(e) {
+    keysPressed[e.key.toLowerCase()] = false;
+});
+
+
+// Copyright modal logic
+const copyrightLink = document.getElementById('copyright-link');
+const copyrightModal = document.getElementById('copyright-modal');
+const closeCopyrightModal = document.getElementById('close-copyright-modal');
+if (copyrightLink && copyrightModal && closeCopyrightModal) {
+    let scrollPosition = 0;
+    copyrightLink.addEventListener('click', function(e) {
+        e.preventDefault();
+        // Save current scroll position
+        scrollPosition = window.scrollY || window.pageYOffset;
+        // Position modal at current viewport - it will cover the visible area
+        copyrightModal.style.top = scrollPosition + 'px';
+        copyrightModal.style.display = 'flex';
+        copyrightModal.style.zIndex = '999999';
+        copyrightModal.style.position = 'fixed';
+        copyrightModal.style.left = '0';
+        copyrightModal.style.width = '100vw';
+        copyrightModal.style.height = '100vh';
+        // Prevent body scrolling
+        document.body.style.overflow = 'hidden';
+        document.body.style.position = 'fixed';
+        document.body.style.width = '100%';
+        document.body.style.top = `-${scrollPosition}px`;
+    });
+    closeCopyrightModal.addEventListener('click', function() {
+        const savedScroll = scrollPosition;
+        copyrightModal.style.display = 'none';
+        document.body.style.overflow = '';
+        document.body.style.position = '';
+        document.body.style.width = '';
+        document.body.style.top = '';
+        // Restore scroll position
+        if (savedScroll !== undefined) {
+            window.scrollTo(0, savedScroll);
+        }
+    });
+    copyrightModal.addEventListener('click', function(e) {
+        if (e.target === copyrightModal) {
+            const savedScroll = scrollPosition;
+            copyrightModal.style.display = 'none';
+            document.body.style.overflow = '';
+            document.body.style.position = '';
+            document.body.style.width = '';
+            document.body.style.top = '';
+            // Restore scroll position
+            if (savedScroll !== undefined) {
+                window.scrollTo(0, savedScroll);
+            }
+        }
+    });
+}
+
+// Currency Selector Functionality
+document.addEventListener('DOMContentLoaded', function() {
+    const currencySelector = document.querySelector('.currency-selector');
+    const currencyButton = document.getElementById('currencyButton');
+    const currencyDropdown = document.getElementById('currencyDropdown');
+    const currencyDisplay = document.getElementById('currencyDisplay');
+    const currencyOptions = document.querySelectorAll('.currency-option');
+
+    // Currency selector is now part of header buttons, no special positioning needed
+
+    // Currency conversion rates (USD as base)
+    const exchangeRates = {
+        USD: 1.0,
+        CAD: 1.35,
+        EUR: 0.92,
+        CNY: 7.24,
+        JPY: 149.50,
+        KRW: 1318.50,
+        GBP: 0.79,
+        AUD: 1.52,
+        NZD: 1.68,
+        MXN: 16.85
+    };
+
+    const translations = window.EeksTranslations || { en: {} };
+
+    // Currency / language: cookie (if accepted) + localStorage — see js/cookie-consent.js
+    function initPrefsFromCookies() {
+        if (typeof window.EeksCookies !== 'undefined' && window.EeksCookies.syncEffectiveToLocalStorage) {
+            return window.EeksCookies.syncEffectiveToLocalStorage();
+        }
+        return {
+            currency: localStorage.getItem('selectedCurrency') || 'USD',
+            country: localStorage.getItem('selectedCountry') || 'US',
+            symbol: localStorage.getItem('selectedSymbol') || '$',
+            language: localStorage.getItem('selectedLanguage') || 'en'
+        };
+    }
+
+    var _prefs = initPrefsFromCookies();
+    let currentCurrency = _prefs.currency;
+    let currentCountry = _prefs.country;
+    let currentSymbol = _prefs.symbol;
+    let currentLanguage = _prefs.language;
+
+    // Update display on load
+    updateCurrencyDisplay();
+    translatePage(currentLanguage);
+
+    // Toggle dropdown
+    currencyButton.addEventListener('click', function(e) {
+        e.stopPropagation();
+        currencyDropdown.classList.toggle('active');
+        const icon = currencyButton.querySelector('i');
+        if (currencyDropdown.classList.contains('active')) {
+            icon.classList.remove('fa-chevron-up');
+            icon.classList.add('fa-chevron-down');
+        } else {
+            icon.classList.remove('fa-chevron-down');
+            icon.classList.add('fa-chevron-up');
+        }
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!currencyButton.contains(e.target) && !currencyDropdown.contains(e.target)) {
+            currencyDropdown.classList.remove('active');
+            const icon = currencyButton.querySelector('i');
+            icon.classList.remove('fa-chevron-down');
+            icon.classList.add('fa-chevron-up');
+        }
+    });
+
+    // Handle currency selection
+    currencyOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            const currency = this.getAttribute('data-currency');
+            const country = this.getAttribute('data-country');
+            const symbol = this.getAttribute('data-symbol');
+            const lang = this.getAttribute('data-lang') || 'en';
+
+            // Update current currency
+            currentCurrency = currency;
+            currentCountry = country;
+            currentSymbol = symbol;
+            currentLanguage = lang;
+
+            localStorage.setItem('selectedCurrency', currency);
+            localStorage.setItem('selectedCountry', country);
+            localStorage.setItem('selectedSymbol', symbol);
+            localStorage.setItem('selectedLanguage', lang);
+
+            if (typeof window.EeksCookies !== 'undefined' && window.EeksCookies.hasConsent && window.EeksCookies.hasConsent()) {
+                window.EeksCookies.savePreferences({
+                    currency: currency,
+                    country: country,
+                    symbol: symbol,
+                    language: lang
+                });
+            }
+
+            // Reload page to reset with new language/currency
+            window.location.reload();
+        });
+    });
+
+    function translatePage(language) {
+        const lang = translations[language] || translations.en;
+        
+        // Translate elements with data-translate attribute
+        document.querySelectorAll('[data-translate]').forEach(element => {
+            const key = element.getAttribute('data-translate');
+            if (lang[key]) {
+                element.textContent = lang[key];
+            }
+        });
+
+        // Translate placeholders
+        document.querySelectorAll('[data-translate-placeholder]').forEach(element => {
+            const key = element.getAttribute('data-translate-placeholder');
+            if (lang[key]) {
+                element.placeholder = lang[key];
+            }
+        });
+
+        document.querySelectorAll('[data-translate-aria]').forEach(element => {
+            const key = element.getAttribute('data-translate-aria');
+            if (lang[key]) {
+                element.setAttribute('aria-label', lang[key]);
+            }
+        });
+
+        document.querySelectorAll('[data-translate-title]').forEach(element => {
+            const key = element.getAttribute('data-translate-title');
+            if (lang[key]) {
+                element.setAttribute('title', lang[key]);
+            }
+        });
+
+        const currencyNames = window.EeksCurrencyFullNames || {};
+
+        document.querySelectorAll('[data-translate-currency]').forEach(element => {
+            const key = element.getAttribute('data-translate-currency');
+            if (currencyNames[language] && currencyNames[language][key]) {
+                element.textContent = currencyNames[language][key];
+            }
+        });
+
+        if (typeof window.applyProductI18n === 'function') {
+            window.applyProductI18n(language);
+        }
+    }
+
+    function updateCurrencyDisplay() {
+        // Format: Country (Currency Symbol)
+        const countryNames = {
+            'US': 'US',
+            'CA': 'CA',
+            'FR': 'FR',
+            'DE': 'DE',
+            'ES': 'ES',
+            'IT': 'IT',
+            'CN': 'CN',
+            'JP': 'JP',
+            'KR': 'KR',
+            'GB': 'GB',
+            'AU': 'AU',
+            'NZ': 'NZ',
+            'MX': 'MX'
+        };
+        let countryName = countryNames[currentCountry] || currentCountry;
+        let currencyCode = currentCurrency;
+        currencyDisplay.textContent = `${countryName} (${currencyCode} ${currentSymbol})`;
+    }
+
+    function convertPrices() {
+        // Find all price elements on the page
+        // This is a basic implementation - you may need to adjust selectors based on your price elements
+        const priceElements = document.querySelectorAll('[data-price]');
+        
+        priceElements.forEach(element => {
+            const basePrice = parseFloat(element.getAttribute('data-price'));
+            if (!isNaN(basePrice)) {
+                const convertedPrice = basePrice * exchangeRates[currentCurrency];
+                // Format the price based on currency
+                if (currentCurrency === 'USD') {
+                    element.textContent = `$${convertedPrice.toFixed(2)}`;
+                } else if (currentCurrency === 'MXN') {
+                    element.textContent = `$${convertedPrice.toFixed(2)} MXN`;
+                }
+            }
+        });
+
+        // Also convert any prices in text content (more flexible approach)
+        // This will find prices in format $XX.XX and convert them
+        const pricePattern = /\$(\d+\.?\d*)/g;
+        const textElements = document.querySelectorAll('body *');
+        
+        textElements.forEach(element => {
+            if (element.children.length === 0) { // Only process leaf nodes
+                let text = element.textContent;
+                if (text && pricePattern.test(text)) {
+                    // This is a simplified approach - you may want more sophisticated price detection
+                    // For now, we'll just mark that conversion is available
+                }
+            }
+        });
+    }
+
+    // Convert prices on page load
+    convertPrices();
+
+    // Newsletter subscribe – sends automated welcome email via EmailJS
+    const newsletterForm = document.querySelector('footer .newsletter-form');
+    if (newsletterForm) {
+        const emailInput = newsletterForm.querySelector('input[type="email"]');
+        const checkbox = newsletterForm.querySelector('#newsletter-check');
+        const status = document.createElement('p');
+        status.style.fontSize = '0.7rem';
+        status.style.marginTop = '0.3rem';
+        status.style.color = '#ffffff';
+        status.style.opacity = '0.85';
+        newsletterForm.appendChild(status);
+
+        newsletterForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const email = emailInput ? emailInput.value.trim() : '';
+
+            if (!email) {
+                status.textContent = 'Please enter your email.';
+                return;
+            }
+            if (checkbox && !checkbox.checked) {
+                status.textContent = 'Please confirm newsletter subscription.';
+                return;
+            }
+            if (typeof emailjs === 'undefined') {
+                status.textContent = 'Subscription service is not available right now.';
+                return;
+            }
+
+            status.textContent = 'Sending...';
+
+            emailjs.init('4NNKONRfDtWHf7PIK').then(function() {
+                return emailjs.send('service_ty390sa', 'template_newsletter_welcome', {
+                    to_email: email,
+                    to_name: email,
+                    subject: 'You’re subscribed – eekseye',
+                    message: 'Thank you for subscribing to eekseye. You’ll get updates on new drops, events, and news.',
+                    reply_to: 'fuchendeonze@gmail.com'
+                });
+            }).then(function () {
+                status.textContent = 'Check your email – you’re subscribed.';
+                newsletterForm.reset();
+                if (checkbox) checkbox.checked = false;
+            }).catch(function (err) {
+                console.error('Newsletter EmailJS error:', err);
+                status.textContent = 'Something went wrong. Try again or contact us.';
+            });
+        });
+    }
+});
+</script>
+    <script type="module">
+        import { initGoogleAuthUI } from './js/google-auth-ui.js';
+        initGoogleAuthUI({
+            button: '#googleSignInButton',
+            signedInContainer: '#googleAuthSignedIn',
+            errorEl: '#googleAuthError'
+        });
+    </script>
+</body>
+</html>
