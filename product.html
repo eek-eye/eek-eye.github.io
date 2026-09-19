@@ -458,10 +458,9 @@
                 <div class="product-description" id="product-description"></div>
                 <div class="product-actions">
                 <button type="button" class="checkout-button" id="add-to-cart-btn">Add to cart</button>
-                <button type="button" class="checkout-button" id="purchase-btn" data-translate="purchase">Buy now</button>
                 </div>
                 <p id="add-to-cart-status" class="checkout-note" hidden></p>
-                <p class="checkout-note">Secure checkout with Stripe — card, Apple Pay, and more.</p>
+                <p class="checkout-note">Add to cart, then checkout from Cart — Stripe accepts card, Apple Pay, and more.</p>
                 <a href="#" class="find-in-store">Find in store</a>
                 <hr class="divider">
                 <div class="accordion">
@@ -547,7 +546,6 @@
             var categoryEl = document.getElementById('product-category');
             var priceEl = document.getElementById('product-price');
             var descEl = document.getElementById('product-description');
-            var purchaseBtn = document.getElementById('purchase-btn');
             var prevBtn = document.getElementById('gallery-prev');
             var nextBtn = document.getElementById('gallery-next');
 
@@ -604,10 +602,6 @@
                 priceEl.dataset.price = product.price;
                 priceEl.textContent = "$" + Number(product.price).toFixed(2);
             }
-            if (purchaseBtn) {
-                purchaseBtn.dataset.productId = String(id);
-            }
-
             var lang = (typeof localStorage !== 'undefined' && localStorage.getItem('selectedLanguage')) || 'en';
             if (typeof window.applyProductI18n === 'function') {
                 window.applyProductI18n(lang);
@@ -627,10 +621,6 @@
             var params = new URLSearchParams(window.location.search);
             var rawId = params.get('id') || '1';
             var id = parseInt(rawId, 10) || 1;
-            var purchaseBtn = document.getElementById('purchase-btn');
-            if (window.EeksStripeCheckout && purchaseBtn) {
-                window.EeksStripeCheckout.bindPurchaseButton(purchaseBtn, id);
-            }
             var addBtn = document.getElementById('add-to-cart-btn');
             var addStatus = document.getElementById('add-to-cart-status');
             if (addBtn && window.EeksCart) {
