@@ -38,7 +38,7 @@
         }
     }
 
-    async function startCheckout(productId, buttonEl) {
+    async function runCheckout(productId, buttonEl, customerEmail) {
         var product = getProduct(productId);
         if (!product) {
             showError('This product is not available for checkout.');
@@ -46,7 +46,11 @@
         }
 
         if (product.stripePaymentLink) {
-            window.location.href = product.stripePaymentLink;
+            var link = product.stripePaymentLink;
+            if (customerEmail && link.indexOf('prefilled_email') === -1) {
+                link += (link.indexOf('?') >= 0 ? '&' : '?') + 'prefilled_email=' + encodeURIComponent(customerEmail);
+            }
+            window.location.href = link;
             return;
         }
 
@@ -60,10 +64,12 @@
         setButtonState(buttonEl, 'loading');
 
         try {
+            var payload = { productId: String(productId) };
+            if (customerEmail) payload.customerEmail = customerEmail;
             var res = await fetch(apiUrl, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ productId: String(productId) })
+                body: JSON.stringify(payload)
             });
 
             var data = await res.json().catch(function () {
@@ -84,6 +90,28 @@
             setButtonState(buttonEl, 'idle');
             showError(err.message || 'Checkout failed. Please try again.');
         }
+    }
+
+    async function startCheckout(productId, buttonEl) {
+        var product = getProduct(productId);
+        if (!product) {
+            showError('This product is not available for checkout.');
+            return;
+        }
+
+        var productInfo = {
+            id: productId,
+            title: product.title || product.name || ('Product #' + productId)
+        };
+
+        if (window.EeksAbandonedCheckout && typeof window.EeksAbandonedCheckout.captureAndProceed === 'function') {
+            await window.EeksAbandonedCheckout.captureAndProceed(productInfo, function (email) {
+                return runCheckout(productId, buttonEl, email);
+            });
+            return;
+        }
+
+        await runCheckout(productId, buttonEl, null);
     }
 
     function bindPurchaseButton(buttonEl, productId) {

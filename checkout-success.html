@@ -57,6 +57,13 @@
         <p>Your payment was received. You’ll get a confirmation email from Stripe with your order details.</p>
         <a href="explore.html">Back to Explore</a>
     </div>
+    <script src="js/abandoned-checkout-config.js"></script>
+    <script src="js/abandoned-checkout.js"></script>
+    <script>
+        if (window.EeksAbandonedCheckout && window.EeksAbandonedCheckout.markPurchased) {
+            window.EeksAbandonedCheckout.markPurchased();
+        }
+    </script>
     <script src="js/page-transition.js"></script>
 </body>
 </html>

@@ -48,6 +48,7 @@ module.exports = async function handler(req, res) {
         var stripe = new Stripe(secretKey);
         var session = await createCheckoutSession(stripe, {
             productId: productId,
+            customerEmail: (body && (body.customerEmail || body.email)) || null,
             origin: getOriginFromRequest(req),
             priceMap: priceMap
         });

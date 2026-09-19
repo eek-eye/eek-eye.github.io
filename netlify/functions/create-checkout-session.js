@@ -56,6 +56,7 @@ exports.handler = async function (event) {
         var stripe = new Stripe(secretKey);
         var session = await createCheckoutSession(stripe, {
             productId: body.productId,
+            customerEmail: body.customerEmail || body.email || null,
             origin: getOriginFromRequest({ headers: event.headers }),
             priceMap: priceMap
         });
