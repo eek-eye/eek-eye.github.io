@@ -1,10 +1,4 @@
-*.zip
-.cursor/
-.env
+node_modules/
 .env
 .env.local
-.env.local
 .vercel
-.vercel
-node_modules/
-node_modules/
