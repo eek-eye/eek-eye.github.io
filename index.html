@@ -2070,6 +2070,40 @@
             padding-bottom: max(1rem, env(safe-area-inset-bottom, 0px)) !important;
         }
     
+
+        /* Match Cart / Profile / Google auth controls to header nav links */
+        .nav-header .index-header-buttons button.explore-button,
+        .nav-header .index-header-buttons .eeks-cart-launch,
+        .nav-header .index-header-buttons .google-auth-signout,
+        .nav-header .index-header-buttons .google-auth-signed-in {
+            font-size: 0.46rem;
+            padding: 0.26rem 0.68rem;
+            border-radius: 1rem;
+            color: white;
+            border: none;
+            background: transparent;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            box-shadow: none;
+        }
+        .nav-header.header-scrolled .index-header-buttons button.explore-button,
+        .nav-header.header-scrolled .index-header-buttons .eeks-cart-launch,
+        .nav-header.header-scrolled .index-header-buttons .google-auth-signout,
+        .nav-header.header-scrolled .index-header-buttons .google-auth-signed-in {
+            font-size: 0.48rem;
+            padding: 0.2rem 0.58rem;
+            border-radius: 0.75rem;
+            color: #ff006e;
+            text-shadow: 0 0 6px #ff006e, 0 0 14px #ff006e, 0 0 28px rgba(255, 0, 110, 0.85);
+            background: transparent;
+        }
+
         /* Google auth header control */
         .google-auth-signed-in {
             display: inline-flex;

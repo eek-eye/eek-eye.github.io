@@ -13,7 +13,7 @@
     var s = document.createElement('style');
     s.id = 'eeks-profile-panel-styles';
     s.textContent =
-      '.eeks-cart-badge{display:inline-flex;align-items:center;justify-content:center;min-width:1.5rem;height:1.5rem;padding:0 .35rem;margin-left:.35rem;border-radius:999px;background:#fff;color:#111;font-size:.72rem;font-weight:700;line-height:1;}' +
+      '.eeks-cart-badge{display:inline-flex;align-items:center;justify-content:center;min-width:1.1rem;height:1.1rem;padding:0 .28rem;margin-left:.3rem;border-radius:999px;background:transparent;color:inherit;border:1px solid currentColor;font-size:.65rem;font-weight:700;line-height:1;opacity:.9;}.eeks-cart-launch,.google-auth-signout{font:inherit;font-family:inherit;font-size:inherit;color:inherit;text-transform:uppercase;letter-spacing:inherit;font-weight:inherit;padding:inherit;border:none;border-radius:inherit;background:transparent;cursor:pointer;text-decoration:none;display:inline-block;appearance:none;-webkit-appearance:none;}.eeks-profile-trigger{display:inline-flex;align-items:center;gap:.4rem;cursor:pointer;background:transparent;border:none;color:inherit;padding:0;font:inherit;}' +
       '.eeks-profile-trigger{display:inline-flex;align-items:center;gap:.4rem;cursor:pointer;background:transparent;border:none;color:inherit;padding:0;font:inherit;}' +
       '.eeks-profile-overlay{position:fixed;inset:0;z-index:10090;background:rgba(0,0,0,.72);display:flex;justify-content:flex-end;}' +
       '.eeks-profile-panel{width:min(420px,100%);height:100%;background:#0f0f0f;color:#f5f5f5;border-left:1px solid #333;padding:1.25rem;overflow:auto;font-family:inherit;box-sizing:border-box;}' +
@@ -196,9 +196,10 @@
     if (!nearEl || !nearEl.parentElement) return;
     if (nearEl.parentElement.querySelector('.eeks-cart-launch')) return;
     ensureStyles();
-    var btn = document.createElement('button');
-    btn.type = 'button';
+    var btn = document.createElement('a');
+    btn.href = '#';
     btn.className = 'explore-button nav-link eeks-cart-launch';
+    btn.setAttribute('role', 'button');
     btn.innerHTML = 'Cart <span class="eeks-cart-badge" data-eeks-cart-count hidden>0</span>';
     btn.addEventListener('click', function (e) {
       e.preventDefault();

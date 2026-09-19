@@ -236,6 +236,19 @@
             text-align: center;
         }
         
+
+        .product-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.65rem;
+            margin-top: 1rem;
+            width: 100%;
+        }
+        .product-actions .checkout-button {
+            margin-top: 0;
+            width: 100%;
+        }
+
         .checkout-button {
             background: #111;
             color: #fff;
@@ -443,11 +456,11 @@
                 <div class="product-category" id="product-category"></div>
                 <div class="product-price" id="product-price" data-price=""></div>
                 <div class="product-description" id="product-description"></div>
-                <div class="product-actions" style="display:flex;flex-wrap:wrap;gap:0.75rem;align-items:center;">
+                <div class="product-actions">
                 <button type="button" class="checkout-button" id="add-to-cart-btn">Add to cart</button>
-                <button type="button" class="checkout-button" id="purchase-btn" data-translate="purchase" style="background:transparent;color:inherit;border:1px solid currentColor;">Buy now</button>
+                <button type="button" class="checkout-button" id="purchase-btn" data-translate="purchase">Buy now</button>
                 </div>
-                <p id="add-to-cart-status" style="min-height:1.2em;font-size:0.9rem;margin:0.5rem 0 0;opacity:0.85;" hidden></p>
+                <p id="add-to-cart-status" class="checkout-note" hidden></p>
                 <p class="checkout-note">Secure checkout with Stripe — card, Apple Pay, and more.</p>
                 <a href="#" class="find-in-store">Find in store</a>
                 <hr class="divider">
