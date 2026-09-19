@@ -630,8 +630,11 @@
                         addStatus.hidden = false;
                         addStatus.textContent = result && result.ok ? 'Added to cart.' : 'Could not add to cart.';
                     }
-                    if (window.EeksProfilePanel && window.EeksProfilePanel.refresh) {
-                        window.EeksProfilePanel.refresh();
+                    if (window.EeksProfilePanel) {
+                        if (window.EeksProfilePanel.refresh) window.EeksProfilePanel.refresh();
+                        if (result && result.ok && window.EeksProfilePanel.open) {
+                            window.EeksProfilePanel.open();
+                        }
                     }
                 });
             }
