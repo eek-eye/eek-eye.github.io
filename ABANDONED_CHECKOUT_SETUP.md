@@ -10,7 +10,7 @@ Your shop is **one-product Stripe checkout** (not a multi-item cart). This featu
 | `js/abandoned-checkout-config.js` | EmailJS + delay settings |
 | `js/stripe-checkout.js` | Asks for email, then starts Stripe |
 | `checkout-success.html` | Clears intent / marks purchased |
-| `.github/workflows/abandoned-checkout-reminders.yml` | Hourly **timed** emails |
+| `docs/abandoned-checkout-reminders.yml (copy into `.github/workflows/` once, or paste in GitHub → Actions)` | Hourly **timed** emails |
 | `scripts/send-abandoned-checkout-reminders.mjs` | Action script (Firestore + EmailJS) |
 
 ## 1) EmailJS template (required for both modes)
