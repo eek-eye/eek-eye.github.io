@@ -863,9 +863,9 @@
                 inset 0 0 0 1px rgba(255, 255, 255, 0.04);
         }
 
-        /* Cover artwork removed for now — keep tiles tall enough for title strip */
+        /* Covers: portrait tiles (carousel sets width; img aspect 3/4) */
         #covers-section .design-card {
-            min-height: 148px;
+            min-height: 0;
         }
 
         /* Posters / ads: show full art (not forced square crop) */
@@ -997,6 +997,117 @@
             .designs-grid {
                 grid-template-columns: 1fr;
                 padding: 1rem 0;
+            }
+        }
+
+
+        /* Designs carousel: 3 portraits + prev/next */
+        .designs-carousel {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem 0;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .designs-carousel-viewport {
+            overflow: hidden;
+            flex: 1;
+            min-width: 0;
+            width: 100%;
+        }
+
+        .designs-grid.designs-carousel-track {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 1rem;
+            padding: 0;
+            margin: 0;
+            max-width: none;
+            width: max-content;
+            box-sizing: border-box;
+            grid-template-columns: none;
+            transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+            will-change: transform;
+        }
+
+        .designs-carousel-track .design-card {
+            flex: 0 0 auto;
+            width: var(--designs-card-w, calc((100% - 2rem) / 3));
+            max-width: none;
+            box-sizing: border-box;
+            min-height: 0;
+        }
+
+        #covers-section .designs-carousel-track .design-card {
+            min-height: 0;
+        }
+
+        #covers-section .designs-carousel-track .design-card img,
+        .designs-carousel-track .design-card img {
+            aspect-ratio: 3 / 4;
+            object-fit: cover;
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        #advertisements-section .designs-carousel-track .design-card img {
+            aspect-ratio: 3 / 4;
+            object-fit: cover;
+            max-height: none;
+            background: #0a0a0a;
+        }
+
+        .designs-carousel-btn {
+            flex-shrink: 0;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            background: rgba(0, 0, 0, 0.65);
+            color: #ff006e;
+            font-size: 1.75rem;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            transition: opacity 0.2s ease, border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .designs-carousel-btn:hover:not(:disabled) {
+            border-color: #ff006e;
+            background: rgba(0, 0, 0, 0.85);
+            transform: scale(1.05);
+        }
+
+        .designs-carousel-btn:disabled {
+            opacity: 0.28;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        @media (max-width: 600px) {
+            .designs-carousel {
+                gap: 0.35rem;
+                padding: 1rem 0;
+            }
+            .designs-carousel-btn {
+                width: 40px;
+                height: 40px;
+                font-size: 1.4rem;
+            }
+            .designs-grid.designs-carousel-track {
+                gap: 0.6rem;
             }
         }
 
@@ -1359,10 +1470,14 @@
 
     <main>
         <!-- Covers Section -->
-        <div id="covers-section" class="content-section active">
-            <div class="designs-grid">
+                <div id="covers-section" class="content-section active">
+            <div class="designs-carousel" data-designs-carousel>
+                <button type="button" class="designs-carousel-btn designs-carousel-btn--prev" aria-label="Previous art">‹</button>
+                <div class="designs-carousel-viewport">
+                    <div class="designs-grid designs-carousel-track">
             <!-- UFO -->
             <a href="design-detail.html?id=ufo" class="design-card nav-link">
+                <img src="covers/UFO.jpg" alt="UFO">
                 <div class="design-info">
                     <h3>UFO</h3>
                 </div>
@@ -1370,6 +1485,7 @@
 
             <!-- In Love With You -->
             <a href="design-detail.html?id=in-love-with-you" class="design-card nav-link">
+                <img src="covers/In%20Love%20With%20You.jpg" alt="In Love With You">
                 <div class="design-info">
                     <h3>In Love With You</h3>
                 </div>
@@ -1377,6 +1493,7 @@
 
             <!-- Interstella -->
             <a href="design-detail.html?id=interstella" class="design-card nav-link">
+                <img src="covers/Interstella.jpg" alt="Interstella">
                 <div class="design-info">
                     <h3>Interstella</h3>
                 </div>
@@ -1384,6 +1501,7 @@
 
             <!-- Destiny vs Plans -->
             <a href="design-detail.html?id=destiny-vs-plans" class="design-card nav-link">
+                <img src="covers/Destiny%20vs%20Plans.jpg" alt="Destiny vs Plans">
                 <div class="design-info">
                     <h3>Destiny vs Plans</h3>
                 </div>
@@ -1391,6 +1509,7 @@
 
             <!-- Eeks Eye -->
             <a href="design-detail.html?id=eeks-eye" class="design-card nav-link">
+                <img src="covers/Eeks%20Eye.jpg" alt="Eeks Eye">
                 <div class="design-info">
                     <h3>Eeks Eye</h3>
                 </div>
@@ -1398,6 +1517,7 @@
 
             <!-- Another Dimensions -->
             <a href="design-detail.html?id=another-dimensions" class="design-card nav-link">
+                <img src="covers/Another%20Dimensions.jpg" alt="Another Dimensions">
                 <div class="design-info">
                     <h3>Another Dimensions</h3>
                 </div>
@@ -1405,6 +1525,7 @@
 
             <!-- Rockstar -->
             <a href="design-detail.html?id=rockstar" class="design-card nav-link">
+                <img src="covers/Rockstar.jpg" alt="Rockstar">
                 <div class="design-info">
                     <h3>Rockstar</h3>
                 </div>
@@ -1412,6 +1533,7 @@
 
             <!-- Unguided -->
             <a href="design-detail.html?id=unguided" class="design-card nav-link">
+                <img src="covers/Unguided.jpg" alt="Unguided">
                 <div class="design-info">
                     <h3>Unguided</h3>
                 </div>
@@ -1419,6 +1541,7 @@
 
             <!-- Seek -->
             <a href="design-detail.html?id=seek" class="design-card nav-link">
+                <img src="covers/Seek.jpg" alt="Seek">
                 <div class="design-info">
                     <h3>Seek</h3>
                 </div>
@@ -1426,6 +1549,7 @@
 
             <!-- Vibration -->
             <a href="design-detail.html?id=vibration" class="design-card nav-link">
+                <img src="covers/Vibration.jpg" alt="Vibration">
                 <div class="design-info">
                     <h3>Vibration</h3>
                 </div>
@@ -1433,6 +1557,7 @@
 
             <!-- CH@0S -->
             <a href="design-detail.html?id=chaos" class="design-card nav-link">
+                <img src="covers/CH@0S.jpg" alt="CH@0S">
                 <div class="design-info">
                     <h3>CH@0S</h3>
                 </div>
@@ -1440,6 +1565,7 @@
 
             <!-- 5 Scenes -->
             <a href="design-detail.html?id=5-scenes" class="design-card nav-link">
+                <img src="covers/5%20Scenes.jpg" alt="5 Scenes">
                 <div class="design-info">
                     <h3>5 Scenes</h3>
                 </div>
@@ -1447,6 +1573,7 @@
 
             <!-- Dark Side -->
             <a href="design-detail.html?id=dark-side" class="design-card nav-link">
+                <img src="covers/Dark%20Side.jpg" alt="Dark Side">
                 <div class="design-info">
                     <h3>Dark Side</h3>
                 </div>
@@ -1454,6 +1581,7 @@
 
             <!-- Martyr -->
             <a href="design-detail.html?id=martyr" class="design-card nav-link">
+                <img src="covers/Martyr.jpg" alt="Martyr">
                 <div class="design-info">
                     <h3>Martyr</h3>
                 </div>
@@ -1461,6 +1589,7 @@
 
             <!-- Opium type cover -->
             <a href="design-detail.html?id=vampire" class="design-card nav-link">
+                <img src="covers/V.A.M.P.I.R.E.jpg" alt="V.A.M.P.I.R.E">
                 <div class="design-info">
                     <h3>V.A.M.P.I.R.E</h3>
                 </div>
@@ -1468,6 +1597,7 @@
 
             <!-- Cured -->
             <a href="design-detail.html?id=cured" class="design-card nav-link">
+                <img src="covers/Cured.jpg" alt="Cured">
                 <div class="design-info">
                     <h3>Cured</h3>
                 </div>
@@ -1475,6 +1605,7 @@
 
             <!-- Wait.. I'M Sorry -->
             <a href="design-detail.html?id=wait-im-sorry" class="design-card nav-link">
+                <img src="covers/Wait..%20I'M%20Sorry.jpg" alt="Wait.. I'M Sorry">
                 <div class="design-info">
                     <h3>Wait.. I'M Sorry</h3>
                 </div>
@@ -1482,6 +1613,7 @@
 
             <!-- Truth Should Set You Free -->
             <a href="design-detail.html?id=truth-should-set-you-free" class="design-card nav-link">
+                <img src="covers/Truth%20Should%20Set%20You%20Free.jpg" alt="Truth Should Set You Free">
                 <div class="design-info">
                     <h3>Truth Should Set You Free</h3>
                 </div>
@@ -1489,6 +1621,7 @@
 
             <!-- Figure 10 -->
             <a href="design-detail.html?id=figure-10" class="design-card nav-link">
+                <img src="covers/Figure%2010.jpg" alt="Figure 10">
                 <div class="design-info">
                     <h3>Figure 10</h3>
                 </div>
@@ -1496,6 +1629,7 @@
 
             <!-- Villain -->
             <a href="design-detail.html?id=villain" class="design-card nav-link">
+                <img src="covers/Villain.jpg" alt="Villain">
                 <div class="design-info">
                     <h3>Villain</h3>
                 </div>
@@ -1503,6 +1637,7 @@
 
             <!-- Piss em OFF -->
             <a href="design-detail.html?id=piss-em-off" class="design-card nav-link">
+                <img src="covers/Piss%20em%20OFF.jpg" alt="Piss em OFF">
                 <div class="design-info">
                     <h3>Piss em OFF</h3>
                 </div>
@@ -1510,6 +1645,7 @@
 
             <!-- New Maps -->
             <a href="design-detail.html?id=new-maps" class="design-card nav-link">
+                <img src="covers/New%20Maps.jpg" alt="New Maps">
                 <div class="design-info">
                     <h3>New Maps</h3>
                 </div>
@@ -1517,6 +1653,7 @@
 
             <!-- LOst -->
             <a href="design-detail.html?id=lost" class="design-card nav-link">
+                <img src="covers/LOst.jpg" alt="LOst">
                 <div class="design-info">
                     <h3>LOst</h3>
                 </div>
@@ -1524,6 +1661,7 @@
 
             <!-- Alluring & -->
             <a href="design-detail.html?id=alluring" class="design-card nav-link">
+                <img src="covers/Alluring%20%26.jpg" alt="Alluring &">
                 <div class="design-info">
                     <h3>Alluring &</h3>
                 </div>
@@ -1531,6 +1669,7 @@
 
             <!-- Distortion -->
             <a href="design-detail.html?id=distortion" class="design-card nav-link">
+                <img src="covers/Distortion.jpg" alt="Distortion">
                 <div class="design-info">
                     <h3>Distortion</h3>
                 </div>
@@ -1538,6 +1677,7 @@
 
             <!-- Nightmare -->
             <a href="design-detail.html?id=nightmare" class="design-card nav-link">
+                <img src="covers/Nightmare.jpg" alt="Nightmare">
                 <div class="design-info">
                     <h3>Nightmare</h3>
                 </div>
@@ -1545,10 +1685,15 @@
 
             <!-- Silloute -->
             <a href="design-detail.html?id=silloute" class="design-card nav-link">
+                <img src="covers/Silloute.jpg" alt="Silloute">
                 <div class="design-info">
                     <h3>Silloute</h3>
                 </div>
             </a>
+            
+                    </div>
+                </div>
+                <button type="button" class="designs-carousel-btn designs-carousel-btn--next" aria-label="Next art">›</button>
             </div>
         </div>
         
@@ -1566,7 +1711,10 @@
 
         <!-- Advertisements / Posters Section -->
         <div id="advertisements-section" class="content-section">
-            <div class="designs-grid">
+            <div class="designs-carousel" data-designs-carousel>
+                <button type="button" class="designs-carousel-btn designs-carousel-btn--prev" aria-label="Previous art">‹</button>
+                <div class="designs-carousel-viewport">
+                    <div class="designs-grid designs-carousel-track">
             <a href="Posters/Bahahahaha.jpg" class="design-card nav-link" target="_blank" rel="noopener noreferrer" aria-label="Open Bahahahaha poster full size">
                 <img src="Posters/Bahahahaha.jpg" alt="Bahahahaha">
                 <div class="design-info">
@@ -1603,6 +1751,10 @@
                     <h3>XI</h3>
                 </div>
             </a>
+            
+                    </div>
+                </div>
+                <button type="button" class="designs-carousel-btn designs-carousel-btn--next" aria-label="Next art">›</button>
             </div>
         </div>
     </main>
@@ -1724,6 +1876,11 @@
                 }
 
                 refreshSidebarForActiveTab();
+                if (typeof window.recalcDesignsCarousels === 'function') {
+                    requestAnimationFrame(function() {
+                        window.recalcDesignsCarousels();
+                    });
+                }
             });
         });
 
@@ -1825,6 +1982,114 @@
                 }
             });
         }
+
+
+        // Designs carousel: show N portraits, prev/next by 1
+        (function initDesignsCarousels() {
+            const GAP = 16; // px, matches ~1rem track gap (updated from computed style)
+            const instances = [];
+
+            function visibleCount() {
+                const w = window.innerWidth;
+                if (w < 600) return 1;
+                if (w < 900) return 2;
+                return 3;
+            }
+
+            function getGap(track) {
+                const cs = window.getComputedStyle(track);
+                const g = parseFloat(cs.gap || cs.columnGap || '16');
+                return Number.isFinite(g) ? g : GAP;
+            }
+
+            function initOne(root) {
+                const viewport = root.querySelector('.designs-carousel-viewport');
+                const track = root.querySelector('.designs-carousel-track');
+                const prevBtn = root.querySelector('.designs-carousel-btn--prev');
+                const nextBtn = root.querySelector('.designs-carousel-btn--next');
+                if (!viewport || !track || !prevBtn || !nextBtn) return null;
+
+                const state = { index: 0, root: root, viewport: viewport, track: track, prevBtn: prevBtn, nextBtn: nextBtn };
+
+                function cards() {
+                    return Array.from(track.querySelectorAll('.design-card')).filter(function(c) {
+                        return c.style.display !== 'none';
+                    });
+                }
+
+                function layout() {
+                    const list = cards();
+                    const visible = visibleCount();
+                    const gap = getGap(track);
+                    const vw = viewport.clientWidth;
+                    if (vw <= 0 || list.length === 0) {
+                        updateButtons(0, 0);
+                        return;
+                    }
+                    const cardW = (vw - gap * (visible - 1)) / visible;
+                    list.forEach(function(card) {
+                        card.style.flex = '0 0 ' + cardW + 'px';
+                        card.style.width = cardW + 'px';
+                        card.style.maxWidth = cardW + 'px';
+                    });
+                    const maxIndex = Math.max(0, list.length - visible);
+                    if (state.index > maxIndex) state.index = maxIndex;
+                    const offset = state.index * (cardW + gap);
+                    track.style.transform = 'translateX(-' + offset + 'px)';
+                    updateButtons(state.index, maxIndex);
+                }
+
+                function updateButtons(index, maxIndex) {
+                    prevBtn.disabled = index <= 0;
+                    nextBtn.disabled = index >= maxIndex;
+                }
+
+                function go(delta) {
+                    const list = cards();
+                    const visible = visibleCount();
+                    const maxIndex = Math.max(0, list.length - visible);
+                    state.index = Math.max(0, Math.min(maxIndex, state.index + delta));
+                    layout();
+                }
+
+                prevBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    go(-1);
+                });
+                nextBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    go(1);
+                });
+
+                state.layout = layout;
+                state.go = go;
+                layout();
+                return state;
+            }
+
+            document.querySelectorAll('[data-designs-carousel]').forEach(function(el) {
+                const inst = initOne(el);
+                if (inst) instances.push(inst);
+            });
+
+            function recalcAll() {
+                instances.forEach(function(inst) { inst.layout(); });
+            }
+
+            window.addEventListener('resize', recalcAll);
+            window.recalcDesignsCarousels = recalcAll;
+
+            // Recalc after brightness sort reorders covers
+            const coversTrack = document.querySelector('#covers-section .designs-carousel-track');
+            if (coversTrack) {
+                const mo = new MutationObserver(function() {
+                    recalcAll();
+                });
+                mo.observe(coversTrack, { childList: true });
+            }
+        })();
 
         function buildDesignsSidebarNavForSection(sectionEl) {
             const nav = document.getElementById('designs-sidebar-nav');
@@ -2065,11 +2330,14 @@
             designCards.forEach(card => {
                 const title = card.querySelector('h3').textContent.toLowerCase();
                 if (title.includes(searchTerm)) {
-                    card.style.display = 'block';
+                    card.style.display = '';
                 } else {
                     card.style.display = 'none';
                 }
             });
+            if (typeof window.recalcDesignsCarousels === 'function') {
+                window.recalcDesignsCarousels();
+            }
         }
 
         // Add event listeners
