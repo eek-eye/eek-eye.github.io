@@ -56,6 +56,18 @@
             transform: none !important;
         }
 
+
+        body.designs-page main {
+            padding-inline: clamp(0.35rem, 1.2vw, 1rem) !important;
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+        body.designs-page .designs-carousel {
+            width: 100%;
+            padding-left: 0.25rem;
+            padding-right: 0.25rem;
+        }
+
         /* Whole designs page stays black (no light invert) */
         html:has(body.designs-page),
         body.designs-page,
@@ -1006,13 +1018,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.75rem;
+            gap: 1rem;
             width: 100%;
-            max-width: 1400px;
+            max-width: none;
             margin: 0 auto;
-            padding: 2rem 0;
+            padding: 1.25rem 0 2.5rem;
             box-sizing: border-box;
             position: relative;
+            min-height: min(78vh, 900px);
         }
 
         .designs-carousel-viewport {
@@ -1042,6 +1055,10 @@
             max-width: none;
             box-sizing: border-box;
             min-height: 0;
+            padding: 4px;
+        }
+        .designs-carousel-track .design-card::before {
+            inset: 4px;
         }
 
         #covers-section .designs-carousel-track .design-card {
@@ -1066,8 +1083,8 @@
 
         .designs-carousel-btn {
             flex-shrink: 0;
-            width: 48px;
-            height: 48px;
+            width: 64px;
+            height: 64px;
             border-radius: 50%;
             border: 1px solid rgba(255, 255, 255, 0.25);
             background: rgba(0, 0, 0, 0.65);
@@ -2026,7 +2043,13 @@
                         updateButtons(0, 0);
                         return;
                     }
-                    const cardW = (vw - gap * (visible - 1)) / visible;
+                    // Prefer tall portraits: height ~72vh, width from 3:4, then fit 3 across
+                    const targetH = Math.min(window.innerHeight * 0.72, 860);
+                    const heightBasedW = targetH * 0.75; // 3:4 portrait
+                    const widthBasedW = (vw - gap * (visible - 1)) / visible;
+                    const cardW = Math.min(heightBasedW, widthBasedW);
+                    const cardH = cardW / 0.75;
+                    root.style.setProperty('--designs-card-h', cardH + 'px');
                     list.forEach(function(card) {
                         card.style.flex = '0 0 ' + cardW + 'px';
                         card.style.width = cardW + 'px';
