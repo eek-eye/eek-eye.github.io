@@ -41,18 +41,20 @@ export function initGoogleAuthUI(options = {}) {
     (signedInContainer.parentElement || button.parentElement || document.body).appendChild(errorEl);
   }
 
-  const displayNameEl = document.createElement('span');
-  displayNameEl.className = 'google-auth-identity';
   const photoEl = document.createElement('img');
   photoEl.className = 'google-auth-photo';
-  photoEl.alt = '';
+  photoEl.alt = 'Your profile';
   photoEl.hidden = true;
-  const signOutBtn = document.createElement('button');
-  signOutBtn.type = 'button';
-  signOutBtn.className = 'google-auth-signout explore-button nav-link';
-  signOutBtn.textContent = 'Profile';
-  signOutBtn.setAttribute('aria-label', 'Open profile and cart');
-  signedInContainer.replaceChildren(photoEl, displayNameEl, signOutBtn);
+  const fallbackEl = document.createElement('span');
+  fallbackEl.className = 'google-auth-photo-fallback';
+  fallbackEl.hidden = true;
+  fallbackEl.setAttribute('aria-hidden', 'true');
+  signedInContainer.replaceChildren(photoEl, fallbackEl);
+  signedInContainer.classList.add('google-auth-signed-in--avatar-only');
+  signedInContainer.setAttribute('role', 'button');
+  signedInContainer.setAttribute('tabindex', '0');
+  signedInContainer.setAttribute('aria-label', 'Open profile and cart');
+  signedInContainer.title = 'Profile';
 
   let busy = false;
   let unsubscribe = null;
@@ -84,15 +86,27 @@ export function initGoogleAuthUI(options = {}) {
     signedInContainer.hidden = true;
     photoEl.hidden = true;
     photoEl.removeAttribute('src');
-    displayNameEl.textContent = '';
+    fallbackEl.hidden = true;
+    fallbackEl.textContent = '';
   }
 
   function renderSignedIn(user) {
     button.hidden = true;
     signedInContainer.hidden = false;
-    displayNameEl.textContent = displayLabel(user);
-    if (user.photoURL) { photoEl.src = user.photoURL; photoEl.hidden = false; }
-    else { photoEl.hidden = true; photoEl.removeAttribute('src'); }
+    var label = displayLabel(user) || 'Profile';
+    photoEl.alt = label;
+    signedInContainer.setAttribute('aria-label', 'Open profile for ' + label);
+    if (user.photoURL) {
+      photoEl.src = user.photoURL;
+      photoEl.hidden = false;
+      fallbackEl.hidden = true;
+      fallbackEl.textContent = '';
+    } else {
+      photoEl.hidden = true;
+      photoEl.removeAttribute('src');
+      fallbackEl.textContent = (label.charAt(0) || '?').toUpperCase();
+      fallbackEl.hidden = false;
+    }
     try {
       if (window.EeksProfilePanel && window.EeksProfilePanel.setUser) {
         window.EeksProfilePanel.setUser(user);
@@ -145,21 +159,19 @@ export function initGoogleAuthUI(options = {}) {
   }
 
   button.addEventListener('click', handleSignIn);
-  signOutBtn.addEventListener('click', function (event) {
-    event.preventDefault();
-    event.stopPropagation();
-    if (window.EeksProfilePanel && window.EeksProfilePanel.open) {
-      window.EeksProfilePanel.open();
-    } else {
-      handleSignOut(event);
-    }
-  });
-  // Clicking photo/name also opens profile
-  signedInContainer.addEventListener('click', function (event) {
-    if (event.target === signOutBtn) return;
-    if (window.EeksProfilePanel && window.EeksProfilePanel.open) {
+  function openProfile(event) {
+    if (event) {
       event.preventDefault();
+      event.stopPropagation();
+    }
+    if (window.EeksProfilePanel && window.EeksProfilePanel.open) {
       window.EeksProfilePanel.open();
+    }
+  }
+  signedInContainer.addEventListener('click', openProfile);
+  signedInContainer.addEventListener('keydown', function (event) {
+    if (event.key === 'Enter' || event.key === ' ') {
+      openProfile(event);
     }
   });
 
@@ -178,7 +190,7 @@ export function initGoogleAuthUI(options = {}) {
   return {
     destroy() {
       button.removeEventListener('click', handleSignIn);
-      signOutBtn.removeEventListener('click', handleSignOut);
+      signedInContainer.removeEventListener('click', openProfile);
       if (typeof unsubscribe === 'function') { try { unsubscribe(); } catch (_) {} }
     }
   };
