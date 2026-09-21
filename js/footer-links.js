@@ -71,6 +71,8 @@
         });
     }
 
+    window.EeksFooterLinks = { init: initFooterLinks };
+
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', initFooterLinks);
     } else {
