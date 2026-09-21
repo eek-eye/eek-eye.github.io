@@ -1,54 +1,75 @@
 /**
- * Keep the site visually at ~100% size when the browser is zoomed
- * with Ctrl+scroll / Ctrl+/- (down to ~25%).
+ * Pin page visual size. Blocks Ctrl+scroll zoom when possible;
+ * otherwise scales the document back so it matches the size at first load (~100%).
  */
 (function () {
   'use strict';
 
   var root = document.documentElement;
+  var body = null;
+  var baselineDpr = window.devicePixelRatio || 1;
   var busy = false;
   var timer = null;
-  var lastApplied = 1;
 
-  function readBrowserZoom() {
-    // Chromium Ctrl+/- : outer/inner tracks zoom while our CSS zoom is cleared
-    if (window.outerWidth > 0 && window.innerWidth > 0) {
-      var z = window.outerWidth / window.innerWidth;
-      if (isFinite(z) && z >= 0.15 && z <= 5) return z;
+  function pageRoot() {
+    return document.body || root;
+  }
+
+  function browserZoomFactor() {
+    var dpr = window.devicePixelRatio || 1;
+    var fromDpr = dpr / baselineDpr;
+    var fromOuter = 1;
+    if (window.outerWidth > 40 && window.innerWidth > 40) {
+      fromOuter = window.outerWidth / window.innerWidth;
     }
-    if (window.visualViewport && window.visualViewport.scale > 0) {
-      return window.visualViewport.scale;
+    // Prefer DPR ratio (tracks Ctrl+/- in Chromium). Fall back to outer/inner.
+    var z = fromDpr;
+    if (!isFinite(z) || z < 0.1 || z > 5) z = fromOuter;
+    // If outer/inner says we're zoomed but DPR baseline matched (refresh at zoom), trust outer
+    if (Math.abs(fromOuter - 1) > 0.12 && Math.abs(fromDpr - 1) < 0.08) {
+      z = fromOuter;
+      // Recalibrate baseline so further steps work
+      baselineDpr = dpr / fromOuter;
     }
-    return 1;
+    if (!isFinite(z) || z < 0.15) z = 0.15;
+    if (z > 5) z = 5;
+    return z;
+  }
+
+  function clearPin(el) {
+    el.style.transform = '';
+    el.style.transformOrigin = '';
+    el.style.width = '';
+    el.style.minHeight = '';
+    el.style.zoom = '';
   }
 
   function apply() {
     if (busy) return;
     busy = true;
     try {
-      // Clear so measurement is not skewed by our own compensation
-      root.style.zoom = '';
+      var el = pageRoot();
+      clearPin(el);
+      clearPin(root);
       void root.offsetWidth;
 
-      var browserZoom = readBrowserZoom();
-      var compensate = 1 / browserZoom;
-      if (!isFinite(compensate) || compensate < 0.5 || compensate > 8) {
-        compensate = 1;
-      }
-      if (Math.abs(compensate - 1) < 0.04) {
-        if (lastApplied !== 1) {
-          root.style.zoom = '';
-          lastApplied = 1;
-        }
+      var z = browserZoomFactor();
+      var compensate = 1 / z;
+      if (Math.abs(compensate - 1) < 0.05) {
         return;
       }
-      // Snap to common zoom steps to reduce jitter
-      compensate = Math.round(compensate * 100) / 100;
-      if (compensate !== lastApplied) {
-        root.style.zoom = String(compensate);
-        lastApplied = compensate;
-      } else {
-        root.style.zoom = String(compensate);
+      if (compensate > 8) compensate = 8;
+      if (compensate < 0.5) compensate = 0.5;
+
+      // Prefer CSS zoom where supported (Chrome/Edge/Safari); transform fallback
+      el.style.transformOrigin = 'top left';
+      el.style.zoom = String(compensate);
+      // Transform backup for engines that ignore zoom on body
+      if (!('zoom' in root.style) || /firefox/i.test(navigator.userAgent)) {
+        el.style.zoom = '';
+        el.style.transform = 'scale(' + compensate + ')';
+        el.style.width = 100 / compensate + '%';
+        el.style.minHeight = 100 / compensate + 'vh';
       }
     } finally {
       busy = false;
@@ -57,33 +78,59 @@
 
   function schedule() {
     if (timer) clearTimeout(timer);
-    timer = setTimeout(apply, 16);
+    timer = setTimeout(apply, 0);
   }
 
-  // Prefer blocking Ctrl+scroll zoom so size never changes
-  function blockZoomWheel(e) {
+  function blockWheel(e) {
     if (e.ctrlKey || e.metaKey) {
       e.preventDefault();
+      e.stopPropagation();
     }
   }
-  function blockZoomKeys(e) {
+  function blockGesture(e) {
+    e.preventDefault();
+  }
+  function blockKeys(e) {
     if (!(e.ctrlKey || e.metaKey)) return;
-    var k = e.key;
-    if (k === '+' || k === '-' || k === '=' || k === '_' || k === '0' ||
-        e.keyCode === 187 || e.keyCode === 189 || e.keyCode === 48) {
+    var code = e.keyCode || e.which;
+    var key = e.key;
+    if (
+      key === '+' || key === '-' || key === '=' || key === '_' || key === '0' ||
+      code === 187 || code === 189 || code === 48 || code === 107 || code === 109 || code === 61
+    ) {
       e.preventDefault();
+      e.stopPropagation();
     }
   }
 
-  window.addEventListener('wheel', blockZoomWheel, { passive: false, capture: true });
-  window.addEventListener('keydown', blockZoomKeys, true);
+  var opts = { passive: false, capture: true };
+  window.addEventListener('wheel', blockWheel, opts);
+  window.addEventListener('mousewheel', blockWheel, opts);
+  document.addEventListener('wheel', blockWheel, opts);
+  window.addEventListener('keydown', blockKeys, true);
+  document.addEventListener('keydown', blockKeys, true);
+  window.addEventListener('gesturestart', blockGesture, opts);
+  window.addEventListener('gesturechange', blockGesture, opts);
+  window.addEventListener('gestureend', blockGesture, opts);
 
-  // Fallback if zoom still changes (browser UI, trackpad gestures, etc.)
-  apply();
+  function boot() {
+    body = document.body;
+    baselineDpr = window.devicePixelRatio || 1;
+    apply();
+  }
+
+  if (document.body) boot();
+  else document.addEventListener('DOMContentLoaded', boot);
+
   window.addEventListener('resize', schedule);
   window.addEventListener('orientationchange', schedule);
   if (window.visualViewport) {
     window.visualViewport.addEventListener('resize', schedule);
     window.visualViewport.addEventListener('scroll', schedule);
   }
+  // Catch zoom that only changes DPR
+  try {
+    matchMedia('screen and (min-resolution: 1dppx)').addEventListener('change', schedule);
+  } catch (e) {}
+  setInterval(apply, 500);
 })();

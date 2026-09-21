@@ -1000,16 +1000,16 @@ main {
 
 /* Services strip — match index.html compact size (53.6% ≈ 80% × 0.67) */
 .index-cards-footer-scale {
-    zoom: 53.6%;
+    zoom: 1;
     width: 100%;
 }
 
 @supports not (zoom: 1) {
     .index-cards-footer-scale {
         zoom: unset;
-        transform: scale(0.536);
+        transform: none;
         transform-origin: top center;
-        width: calc(100% / 0.536);
+        width: 100%;
         margin-left: auto;
         margin-right: auto;
     }
@@ -1017,13 +1017,13 @@ main {
 
 /* explore.html body is already 67% — compensate so services match index */
 .explore-page .index-cards-footer-scale {
-    zoom: calc(53.6% / 0.67);
+    zoom: 1;
 }
 
 @supports not (zoom: 1) {
     .explore-page .index-cards-footer-scale {
-        transform: scale(calc(0.536 / 0.67));
-        width: calc(100% / (0.536 / 0.67));
+        transform: none;
+        width: 100%;
     }
 }
 
@@ -1039,7 +1039,7 @@ body.designs-page .index-cards-footer-scale {
 
 @supports not (zoom: 1) {
     body.designs-page .index-cards-footer-scale {
-        width: calc((100% - var(--designs-sidebar-w)) / 0.536);
+        width: calc(100% - var(--designs-sidebar-w));
         margin-left: var(--designs-sidebar-w);
         margin-right: 0;
     }
@@ -1047,16 +1047,16 @@ body.designs-page .index-cards-footer-scale {
 
 /* Editorial multi-column footer — typography matches explore.html */
 .explore-footer-scale-wrap {
-    zoom: 67%;
+    zoom: 1;
     width: 100%;
 }
 
 @supports not (zoom: 1) {
     .explore-footer-scale-wrap {
         zoom: unset;
-        transform: scale(0.67);
+        transform: none;
         transform-origin: top center;
-        width: calc(100% / 0.67);
+        width: 100%;
         margin-left: auto;
         margin-right: auto;
     }

@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script>
+/* zoom pin boot — blocks Ctrl+scroll immediately */
+(function(){function b(e){if(e.ctrlKey||e.metaKey){e.preventDefault();e.stopPropagation();}}window.addEventListener("wheel",b,{passive:false,capture:true});document.addEventListener("wheel",b,{passive:false,capture:true});})();
+</script>
     <script src="js/zoom-lock.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -902,16 +906,16 @@
             display: none;
         }
         /*
-         * Hero content at ~25% browser-zoom composition at 100% zoom: large black field,
+         * Hero content full size (zoom locked). Large black field,
          * small centered cluster (matches Ctrl/Cmd minus until ~25% on hero only).
          */
         .hero-section-scale-root {
             position: absolute;
             left: 50%;
             top: 50%;
-            width: 400%;
-            height: 400%;
-            transform: translate(-50%, -50%) scale(0.25);
+            width: 100%;
+            height: 100%;
+            transform: translate(-50%, -50%);
             transform-origin: center center;
             pointer-events: auto;
             z-index: 1;
