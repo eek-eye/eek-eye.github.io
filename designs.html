@@ -68,6 +68,26 @@
             padding-right: 0.25rem;
         }
 
+
+        /* Keep designs page at real 100% size — no CSS zoom shrink */
+        body.designs-page .explore-footer-scale-wrap,
+        body.designs-page .index-cards-footer-scale {
+            zoom: 1 !important;
+            transform: none !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+        @supports not (zoom: 1) {
+            body.designs-page .explore-footer-scale-wrap,
+            body.designs-page .index-cards-footer-scale {
+                zoom: unset !important;
+                transform: none !important;
+                width: 100% !important;
+            }
+        }
+
         /* Whole designs page stays black (no light invert) */
         html:has(body.designs-page),
         body.designs-page,
@@ -2043,8 +2063,15 @@
                         updateButtons(0, 0);
                         return;
                     }
-                    // Prefer tall portraits: height ~72vh, width from 3:4, then fit 3 across
-                    const targetH = Math.min(window.innerHeight * 0.88, 1100);
+                    // Keep visual size stable when the browser zooms out/in
+                    var zoomComp = 1;
+                    if (window.outerWidth && window.innerWidth) {
+                        zoomComp = window.innerWidth / window.outerWidth;
+                        if (!isFinite(zoomComp) || zoomComp < 0.5) zoomComp = 1;
+                        if (zoomComp > 3) zoomComp = 3;
+                    }
+                    // Prefer tall portraits; multiply by zoomComp so zoom-out does not shrink them
+                    const targetH = Math.min(window.innerHeight * 0.88, 1100) * zoomComp;
                     const heightBasedW = targetH * 0.75; // 3:4 portrait
                     const widthBasedW = (vw - gap * (visible - 1)) / visible;
                     const cardW = Math.min(heightBasedW, widthBasedW);
@@ -2113,6 +2140,10 @@
             }
 
             window.addEventListener('resize', recalcAll);
+            if (window.visualViewport) {
+                window.visualViewport.addEventListener('resize', recalcAll);
+                window.visualViewport.addEventListener('scroll', recalcAll);
+            }
             window.recalcDesignsCarousels = recalcAll;
 
             // Recalc after brightness sort reorders covers
