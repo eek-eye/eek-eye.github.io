@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="js/zoom-lock.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Design Portfolio | EeksEye Creative TTRPG & Brand Designs</title>
@@ -2063,15 +2064,8 @@
                         updateButtons(0, 0);
                         return;
                     }
-                    // Keep visual size stable when the browser zooms out/in
-                    var zoomComp = 1;
-                    if (window.outerWidth && window.innerWidth) {
-                        zoomComp = window.innerWidth / window.outerWidth;
-                        if (!isFinite(zoomComp) || zoomComp < 0.5) zoomComp = 1;
-                        if (zoomComp > 3) zoomComp = 3;
-                    }
-                    // Prefer tall portraits; multiply by zoomComp so zoom-out does not shrink them
-                    const targetH = Math.min(window.innerHeight * 0.88, 1100) * zoomComp;
+                    // Prefer tall portraits: height ~88vh, width from 3:4, then fit 3 across
+                    const targetH = Math.min(window.innerHeight * 0.88, 1100);
                     const heightBasedW = targetH * 0.75; // 3:4 portrait
                     const widthBasedW = (vw - gap * (visible - 1)) / visible;
                     const cardW = Math.min(heightBasedW, widthBasedW);

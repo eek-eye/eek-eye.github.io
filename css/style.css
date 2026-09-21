@@ -2750,3 +2750,29 @@ main {
 .explore-product-price {
     display: none !important;
 }
+
+
+/* ZOOM LOCK: keep footers at full size (no artificial CSS zoom shrink) */
+.index-cards-footer-scale,
+.explore-footer-scale-wrap,
+.explore-page .index-cards-footer-scale,
+.explore-page .explore-footer-scale-wrap,
+body.designs-page .index-cards-footer-scale,
+body.designs-page .explore-footer-scale-wrap {
+    zoom: 1 !important;
+    transform: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+}
+@supports not (zoom: 1) {
+    .index-cards-footer-scale,
+    .explore-footer-scale-wrap,
+    .explore-page .index-cards-footer-scale,
+    .explore-page .explore-footer-scale-wrap,
+    body.designs-page .index-cards-footer-scale,
+    body.designs-page .explore-footer-scale-wrap {
+        zoom: unset !important;
+        transform: none !important;
+        width: 100% !important;
+    }
+}

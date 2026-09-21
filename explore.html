@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="js/zoom-lock.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Explore - Eeks-Eye</title>
@@ -43,7 +44,7 @@
          * Shirt grid (#exploreProducts) is counter-scaled so product heroes stay unchanged.
          */
         body.explore-page {
-            zoom: 67%;
+            zoom: 1; /* was 67% — zoom lock keeps full size */
             transform: none; /* do not stack with style.css body { transform: scale(1) } */
         }
         body.explore-page #exploreProducts {
@@ -52,7 +53,7 @@
         @supports not (zoom: 1) {
             body.explore-page {
                 zoom: unset;
-                transform: scale(0.67);
+                transform: none;
                 transform-origin: top center;
                 width: calc(100% / 0.67);
                 min-height: calc(100vh / 0.67);
