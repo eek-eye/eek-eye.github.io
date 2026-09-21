@@ -56,6 +56,40 @@
             transform: none !important;
         }
 
+        /* Whole designs page stays black (no light invert) */
+        html:has(body.designs-page),
+        body.designs-page,
+        body.designs-page main,
+        body.designs-page .content-section,
+        body.designs-page .designs-grid,
+        body.designs-page .index-cards-footer-scale,
+        body.designs-page .explore-footer-scale-wrap,
+        body.designs-page .page-transition-overlay.fade-out {
+            background-color: #000 !important;
+            background: #000 !important;
+        }
+        body.designs-page main,
+        body.designs-page .index-cards-footer-scale,
+        body.designs-page .explore-footer-scale-wrap,
+        body.designs-page .designs-left-sidebar,
+        body.designs-page .x-border,
+        body.designs-page .x-line {
+            filter: none !important;
+        }
+        body.designs-page main img,
+        body.designs-page .index-cards-footer-scale img,
+        body.designs-page .explore-footer-scale-wrap img,
+        body.designs-page main video,
+        body.designs-page .index-cards-footer-scale video {
+            filter: none !important;
+        }
+        body.designs-page .site-footer.explore-footer-editorial {
+            background-color: #000 !important;
+            color: #e8e8e8;
+            border-top-color: rgba(255,255,255,0.12);
+        }
+
+
         body.designs-page main {
             position: relative;
             z-index: 1;
@@ -1160,22 +1194,9 @@
          * Inverted (light) look on designs page only.
          * Apply filter per region (not on body) so position:fixed nav/dropdowns stay viewport-anchored.
          */
-        body.designs-page .designs-left-sidebar,
-        body.designs-page .x-border,
-        body.designs-page .x-line,
-        body.designs-page main,
-        body.designs-page .index-cards-footer-scale,
-        body.designs-page .explore-footer-scale-wrap {
-            filter: invert(1) hue-rotate(180deg);
-        }
+        /* invert removed — keep page black */
 
-        body.designs-page main img,
-        body.designs-page .index-cards-footer-scale img,
-        body.designs-page .explore-footer-scale-wrap img,
-        body.designs-page main video,
-        body.designs-page .index-cards-footer-scale video {
-            filter: invert(1) hue-rotate(180deg);
-        }
+        /* invert removed — keep page black */
     
 
         /* Match Cart / Profile / Google auth to index scrolled header buttons */
