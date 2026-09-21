@@ -1025,7 +1025,7 @@
             padding: 1.25rem 0 2.5rem;
             box-sizing: border-box;
             position: relative;
-            min-height: min(78vh, 900px);
+            min-height: min(90vh, 1100px);
         }
 
         .designs-carousel-viewport {
@@ -1083,13 +1083,13 @@
 
         .designs-carousel-btn {
             flex-shrink: 0;
-            width: 64px;
-            height: 64px;
+            width: 34px;
+            height: 34px;
             border-radius: 50%;
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            background: rgba(0, 0, 0, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            background: rgba(0, 0, 0, 0.55);
             color: #ff006e;
-            font-size: 1.75rem;
+            font-size: 1.15rem;
             line-height: 1;
             cursor: pointer;
             display: flex;
@@ -1119,9 +1119,9 @@
                 padding: 1rem 0;
             }
             .designs-carousel-btn {
-                width: 40px;
-                height: 40px;
-                font-size: 1.4rem;
+                width: 30px;
+                height: 30px;
+                font-size: 1rem;
             }
             .designs-grid.designs-carousel-track {
                 gap: 0.6rem;
@@ -2044,34 +2044,45 @@
                         return;
                     }
                     // Prefer tall portraits: height ~72vh, width from 3:4, then fit 3 across
-                    const targetH = Math.min(window.innerHeight * 0.72, 860);
+                    const targetH = Math.min(window.innerHeight * 0.88, 1100);
                     const heightBasedW = targetH * 0.75; // 3:4 portrait
                     const widthBasedW = (vw - gap * (visible - 1)) / visible;
                     const cardW = Math.min(heightBasedW, widthBasedW);
                     const cardH = cardW / 0.75;
                     root.style.setProperty('--designs-card-h', cardH + 'px');
-                    list.forEach(function(card) {
+                    const n = list.length;
+                    if (state.index >= n) state.index = state.index % n;
+                    if (state.index < 0) state.index = (state.index % n + n) % n;
+                    list.forEach(function(card, i) {
+                        // Infinite loop: rotate visual order so we always fill the row
+                        const order = (i - state.index + n) % n;
+                        card.style.order = String(order);
                         card.style.flex = '0 0 ' + cardW + 'px';
                         card.style.width = cardW + 'px';
                         card.style.maxWidth = cardW + 'px';
+                        // Only the first `visible` ordered cards need to sit in view;
+                        // hide extras from flex line via visibility when order >= visible (optional)
+                        if (order >= visible) {
+                            card.style.visibility = 'hidden';
+                            card.style.pointerEvents = 'none';
+                            card.style.position = 'absolute';
+                        } else {
+                            card.style.visibility = 'visible';
+                            card.style.pointerEvents = '';
+                            card.style.position = '';
+                        }
                     });
-                    const maxIndex = Math.max(0, list.length - visible);
-                    if (state.index > maxIndex) state.index = maxIndex;
-                    const offset = state.index * (cardW + gap);
-                    track.style.transform = 'translateX(-' + offset + 'px)';
-                    updateButtons(state.index, maxIndex);
-                }
-
-                function updateButtons(index, maxIndex) {
-                    prevBtn.disabled = index <= 0;
-                    nextBtn.disabled = index >= maxIndex;
+                    track.style.transform = 'translateX(0)';
+                    // Infinite: arrows always enabled when there is more than one card
+                    prevBtn.disabled = n <= 1;
+                    nextBtn.disabled = n <= 1;
                 }
 
                 function go(delta) {
                     const list = cards();
-                    const visible = visibleCount();
-                    const maxIndex = Math.max(0, list.length - visible);
-                    state.index = Math.max(0, Math.min(maxIndex, state.index + delta));
+                    const n = list.length;
+                    if (n === 0) return;
+                    state.index = ((state.index + delta) % n + n) % n;
                     layout();
                 }
 
