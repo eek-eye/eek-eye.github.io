@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <script>
-/* zoom pin boot — blocks Ctrl+scroll immediately */
-(function(){function b(e){if(e.ctrlKey||e.metaKey){e.preventDefault();e.stopPropagation();}}window.addEventListener("wheel",b,{passive:false,capture:true});document.addEventListener("wheel",b,{passive:false,capture:true});})();
+/* zoom pin boot — blocks Ctrl+scroll immediately (desktop only) */
+(function(){if(('ontouchstart' in window||navigator.maxTouchPoints>0)&&(window.innerWidth<=768||/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)))return;function b(e){if(e.ctrlKey||e.metaKey){e.preventDefault();e.stopPropagation();}}window.addEventListener("wheel",b,{passive:false,capture:true});document.addEventListener("wheel",b,{passive:false,capture:true});})();
 </script>
     <script src="js/zoom-lock.js"></script>
     <meta charset="UTF-8">
@@ -1462,6 +1462,113 @@
             color: #ff8a80;
             font-size: 0.75rem;
             margin-top: 0.25rem;
+        }
+
+        /* ========================================
+           MOBILE-ONLY FIXES (max-width: 768px)
+           Desktop layout at 1280px+ is unchanged.
+           ======================================== */
+        @media (max-width: 768px) {
+            /* Hide X-borders on mobile - they cause overflow */
+            .x-border,
+            .x-border-left,
+            .x-border-right {
+                display: none !important;
+            }
+
+            /* X-line: prevent horizontal overflow */
+            .x-line {
+                font-size: 0.28rem !important;
+                letter-spacing: 0 !important;
+                overflow: hidden !important;
+                max-width: 100vw !important;
+            }
+
+            /* Nav bar: ensure it stays visible and doesn't get cut off */
+            .designs-nav-bar {
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                right: 0 !important;
+                width: 100% !important;
+                padding: 0.75rem !important;
+                flex-direction: column !important;
+                align-items: center !important;
+                background: rgba(0, 0, 0, 0.95) !important;
+                z-index: 10050 !important;
+            }
+
+            .designs-nav-bar .nav-header-top-row {
+                width: 100% !important;
+                justify-content: center !important;
+                flex-wrap: wrap !important;
+            }
+
+            .designs-nav-bar .header-buttons-container {
+                width: 100% !important;
+                justify-content: center !important;
+                flex-wrap: wrap !important;
+                gap: 0.4rem !important;
+                padding: 0.25rem 0 !important;
+            }
+
+            .designs-nav-bar .header-buttons-container a,
+            .designs-nav-bar .header-buttons-container button,
+            .designs-nav-bar .tab-button,
+            .designs-nav-bar .currency-button {
+                font-size: 0.55rem !important;
+                padding: 0.3rem 0.65rem !important;
+            }
+
+            /* Hide sidebar on mobile */
+            .designs-left-sidebar {
+                display: none !important;
+            }
+
+            /* Main content full width */
+            body.designs-page main {
+                margin-left: 0 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                padding-top: 5rem !important;
+            }
+
+            /* Carousel adjustments */
+            .designs-carousel {
+                padding: 0 0.5rem !important;
+            }
+
+            /* Contact/Aesthetic dropdowns */
+            .contact-dropdown {
+                position: fixed !important;
+                left: 0 !important;
+                top: auto !important;
+                bottom: 0 !important;
+                width: 100% !important;
+                height: auto !important;
+                max-height: 50vh !important;
+                transform: translateY(100%) !important;
+                flex-direction: row !important;
+                flex-wrap: wrap !important;
+                justify-content: center !important;
+                padding: 1rem !important;
+                background: rgba(0, 0, 0, 0.95) !important;
+            }
+
+            .contact-dropdown.active {
+                transform: translateY(0) !important;
+            }
+
+            .aesthetic-dropdown {
+                width: 100% !important;
+                justify-content: center !important;
+                margin-top: 0.5rem !important;
+            }
+
+            /* Service cards */
+            body.designs-page .hero-section-3-cards {
+                grid-template-columns: 1fr !important;
+            }
         }
     </style>
 </head>

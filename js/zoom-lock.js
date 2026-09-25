@@ -1,9 +1,28 @@
 /**
  * Pin page visual size. Blocks Ctrl+scroll zoom when possible;
  * otherwise scales the document back so it matches the size at first load (~100%).
+ * 
+ * MOBILE: This script is disabled on touch/mobile devices to preserve
+ * native pinch-zoom accessibility and avoid layout issues.
  */
 (function () {
   'use strict';
+
+  // Detect mobile/touch devices and skip zoom-lock entirely
+  function isMobileOrTouch() {
+    // Check for touch capability
+    var hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+    // Check viewport width (phones are typically <768px)
+    var isNarrow = window.innerWidth <= 768;
+    // Check user agent for mobile keywords
+    var mobileUA = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    return hasTouch && (isNarrow || mobileUA);
+  }
+
+  // Exit early on mobile - do not apply zoom lock
+  if (isMobileOrTouch()) {
+    return;
+  }
 
   var root = document.documentElement;
   var body = null;
