@@ -2812,14 +2812,14 @@ body.designs-page .explore-footer-scale-wrap {
     }
 
     /* --------------------------------------------
-       2. X-LINE - prevent horizontal overflow
+       2. X-LINE - just hide overflow on mobile
+       The x-line is decorative; hiding overflow is acceptable
        -------------------------------------------- */
     .x-line {
         font-size: 0.28rem !important;
         letter-spacing: 0 !important;
         white-space: nowrap !important;
         overflow: hidden !important;
-        text-overflow: clip !important;
         max-width: 100vw !important;
         width: 100% !important;
         box-sizing: border-box !important;
