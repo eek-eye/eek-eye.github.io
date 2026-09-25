@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
     <script>
-/* zoom pin boot — blocks Ctrl+scroll immediately */
-(function(){function b(e){if(e.ctrlKey||e.metaKey){e.preventDefault();e.stopPropagation();}}window.addEventListener("wheel",b,{passive:false,capture:true});document.addEventListener("wheel",b,{passive:false,capture:true});})();
+/* zoom pin boot — blocks Ctrl+scroll immediately (desktop only) */
+(function(){if(('ontouchstart' in window||navigator.maxTouchPoints>0)&&(window.innerWidth<=768||/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)))return;function b(e){if(e.ctrlKey||e.metaKey){e.preventDefault();e.stopPropagation();}}window.addEventListener("wheel",b,{passive:false,capture:true});document.addEventListener("wheel",b,{passive:false,capture:true});})();
 </script>
     <script src="js/zoom-lock.js"></script>
     <meta charset="UTF-8">
@@ -765,6 +765,124 @@
             align-items: center;
             gap: 0.35rem;
             box-shadow: none;
+        }
+
+        /* ========================================
+           MOBILE-ONLY FIXES (max-width: 768px)
+           Desktop layout at 1280px+ is unchanged.
+           ======================================== */
+        @media (max-width: 768px) {
+            /* Hide X-borders on mobile - they cause overflow */
+            .x-border,
+            .x-border-left,
+            .x-border-right {
+                display: none !important;
+            }
+
+            /* X-line: prevent horizontal overflow */
+            .x-line {
+                font-size: 0.28rem !important;
+                letter-spacing: 0 !important;
+                overflow: hidden !important;
+                max-width: 100vw !important;
+            }
+
+            /* Top icons bar adjustments */
+            .explore-top-icons-bar {
+                top: 0.5rem !important;
+                left: 0.5rem !important;
+                padding: 0.3rem !important;
+                gap: 0.3rem !important;
+            }
+
+            .explore-layout-btn {
+                width: 32px !important;
+                height: 32px !important;
+                font-size: 0.9rem !important;
+            }
+
+            /* Product hero sections */
+            .explore-hero-section {
+                min-height: 60vh !important;
+                padding: 2rem 1rem !important;
+            }
+
+            .explore-hero-img {
+                max-height: 45vh !important;
+                max-width: 85vw !important;
+            }
+
+            .explore-hero-info {
+                margin-top: 1rem !important;
+            }
+
+            .explore-hero-title {
+                font-size: 0.75rem !important;
+            }
+
+            .explore-hero-category {
+                font-size: 0.55rem !important;
+            }
+
+            /* Grid layout adjustments */
+            .explore-products--columns-3 {
+                grid-template-columns: 1fr !important;
+                gap: 0.5rem !important;
+                padding: 0 0.5rem !important;
+            }
+
+            .explore-products--columns-3 .explore-hero-section {
+                min-height: 50vh !important;
+            }
+
+            /* Pair layout */
+            .explore-hero-pair-row {
+                flex-direction: column !important;
+                gap: 1.5rem !important;
+            }
+
+            .explore-hero-pair-col {
+                max-width: 100% !important;
+            }
+
+            /* Hero text fill (scrolling ticker) - prevent overflow */
+            .explore-hero-text-fill {
+                overflow: hidden !important;
+                max-width: 100vw !important;
+            }
+
+            .explore-hero-text-line {
+                font-size: 0.5rem !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+            }
+
+            /* Service cards section */
+            .hero-section-3 {
+                padding: 2rem 1rem !important;
+            }
+
+            .hero-section-3-container {
+                padding: 1.5rem 1rem !important;
+            }
+
+            .hero-section-3-cards {
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem !important;
+            }
+
+            /* Password modal */
+            .password-modal {
+                width: min(95%, 280px) !important;
+            }
+
+            .password-modal-label {
+                font-size: 1rem !important;
+            }
+
+            .password-input {
+                font-size: 0.9rem !important;
+            }
         }
 
     </style>

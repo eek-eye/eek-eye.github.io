@@ -2776,3 +2776,74 @@ body.designs-page .explore-footer-scale-wrap {
         width: 100% !important;
     }
 }
+
+/* ========================================
+   MOBILE-ONLY FIXES (max-width: 768px)
+   Desktop layout at 1280px+ is unchanged.
+   ======================================== */
+
+@media (max-width: 768px) {
+    /* --------------------------------------------
+       1. COOKIE CONSENT BANNER - use site font
+       -------------------------------------------- */
+    .cookie-consent-banner {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
+        font-size: 0.82rem !important;
+        padding: 0.75rem 1rem !important;
+        padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0px)) !important;
+        gap: 0.75rem !important;
+        flex-direction: column !important;
+        align-items: stretch !important;
+    }
+
+    .cookie-consent-banner p {
+        font-size: 0.78rem !important;
+        line-height: 1.4 !important;
+        min-width: 0 !important;
+        text-align: center !important;
+    }
+
+    .cookie-consent-banner button {
+        width: 100% !important;
+        max-width: 200px !important;
+        margin: 0 auto !important;
+        padding: 0.6rem 1rem !important;
+        font-size: 0.85rem !important;
+    }
+
+    /* --------------------------------------------
+       2. X-LINE - prevent horizontal overflow
+       -------------------------------------------- */
+    .x-line {
+        font-size: 0.28rem !important;
+        letter-spacing: 0 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: clip !important;
+        max-width: 100vw !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    /* --------------------------------------------
+       3. X-BORDERS - hide on mobile (cause overflow)
+       -------------------------------------------- */
+    .x-border,
+    .x-border-left,
+    .x-border-right {
+        display: none !important;
+    }
+}
+
+/* ========================================
+   COOKIE CONSENT - site font on ALL sizes
+   (fallback graceful if Inter unavailable)
+   ======================================== */
+.cookie-consent-banner {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.cookie-consent-banner p,
+.cookie-consent-banner button {
+    font-family: inherit;
+}
