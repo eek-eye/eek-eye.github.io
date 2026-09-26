@@ -377,6 +377,34 @@
         .menu-copyright p {
             margin: 0;
         }
+        /* Phones: stack contact card and form (side-by-side grid overflowed the screen) */
+        @media (max-width: 768px) {
+            .contact-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                margin: 2rem auto;
+                padding: 1rem;
+            }
+            .contact-info {
+                padding: 1.5rem;
+                min-height: 0;
+            }
+            .contact-info h3 {
+                font-size: 1.6rem;
+            }
+            .contact-info p {
+                font-size: 1rem;
+                margin-bottom: 1.25rem;
+                overflow-wrap: anywhere;
+            }
+            .contact-form {
+                padding: 1.5rem;
+            }
+            .form-group input,
+            .form-group textarea {
+                box-sizing: border-box;
+            }
+        }
     </style>
 </head>
 <body class="dark-theme">

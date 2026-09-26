@@ -66,6 +66,17 @@
         .checkout-result a:hover {
             background: #333;
         }
+        /* Phones: let the footer run edge to edge (body padding was insetting it) */
+        @media (max-width: 768px) {
+            body {
+                padding: 0;
+            }
+            body > .checkout-result {
+                width: 100%;
+                padding: 2rem;
+                box-sizing: border-box;
+            }
+        }
     </style>
 </head>
 <body>
