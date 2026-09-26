@@ -843,16 +843,39 @@
         }
 
         @media (max-width: 768px) {
-            body.designs-page .hero-section-3-cards {
-                grid-template-columns: 1fr;
-            }
-
             body.designs-page .hero-section-3 {
-                padding: 2rem 1rem;
+                padding: 0.75rem 0.25rem !important;
             }
-
             body.designs-page .hero-section-3-container {
-                padding: 1.75rem 1.25rem;
+                padding: 0.4rem 0.25rem !important;
+            }
+            body.designs-page .hero-section-3-cards {
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 0.2rem !important;
+            }
+            body.designs-page .hero-section-3-card {
+                padding: 0.35rem 0.2rem !important;
+                border-radius: 2px !important;
+            }
+            body.designs-page .hero-section-3-icon {
+                font-size: 0.7rem !important;
+                margin-bottom: 0.25rem !important;
+            }
+            body.designs-page .hero-section-3-title {
+                font-size: 0.38rem !important;
+                margin: 0 0 0.2rem 0 !important;
+                letter-spacing: 0 !important;
+            }
+            body.designs-page .hero-section-3-desc {
+                font-size: 0.32rem !important;
+                line-height: 1.35 !important;
+                margin: 0 0 0.3rem 0 !important;
+            }
+            body.designs-page .hero-section-3-btn {
+                padding: 0.15rem 0.25rem !important;
+                font-size: 0.3rem !important;
+                letter-spacing: 0 !important;
+                border-width: 1px !important;
             }
         }
 
@@ -1595,9 +1618,40 @@
                 margin-top: 0.5rem !important;
             }
 
-            /* Service cards */
+            /* Service cards - 3 columns on mobile */
+            body.designs-page .hero-section-3 {
+                padding: 0.75rem 0.25rem !important;
+            }
+            body.designs-page .hero-section-3-container {
+                padding: 0.4rem 0.25rem !important;
+            }
             body.designs-page .hero-section-3-cards {
-                grid-template-columns: 1fr !important;
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 0.2rem !important;
+            }
+            body.designs-page .hero-section-3-card {
+                padding: 0.35rem 0.2rem !important;
+                border-radius: 2px !important;
+            }
+            body.designs-page .hero-section-3-icon {
+                font-size: 0.7rem !important;
+                margin-bottom: 0.25rem !important;
+            }
+            body.designs-page .hero-section-3-title {
+                font-size: 0.38rem !important;
+                margin: 0 0 0.2rem 0 !important;
+                letter-spacing: 0 !important;
+            }
+            body.designs-page .hero-section-3-desc {
+                font-size: 0.32rem !important;
+                line-height: 1.35 !important;
+                margin: 0 0 0.3rem 0 !important;
+            }
+            body.designs-page .hero-section-3-btn {
+                padding: 0.15rem 0.25rem !important;
+                font-size: 0.3rem !important;
+                letter-spacing: 0 !important;
+                border-width: 1px !important;
             }
         }
     </style>
