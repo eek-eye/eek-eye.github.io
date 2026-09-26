@@ -2847,3 +2847,134 @@ body.designs-page .explore-footer-scale-wrap {
 .cookie-consent-banner button {
     font-family: inherit;
 }
+
+/* ========================================
+   MOBILE FOOTER CLEANUP (max-width: 768px)
+   Phones only — desktop footer unchanged.
+   - Compact 2-column editorial layout instead of one very long stacked column
+   - Every column aligned to the same left edge (Newsletter was indented)
+   - Footer spans the full screen width on every page (designs / design-detail
+     / checkout pages had it inset with uneven side gaps)
+   ======================================== */
+@media (max-width: 768px) {
+    html body .explore-footer-scale-wrap {
+        padding: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    html body .site-footer.explore-footer-editorial {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+        box-sizing: border-box;
+        font-size: 0.8rem;
+        overflow-x: hidden;
+    }
+
+    html body .site-footer.explore-footer-editorial .explore-footer-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    html body .site-footer.explore-footer-editorial .explore-footer-col,
+    html body .site-footer.explore-footer-editorial .explore-footer-grid > .explore-footer-col:first-child {
+        padding: 1.35rem 1.25rem 1.4rem !important;
+        border-right-width: 0;
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
+    }
+
+    /* Newsletter, Follow us, Contact us: full width rows */
+    html body .site-footer.explore-footer-editorial .explore-footer-col:nth-child(1),
+    html body .site-footer.explore-footer-editorial .explore-footer-col:nth-child(4),
+    html body .site-footer.explore-footer-editorial .explore-footer-col:nth-child(5) {
+        grid-column: 1 / -1;
+    }
+
+    /* Client services | The company side by side with a thin divider */
+    html body .site-footer.explore-footer-editorial .explore-footer-col:nth-child(2) {
+        border-right-width: 1px;
+        border-right-style: solid;
+        border-right-color: rgba(255, 255, 255, 0.12);
+        padding-right: 0.85rem !important;
+    }
+
+    html body .site-footer.explore-footer-editorial.explore-footer-theme-light .explore-footer-col:nth-child(2) {
+        border-right-color: #e5e5e5;
+    }
+
+    html body .site-footer.explore-footer-editorial.explore-footer-theme-classic .explore-footer-col:nth-child(2) {
+        border-right-color: var(--color-gray);
+    }
+
+    html body.news-page .site-footer.explore-footer-editorial .explore-footer-col:nth-child(2) {
+        border-right-color: #111;
+    }
+
+    html body.about-page .site-footer.explore-footer-editorial .explore-footer-col:nth-child(2),
+    html body.explore-page .site-footer.explore-footer-editorial .explore-footer-col:nth-child(2) {
+        border-right-color: rgba(0, 0, 0, 0.28);
+    }
+
+    html body .site-footer.explore-footer-editorial .explore-footer-col:nth-child(3) {
+        padding-left: 1rem !important;
+    }
+
+    html body .site-footer.explore-footer-editorial .explore-footer-col:last-child {
+        border-bottom-width: 0;
+    }
+
+    html body .site-footer.explore-footer-editorial .explore-footer-heading {
+        margin-bottom: 0.7rem;
+        font-size: 0.72rem;
+    }
+
+    html body .site-footer.explore-footer-editorial .explore-footer-list li {
+        margin-bottom: 0.5rem;
+    }
+
+    html body .site-footer.explore-footer-editorial .explore-footer-note {
+        margin-bottom: 0.6rem;
+    }
+
+    /* Follow us: one wrapped row of social links instead of a tall list */
+    html body .site-footer.explore-footer-editorial .explore-footer-col:nth-child(4) .explore-footer-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem 1.35rem;
+    }
+
+    html body .site-footer.explore-footer-editorial .explore-footer-col:nth-child(4) .explore-footer-list li {
+        margin: 0;
+    }
+
+    /* Contact us: tidy subheads */
+    html body .site-footer.explore-footer-editorial .explore-footer-subhead {
+        margin: 0.9rem 0 0.25rem;
+        font-size: 0.7rem;
+    }
+
+    html body .site-footer.explore-footer-editorial .explore-footer-col:nth-child(5) .explore-footer-note:last-child {
+        margin-bottom: 0;
+    }
+
+    html body .site-footer.explore-footer-editorial .explore-footer-bottom {
+        padding: 1rem 1.25rem 1.25rem;
+        padding-bottom: max(1.25rem, env(safe-area-inset-bottom, 0px));
+        font-size: 0.68rem;
+    }
+
+    /* Gray footers (about / explore): softer dividers instead of heavy black rules */
+    .about-page .site-footer.explore-footer-editorial .explore-footer-col,
+    .explore-page .site-footer.explore-footer-editorial .explore-footer-col {
+        border-color: rgba(0, 0, 0, 0.28);
+    }
+
+    .about-page .site-footer.explore-footer-editorial .explore-footer-bottom,
+    .explore-page .site-footer.explore-footer-editorial .explore-footer-bottom {
+        border-top-color: rgba(0, 0, 0, 0.28);
+    }
+}
