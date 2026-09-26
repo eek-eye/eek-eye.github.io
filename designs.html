@@ -1469,6 +1469,12 @@
            Desktop layout at 1280px+ is unchanged.
            ======================================== */
         @media (max-width: 768px) {
+            /* Prevent page horizontal overflow - only nav scrolls */
+            html, body, body.designs-page {
+                overflow-x: hidden !important;
+                max-width: 100vw !important;
+            }
+
             /* Hide X-borders on mobile - they cause overflow */
             .x-border,
             .x-border-left,
@@ -1484,40 +1490,64 @@
                 max-width: 100vw !important;
             }
 
-            /* Nav bar: ensure it stays visible and doesn't get cut off */
+            /* Nav bar: single horizontal row, scrollable */
             .designs-nav-bar {
                 position: fixed !important;
                 top: 0 !important;
                 left: 0 !important;
                 right: 0 !important;
                 width: 100% !important;
-                padding: 0.75rem !important;
-                flex-direction: column !important;
+                padding: 0.5rem 0 !important;
+                flex-direction: row !important;
                 align-items: center !important;
                 background: rgba(0, 0, 0, 0.95) !important;
                 z-index: 10050 !important;
+                overflow: visible !important;
             }
 
             .designs-nav-bar .nav-header-top-row {
                 width: 100% !important;
-                justify-content: center !important;
-                flex-wrap: wrap !important;
+                justify-content: flex-start !important;
+                flex-wrap: nowrap !important;
+                overflow: visible !important;
             }
 
+            /* Nav buttons container: single scrollable row */
             .designs-nav-bar .header-buttons-container {
+                display: flex !important;
+                flex-wrap: nowrap !important;
+                overflow-x: auto !important;
+                overflow-y: hidden !important;
+                -webkit-overflow-scrolling: touch !important;
+                white-space: nowrap !important;
+                gap: 0.35rem !important;
+                padding: 0.3rem 0.75rem !important;
                 width: 100% !important;
-                justify-content: center !important;
-                flex-wrap: wrap !important;
-                gap: 0.4rem !important;
-                padding: 0.25rem 0 !important;
+                justify-content: flex-start !important;
+                align-items: center !important;
+                scrollbar-width: none !important;
+                -ms-overflow-style: none !important;
             }
 
+            /* Hide scrollbar for webkit browsers */
+            .designs-nav-bar .header-buttons-container::-webkit-scrollbar {
+                display: none !important;
+                height: 0 !important;
+                width: 0 !important;
+            }
+
+            /* Nav items: no shrink, readable size, maintain pink glow */
             .designs-nav-bar .header-buttons-container a,
             .designs-nav-bar .header-buttons-container button,
             .designs-nav-bar .tab-button,
-            .designs-nav-bar .currency-button {
+            .designs-nav-bar .currency-button,
+            .designs-nav-bar .header-buttons-container .eeks-cart-launch,
+            .designs-nav-bar .header-buttons-container .google-auth-signed-in,
+            .designs-nav-bar .header-buttons-container .google-auth-signout {
+                flex-shrink: 0 !important;
                 font-size: 0.55rem !important;
-                padding: 0.3rem 0.65rem !important;
+                padding: 0.28rem 0.55rem !important;
+                white-space: nowrap !important;
             }
 
             /* Hide sidebar on mobile */
@@ -1525,12 +1555,12 @@
                 display: none !important;
             }
 
-            /* Main content full width */
+            /* Main content full width - adjusted padding for single-row nav */
             body.designs-page main {
                 margin-left: 0 !important;
                 width: 100% !important;
                 max-width: 100% !important;
-                padding-top: 5rem !important;
+                padding-top: 2.75rem !important;
             }
 
             /* Carousel adjustments */
