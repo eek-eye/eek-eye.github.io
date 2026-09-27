@@ -62,6 +62,21 @@
             background: #333;
         }
     </style>
+    <style id="phone-only-fixes" media="(max-width: 768px)">
+        /* PHONES ONLY (max-width: 768px). Desktop never applies these rules:
+           the <style media> attribute and every @media block limit them to phones. */
+        /* Phones: let the footer run edge to edge (body padding was insetting it) */
+        @media (max-width: 768px) {
+            body {
+                padding: 0;
+            }
+            body > .checkout-result {
+                width: 100%;
+                padding: 2rem;
+                box-sizing: border-box;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="checkout-result">
