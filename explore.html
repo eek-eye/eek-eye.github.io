@@ -1,11 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script>
-/* zoom pin boot — blocks Ctrl+scroll immediately (desktop only) */
-(function(){if(('ontouchstart' in window||navigator.maxTouchPoints>0)&&(window.innerWidth<=768||/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)))return;function b(e){if(e.ctrlKey||e.metaKey){e.preventDefault();e.stopPropagation();}}window.addEventListener("wheel",b,{passive:false,capture:true});document.addEventListener("wheel",b,{passive:false,capture:true});})();
-</script>
-    <script src="js/zoom-lock.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Explore - Eeks-Eye</title>
@@ -43,10 +38,32 @@
             z-index: 1;
         }
 
-        /* Full size — zoom-lock.js keeps visual size stable under Ctrl+/- zoom */
+        /*
+         * Explore default scale: match ~67% browser zoom at 100% for chrome (nav, buttons, cards, footer).
+         * Shirt grid (#exploreProducts) is counter-scaled so product heroes stay unchanged.
+         */
         body.explore-page {
-            zoom: 1;
-            transform: none;
+            zoom: 67%;
+            transform: none; /* do not stack with style.css body { transform: scale(1) } */
+        }
+        body.explore-page #exploreProducts {
+            zoom: calc(100% / 0.67);
+        }
+        @supports not (zoom: 1) {
+            body.explore-page {
+                zoom: unset;
+                transform: scale(0.67);
+                transform-origin: top center;
+                width: calc(100% / 0.67);
+                min-height: calc(100vh / 0.67);
+                margin-left: auto;
+                margin-right: auto;
+            }
+            body.explore-page #exploreProducts {
+                zoom: unset;
+                transform: scale(calc(1 / 0.67));
+                transform-origin: top center;
+            }
         }
 
         .dropdown-menu.active {
@@ -576,39 +593,8 @@
         }
 
         @media (max-width: 768px) {
-            .hero-section-3 {
-                padding: 0.5rem 0.15rem !important;
-            }
-            .hero-section-3-container {
-                padding: 0.35rem 0.15rem !important;
-            }
             .hero-section-3-cards {
-                grid-template-columns: repeat(3, 1fr) !important;
-                gap: 0.12rem !important;
-            }
-            .hero-section-3-card {
-                padding: 0.32rem 0.12rem !important;
-                border-radius: 2px !important;
-            }
-            .hero-section-3-icon {
-                font-size: 0.85rem !important;
-                margin-bottom: 0.25rem !important;
-            }
-            .hero-section-3-title {
-                font-size: 0.5rem !important;
-                margin: 0 0 0.2rem 0 !important;
-                letter-spacing: 0 !important;
-            }
-            .hero-section-3-desc {
-                font-size: 0.42rem !important;
-                line-height: 1.4 !important;
-                margin: 0 0 0.3rem 0 !important;
-            }
-            .hero-section-3-btn {
-                padding: 0.2rem 0.32rem !important;
-                font-size: 0.38rem !important;
-                letter-spacing: 0 !important;
-                border-width: 1px !important;
+                grid-template-columns: 1fr;
             }
         }
 
@@ -796,146 +782,6 @@
             align-items: center;
             gap: 0.35rem;
             box-shadow: none;
-        }
-
-        /* ========================================
-           MOBILE-ONLY FIXES (max-width: 768px)
-           Desktop layout at 1280px+ is unchanged.
-           ======================================== */
-        @media (max-width: 768px) {
-            /* Hide X-borders on mobile - they cause overflow */
-            .x-border,
-            .x-border-left,
-            .x-border-right {
-                display: none !important;
-            }
-
-            /* X-line: prevent horizontal overflow */
-            .x-line {
-                font-size: 0.28rem !important;
-                letter-spacing: 0 !important;
-                overflow: hidden !important;
-                max-width: 100vw !important;
-            }
-
-            /* Top icons bar adjustments */
-            .explore-top-icons-bar {
-                top: 0.5rem !important;
-                left: 0.5rem !important;
-                padding: 0.3rem !important;
-                gap: 0.3rem !important;
-            }
-
-            .explore-layout-btn {
-                width: 32px !important;
-                height: 32px !important;
-                font-size: 0.9rem !important;
-            }
-
-            /* Product hero sections */
-            .explore-hero-section {
-                min-height: 60vh !important;
-                padding: 2rem 1rem !important;
-            }
-
-            .explore-hero-img {
-                max-height: 45vh !important;
-                max-width: 85vw !important;
-            }
-
-            .explore-hero-info {
-                margin-top: 1rem !important;
-            }
-
-            .explore-hero-title {
-                font-size: 0.75rem !important;
-            }
-
-            .explore-hero-category {
-                font-size: 0.55rem !important;
-            }
-
-            /* Grid layout adjustments */
-            .explore-products--columns-3 {
-                grid-template-columns: 1fr !important;
-                gap: 0.5rem !important;
-                padding: 0 0.5rem !important;
-            }
-
-            .explore-products--columns-3 .explore-hero-section {
-                min-height: 50vh !important;
-            }
-
-            /* Pair layout */
-            .explore-hero-pair-row {
-                flex-direction: column !important;
-                gap: 1.5rem !important;
-            }
-
-            .explore-hero-pair-col {
-                max-width: 100% !important;
-            }
-
-            /* Hero text fill (scrolling ticker) - prevent overflow */
-            .explore-hero-text-fill {
-                overflow: hidden !important;
-                max-width: 100vw !important;
-            }
-
-            .explore-hero-text-line {
-                font-size: 0.5rem !important;
-                white-space: nowrap !important;
-                overflow: hidden !important;
-            }
-
-            /* Service cards section - 3 columns on mobile */
-            .hero-section-3 {
-                padding: 0.5rem 0.15rem !important;
-            }
-            .hero-section-3-container {
-                padding: 0.35rem 0.15rem !important;
-            }
-            .hero-section-3-cards {
-                grid-template-columns: repeat(3, 1fr) !important;
-                gap: 0.12rem !important;
-            }
-            .hero-section-3-card {
-                padding: 0.32rem 0.12rem !important;
-                border-radius: 2px !important;
-            }
-            .hero-section-3-icon {
-                font-size: 0.85rem !important;
-                margin-bottom: 0.25rem !important;
-            }
-            .hero-section-3-title {
-                font-size: 0.5rem !important;
-                margin: 0 0 0.2rem 0 !important;
-                letter-spacing: 0 !important;
-            }
-            .hero-section-3-desc {
-                font-size: 0.42rem !important;
-                line-height: 1.4 !important;
-                margin: 0 0 0.3rem 0 !important;
-            }
-            .hero-section-3-btn {
-                padding: 0.2rem 0.32rem !important;
-                font-size: 0.38rem !important;
-                letter-spacing: 0 !important;
-                border-width: 1px !important;
-            }
-
-            /* Password modal */
-            .password-modal {
-                width: min(95%, 280px) !important;
-            }
-
-            .password-modal-label {
-                font-size: 1rem !important;
-            }
-
-            .password-input {
-                font-size: 0.9rem !important;
-            }
         }
 
     </style>

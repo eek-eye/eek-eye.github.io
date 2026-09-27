@@ -1,11 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script>
-/* zoom pin boot — blocks Ctrl+scroll immediately (desktop only) */
-(function(){if(('ontouchstart' in window||navigator.maxTouchPoints>0)&&(window.innerWidth<=768||/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)))return;function b(e){if(e.ctrlKey||e.metaKey){e.preventDefault();e.stopPropagation();}}window.addEventListener("wheel",b,{passive:false,capture:true});document.addEventListener("wheel",b,{passive:false,capture:true});})();
-</script>
-    <script src="js/zoom-lock.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Design Portfolio | EeksEye Creative TTRPG & Brand Designs</title>
@@ -71,26 +66,6 @@
             width: 100%;
             padding-left: 0.25rem;
             padding-right: 0.25rem;
-        }
-
-
-        /* Keep designs page at real 100% size — no CSS zoom shrink */
-        body.designs-page .explore-footer-scale-wrap,
-        body.designs-page .index-cards-footer-scale {
-            zoom: 1 !important;
-            transform: none !important;
-            width: 100% !important;
-            max-width: 100% !important;
-            margin-left: 0 !important;
-            margin-right: 0 !important;
-        }
-        @supports not (zoom: 1) {
-            body.designs-page .explore-footer-scale-wrap,
-            body.designs-page .index-cards-footer-scale {
-                zoom: unset !important;
-                transform: none !important;
-                width: 100% !important;
-            }
         }
 
         /* Whole designs page stays black (no light invert) */
@@ -843,39 +818,16 @@
         }
 
         @media (max-width: 768px) {
-            body.designs-page .hero-section-3 {
-                padding: 0.5rem 0.15rem !important;
-            }
-            body.designs-page .hero-section-3-container {
-                padding: 0.35rem 0.15rem !important;
-            }
             body.designs-page .hero-section-3-cards {
-                grid-template-columns: repeat(3, 1fr) !important;
-                gap: 0.12rem !important;
+                grid-template-columns: 1fr;
             }
-            body.designs-page .hero-section-3-card {
-                padding: 0.32rem 0.12rem !important;
-                border-radius: 2px !important;
+
+            body.designs-page .hero-section-3 {
+                padding: 2rem 1rem;
             }
-            body.designs-page .hero-section-3-icon {
-                font-size: 0.85rem !important;
-                margin-bottom: 0.25rem !important;
-            }
-            body.designs-page .hero-section-3-title {
-                font-size: 0.5rem !important;
-                margin: 0 0 0.2rem 0 !important;
-                letter-spacing: 0 !important;
-            }
-            body.designs-page .hero-section-3-desc {
-                font-size: 0.42rem !important;
-                line-height: 1.4 !important;
-                margin: 0 0 0.3rem 0 !important;
-            }
-            body.designs-page .hero-section-3-btn {
-                padding: 0.2rem 0.32rem !important;
-                font-size: 0.38rem !important;
-                letter-spacing: 0 !important;
-                border-width: 1px !important;
+
+            body.designs-page .hero-section-3-container {
+                padding: 1.75rem 1.25rem;
             }
         }
 
@@ -1486,144 +1438,6 @@
             font-size: 0.75rem;
             margin-top: 0.25rem;
         }
-
-        /* ========================================
-           MOBILE-ONLY FIXES (max-width: 768px)
-           Desktop layout at 1280px+ is unchanged.
-           ======================================== */
-        @media (max-width: 768px) {
-            /* Hide X-borders on mobile - they cause overflow */
-            .x-border,
-            .x-border-left,
-            .x-border-right {
-                display: none !important;
-            }
-
-            /* X-line: prevent horizontal overflow */
-            .x-line {
-                font-size: 0.28rem !important;
-                letter-spacing: 0 !important;
-                overflow: hidden !important;
-                max-width: 100vw !important;
-            }
-
-            /* Nav bar: ensure it stays visible and doesn't get cut off */
-            .designs-nav-bar {
-                position: fixed !important;
-                top: 0 !important;
-                left: 0 !important;
-                right: 0 !important;
-                width: 100% !important;
-                padding: 0.75rem !important;
-                flex-direction: column !important;
-                align-items: center !important;
-                background: rgba(0, 0, 0, 0.95) !important;
-                z-index: 10050 !important;
-            }
-
-            .designs-nav-bar .nav-header-top-row {
-                width: 100% !important;
-                justify-content: center !important;
-                flex-wrap: wrap !important;
-            }
-
-            .designs-nav-bar .header-buttons-container {
-                width: 100% !important;
-                justify-content: center !important;
-                flex-wrap: wrap !important;
-                gap: 0.4rem !important;
-                padding: 0.25rem 0 !important;
-            }
-
-            .designs-nav-bar .header-buttons-container a,
-            .designs-nav-bar .header-buttons-container button,
-            .designs-nav-bar .tab-button,
-            .designs-nav-bar .currency-button {
-                font-size: 0.55rem !important;
-                padding: 0.3rem 0.65rem !important;
-            }
-
-            /* Hide sidebar on mobile */
-            .designs-left-sidebar {
-                display: none !important;
-            }
-
-            /* Main content full width */
-            body.designs-page main {
-                margin-left: 0 !important;
-                width: 100% !important;
-                max-width: 100% !important;
-                padding-top: 5rem !important;
-            }
-
-            /* Carousel adjustments */
-            .designs-carousel {
-                padding: 0 0.5rem !important;
-            }
-
-            /* Contact/Aesthetic dropdowns */
-            .contact-dropdown {
-                position: fixed !important;
-                left: 0 !important;
-                top: auto !important;
-                bottom: 0 !important;
-                width: 100% !important;
-                height: auto !important;
-                max-height: 50vh !important;
-                transform: translateY(100%) !important;
-                flex-direction: row !important;
-                flex-wrap: wrap !important;
-                justify-content: center !important;
-                padding: 1rem !important;
-                background: rgba(0, 0, 0, 0.95) !important;
-            }
-
-            .contact-dropdown.active {
-                transform: translateY(0) !important;
-            }
-
-            .aesthetic-dropdown {
-                width: 100% !important;
-                justify-content: center !important;
-                margin-top: 0.5rem !important;
-            }
-
-            /* Service cards - 3 columns on mobile */
-            body.designs-page .hero-section-3 {
-                padding: 0.5rem 0.15rem !important;
-            }
-            body.designs-page .hero-section-3-container {
-                padding: 0.35rem 0.15rem !important;
-            }
-            body.designs-page .hero-section-3-cards {
-                grid-template-columns: repeat(3, 1fr) !important;
-                gap: 0.12rem !important;
-            }
-            body.designs-page .hero-section-3-card {
-                padding: 0.32rem 0.12rem !important;
-                border-radius: 2px !important;
-            }
-            body.designs-page .hero-section-3-icon {
-                font-size: 0.85rem !important;
-                margin-bottom: 0.25rem !important;
-            }
-            body.designs-page .hero-section-3-title {
-                font-size: 0.5rem !important;
-                margin: 0 0 0.2rem 0 !important;
-                letter-spacing: 0 !important;
-            }
-            body.designs-page .hero-section-3-desc {
-                font-size: 0.42rem !important;
-                line-height: 1.4 !important;
-                margin: 0 0 0.3rem 0 !important;
-            }
-            body.designs-page .hero-section-3-btn {
-                padding: 0.2rem 0.32rem !important;
-                font-size: 0.38rem !important;
-                letter-spacing: 0 !important;
-                border-width: 1px !important;
-            }
-        }
     </style>
 </head>
 <body class="dark-theme designs-page">
@@ -2229,7 +2043,7 @@
                         updateButtons(0, 0);
                         return;
                     }
-                    // Prefer tall portraits: height ~88vh, width from 3:4, then fit 3 across
+                    // Prefer tall portraits: height ~72vh, width from 3:4, then fit 3 across
                     const targetH = Math.min(window.innerHeight * 0.88, 1100);
                     const heightBasedW = targetH * 0.75; // 3:4 portrait
                     const widthBasedW = (vw - gap * (visible - 1)) / visible;
@@ -2299,10 +2113,6 @@
             }
 
             window.addEventListener('resize', recalcAll);
-            if (window.visualViewport) {
-                window.visualViewport.addEventListener('resize', recalcAll);
-                window.visualViewport.addEventListener('scroll', recalcAll);
-            }
             window.recalcDesignsCarousels = recalcAll;
 
             // Recalc after brightness sort reorders covers

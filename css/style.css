@@ -1000,16 +1000,16 @@ main {
 
 /* Services strip — match index.html compact size (53.6% ≈ 80% × 0.67) */
 .index-cards-footer-scale {
-    zoom: 1;
+    zoom: 53.6%;
     width: 100%;
 }
 
 @supports not (zoom: 1) {
     .index-cards-footer-scale {
         zoom: unset;
-        transform: none;
+        transform: scale(0.536);
         transform-origin: top center;
-        width: 100%;
+        width: calc(100% / 0.536);
         margin-left: auto;
         margin-right: auto;
     }
@@ -1017,13 +1017,13 @@ main {
 
 /* explore.html body is already 67% — compensate so services match index */
 .explore-page .index-cards-footer-scale {
-    zoom: 1;
+    zoom: calc(53.6% / 0.67);
 }
 
 @supports not (zoom: 1) {
     .explore-page .index-cards-footer-scale {
-        transform: none;
-        width: 100%;
+        transform: scale(calc(0.536 / 0.67));
+        width: calc(100% / (0.536 / 0.67));
     }
 }
 
@@ -1039,7 +1039,7 @@ body.designs-page .index-cards-footer-scale {
 
 @supports not (zoom: 1) {
     body.designs-page .index-cards-footer-scale {
-        width: calc(100% - var(--designs-sidebar-w));
+        width: calc((100% - var(--designs-sidebar-w)) / 0.536);
         margin-left: var(--designs-sidebar-w);
         margin-right: 0;
     }
@@ -1047,16 +1047,16 @@ body.designs-page .index-cards-footer-scale {
 
 /* Editorial multi-column footer — typography matches explore.html */
 .explore-footer-scale-wrap {
-    zoom: 1;
+    zoom: 67%;
     width: 100%;
 }
 
 @supports not (zoom: 1) {
     .explore-footer-scale-wrap {
         zoom: unset;
-        transform: none;
+        transform: scale(0.67);
         transform-origin: top center;
-        width: 100%;
+        width: calc(100% / 0.67);
         margin-left: auto;
         margin-right: auto;
     }
@@ -2749,232 +2749,4 @@ main {
 #product-price,
 .explore-product-price {
     display: none !important;
-}
-
-
-/* ZOOM LOCK: keep footers at full size (no artificial CSS zoom shrink) */
-.index-cards-footer-scale,
-.explore-footer-scale-wrap,
-.explore-page .index-cards-footer-scale,
-.explore-page .explore-footer-scale-wrap,
-body.designs-page .index-cards-footer-scale,
-body.designs-page .explore-footer-scale-wrap {
-    zoom: 1 !important;
-    transform: none !important;
-    width: 100% !important;
-    max-width: 100% !important;
-}
-@supports not (zoom: 1) {
-    .index-cards-footer-scale,
-    .explore-footer-scale-wrap,
-    .explore-page .index-cards-footer-scale,
-    .explore-page .explore-footer-scale-wrap,
-    body.designs-page .index-cards-footer-scale,
-    body.designs-page .explore-footer-scale-wrap {
-        zoom: unset !important;
-        transform: none !important;
-        width: 100% !important;
-    }
-}
-
-/* ========================================
-   MOBILE-ONLY FIXES (max-width: 768px)
-   Desktop layout at 1280px+ is unchanged.
-   ======================================== */
-
-@media (max-width: 768px) {
-    /* --------------------------------------------
-       1. COOKIE CONSENT BANNER - use site font
-       -------------------------------------------- */
-    .cookie-consent-banner {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif !important;
-        font-size: 0.82rem !important;
-        padding: 0.75rem 1rem !important;
-        padding-bottom: max(0.75rem, env(safe-area-inset-bottom, 0px)) !important;
-        gap: 0.75rem !important;
-        flex-direction: column !important;
-        align-items: stretch !important;
-    }
-
-    .cookie-consent-banner p {
-        font-size: 0.78rem !important;
-        line-height: 1.4 !important;
-        min-width: 0 !important;
-        text-align: center !important;
-    }
-
-    .cookie-consent-banner button {
-        width: 100% !important;
-        max-width: 200px !important;
-        margin: 0 auto !important;
-        padding: 0.6rem 1rem !important;
-        font-size: 0.85rem !important;
-    }
-
-    /* --------------------------------------------
-       2. X-LINE - just hide overflow on mobile
-       The x-line is decorative; hiding overflow is acceptable
-       -------------------------------------------- */
-    .x-line {
-        font-size: 0.28rem !important;
-        letter-spacing: 0 !important;
-        white-space: nowrap !important;
-        overflow: hidden !important;
-        max-width: 100vw !important;
-        width: 100% !important;
-        box-sizing: border-box !important;
-    }
-
-    /* --------------------------------------------
-       3. X-BORDERS - hide on mobile (cause overflow)
-       -------------------------------------------- */
-    .x-border,
-    .x-border-left,
-    .x-border-right {
-        display: none !important;
-    }
-}
-
-/* ========================================
-   COOKIE CONSENT - site font on ALL sizes
-   (fallback graceful if Inter unavailable)
-   ======================================== */
-.cookie-consent-banner {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-}
-
-.cookie-consent-banner p,
-.cookie-consent-banner button {
-    font-family: inherit;
-}
-
-/* ========================================
-   MOBILE FOOTER CLEANUP (max-width: 768px)
-   Phones only — desktop footer unchanged.
-   - Compact 2-column editorial layout instead of one very long stacked column
-   - Every column aligned to the same left edge (Newsletter was indented)
-   - Footer spans the full screen width on every page (designs / design-detail
-     / checkout pages had it inset with uneven side gaps)
-   ======================================== */
-@media (max-width: 768px) {
-    html body .explore-footer-scale-wrap {
-        padding: 0 !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-        width: 100% !important;
-        max-width: 100% !important;
-    }
-
-    html body .site-footer.explore-footer-editorial {
-        width: 100% !important;
-        max-width: 100% !important;
-        margin-left: 0 !important;
-        margin-right: 0 !important;
-        box-sizing: border-box;
-        font-size: 0.8rem;
-        overflow-x: hidden;
-    }
-
-    html body .site-footer.explore-footer-editorial .explore-footer-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    html body .site-footer.explore-footer-editorial .explore-footer-col,
-    html body .site-footer.explore-footer-editorial .explore-footer-grid > .explore-footer-col:first-child {
-        padding: 1.35rem 1.25rem 1.4rem !important;
-        border-right-width: 0;
-        border-bottom-width: 1px;
-        border-bottom-style: solid;
-    }
-
-    /* Newsletter, Follow us, Contact us: full width rows */
-    html body .site-footer.explore-footer-editorial .explore-footer-col:nth-child(1),
-    html body .site-footer.explore-footer-editorial .explore-footer-col:nth-child(4),
-    html body .site-footer.explore-footer-editorial .explore-footer-col:nth-child(5) {
-        grid-column: 1 / -1;
-    }
-
-    /* Client services | The company side by side with a thin divider */
-    html body .site-footer.explore-footer-editorial .explore-footer-col:nth-child(2) {
-        border-right-width: 1px;
-        border-right-style: solid;
-        border-right-color: rgba(255, 255, 255, 0.12);
-        padding-right: 0.85rem !important;
-    }
-
-    html body .site-footer.explore-footer-editorial.explore-footer-theme-light .explore-footer-col:nth-child(2) {
-        border-right-color: #e5e5e5;
-    }
-
-    html body .site-footer.explore-footer-editorial.explore-footer-theme-classic .explore-footer-col:nth-child(2) {
-        border-right-color: var(--color-gray);
-    }
-
-    html body.news-page .site-footer.explore-footer-editorial .explore-footer-col:nth-child(2) {
-        border-right-color: #111;
-    }
-
-    html body.about-page .site-footer.explore-footer-editorial .explore-footer-col:nth-child(2),
-    html body.explore-page .site-footer.explore-footer-editorial .explore-footer-col:nth-child(2) {
-        border-right-color: rgba(0, 0, 0, 0.28);
-    }
-
-    html body .site-footer.explore-footer-editorial .explore-footer-col:nth-child(3) {
-        padding-left: 1rem !important;
-    }
-
-    html body .site-footer.explore-footer-editorial .explore-footer-col:last-child {
-        border-bottom-width: 0;
-    }
-
-    html body .site-footer.explore-footer-editorial .explore-footer-heading {
-        margin-bottom: 0.7rem;
-        font-size: 0.72rem;
-    }
-
-    html body .site-footer.explore-footer-editorial .explore-footer-list li {
-        margin-bottom: 0.5rem;
-    }
-
-    html body .site-footer.explore-footer-editorial .explore-footer-note {
-        margin-bottom: 0.6rem;
-    }
-
-    /* Follow us: one wrapped row of social links instead of a tall list */
-    html body .site-footer.explore-footer-editorial .explore-footer-col:nth-child(4) .explore-footer-list {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.5rem 1.35rem;
-    }
-
-    html body .site-footer.explore-footer-editorial .explore-footer-col:nth-child(4) .explore-footer-list li {
-        margin: 0;
-    }
-
-    /* Contact us: tidy subheads */
-    html body .site-footer.explore-footer-editorial .explore-footer-subhead {
-        margin: 0.9rem 0 0.25rem;
-        font-size: 0.7rem;
-    }
-
-    html body .site-footer.explore-footer-editorial .explore-footer-col:nth-child(5) .explore-footer-note:last-child {
-        margin-bottom: 0;
-    }
-
-    html body .site-footer.explore-footer-editorial .explore-footer-bottom {
-        padding: 1rem 1.25rem 1.25rem;
-        padding-bottom: max(1.25rem, env(safe-area-inset-bottom, 0px));
-        font-size: 0.68rem;
-    }
-
-    /* Gray footers (about / explore): softer dividers instead of heavy black rules */
-    .about-page .site-footer.explore-footer-editorial .explore-footer-col,
-    .explore-page .site-footer.explore-footer-editorial .explore-footer-col {
-        border-color: rgba(0, 0, 0, 0.28);
-    }
-
-    .about-page .site-footer.explore-footer-editorial .explore-footer-bottom,
-    .explore-page .site-footer.explore-footer-editorial .explore-footer-bottom {
-        border-top-color: rgba(0, 0, 0, 0.28);
-    }
 }
