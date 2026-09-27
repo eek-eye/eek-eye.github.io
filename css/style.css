@@ -1000,16 +1000,16 @@ main {
 
 /* Services strip — match index.html compact size (53.6% ≈ 80% × 0.67) */
 .index-cards-footer-scale {
-    zoom: 1;
+    zoom: 53.6%;
     width: 100%;
 }
 
 @supports not (zoom: 1) {
     .index-cards-footer-scale {
         zoom: unset;
-        transform: none;
+        transform: scale(0.536);
         transform-origin: top center;
-        width: 100%;
+        width: calc(100% / 0.536);
         margin-left: auto;
         margin-right: auto;
     }
@@ -1017,13 +1017,13 @@ main {
 
 /* explore.html body is already 67% — compensate so services match index */
 .explore-page .index-cards-footer-scale {
-    zoom: 1;
+    zoom: calc(53.6% / 0.67);
 }
 
 @supports not (zoom: 1) {
     .explore-page .index-cards-footer-scale {
-        transform: none;
-        width: 100%;
+        transform: scale(calc(0.536 / 0.67));
+        width: calc(100% / (0.536 / 0.67));
     }
 }
 
@@ -1039,7 +1039,7 @@ body.designs-page .index-cards-footer-scale {
 
 @supports not (zoom: 1) {
     body.designs-page .index-cards-footer-scale {
-        width: calc(100% - var(--designs-sidebar-w));
+        width: calc((100% - var(--designs-sidebar-w)) / 0.536);
         margin-left: var(--designs-sidebar-w);
         margin-right: 0;
     }
@@ -1047,16 +1047,16 @@ body.designs-page .index-cards-footer-scale {
 
 /* Editorial multi-column footer — typography matches explore.html */
 .explore-footer-scale-wrap {
-    zoom: 1;
+    zoom: 67%;
     width: 100%;
 }
 
 @supports not (zoom: 1) {
     .explore-footer-scale-wrap {
         zoom: unset;
-        transform: none;
+        transform: scale(0.67);
         transform-origin: top center;
-        width: 100%;
+        width: calc(100% / 0.67);
         margin-left: auto;
         margin-right: auto;
     }
@@ -2751,35 +2751,9 @@ main {
     display: none !important;
 }
 
-
-/* ZOOM LOCK: keep footers at full size (no artificial CSS zoom shrink) */
-.index-cards-footer-scale,
-.explore-footer-scale-wrap,
-.explore-page .index-cards-footer-scale,
-.explore-page .explore-footer-scale-wrap,
-body.designs-page .index-cards-footer-scale,
-body.designs-page .explore-footer-scale-wrap {
-    zoom: 1 !important;
-    transform: none !important;
-    width: 100% !important;
-    max-width: 100% !important;
-}
-@supports not (zoom: 1) {
-    .index-cards-footer-scale,
-    .explore-footer-scale-wrap,
-    .explore-page .index-cards-footer-scale,
-    .explore-page .explore-footer-scale-wrap,
-    body.designs-page .index-cards-footer-scale,
-    body.designs-page .explore-footer-scale-wrap {
-        zoom: unset !important;
-        transform: none !important;
-        width: 100% !important;
-    }
-}
-
 /* ========================================
    MOBILE-ONLY FIXES (max-width: 768px)
-   Desktop layout at 1280px+ is unchanged.
+   Desktop layout (anything wider than 768px) is unchanged.
    ======================================== */
 
 @media (max-width: 768px) {
@@ -2836,16 +2810,14 @@ body.designs-page .explore-footer-scale-wrap {
 }
 
 /* ========================================
-   COOKIE CONSENT - site font on ALL sizes
-   (fallback graceful if Inter unavailable)
+   COOKIE CONSENT - site font on PHONES ONLY
+   Desktop (>768px) keeps its original banner font.
    ======================================== */
-.cookie-consent-banner {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-}
-
-.cookie-consent-banner p,
-.cookie-consent-banner button {
-    font-family: inherit;
+@media (max-width: 768px) {
+    .cookie-consent-banner p,
+    .cookie-consent-banner button {
+        font-family: inherit;
+    }
 }
 
 /* ========================================
@@ -2976,5 +2948,24 @@ body.designs-page .explore-footer-scale-wrap {
     .about-page .site-footer.explore-footer-editorial .explore-footer-bottom,
     .explore-page .site-footer.explore-footer-editorial .explore-footer-bottom {
         border-top-color: rgba(0, 0, 0, 0.28);
+    }
+}
+
+/* ========================================
+   PHONE PARITY (max-width: 768px)
+   Phones keep full-size footers / services strip (the desktop 67% / 53.6%
+   compositions stay desktop-only).
+   ======================================== */
+@media (max-width: 768px) {
+    .index-cards-footer-scale,
+    .explore-footer-scale-wrap,
+    .explore-page .index-cards-footer-scale,
+    .explore-page .explore-footer-scale-wrap,
+    body.designs-page .index-cards-footer-scale,
+    body.designs-page .explore-footer-scale-wrap {
+        zoom: 1 !important;
+        transform: none !important;
+        width: 100% !important;
+        max-width: 100% !important;
     }
 }

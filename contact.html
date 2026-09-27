@@ -1,11 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script>
-/* zoom pin boot — blocks Ctrl+scroll immediately */
-(function(){function b(e){if(e.ctrlKey||e.metaKey){e.preventDefault();e.stopPropagation();}}window.addEventListener("wheel",b,{passive:false,capture:true});document.addEventListener("wheel",b,{passive:false,capture:true});})();
-</script>
-    <script src="js/zoom-lock.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact - Eeks-Eye</title>
@@ -377,6 +372,10 @@
         .menu-copyright p {
             margin: 0;
         }
+    </style>
+    <style id="phone-only-fixes" media="(max-width: 768px)">
+        /* PHONES ONLY (max-width: 768px). Desktop never applies these rules:
+           the <style media> attribute and every @media block limit them to phones. */
         /* Phones: stack contact card and form (side-by-side grid overflowed the screen) */
         @media (max-width: 768px) {
             .contact-container {

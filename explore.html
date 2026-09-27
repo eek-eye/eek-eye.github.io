@@ -1,11 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script>
-/* zoom pin boot — blocks Ctrl+scroll immediately (desktop only) */
-(function(){if(('ontouchstart' in window||navigator.maxTouchPoints>0)&&(window.innerWidth<=768||/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)))return;function b(e){if(e.ctrlKey||e.metaKey){e.preventDefault();e.stopPropagation();}}window.addEventListener("wheel",b,{passive:false,capture:true});document.addEventListener("wheel",b,{passive:false,capture:true});})();
-</script>
-    <script src="js/zoom-lock.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Explore - Eeks-Eye</title>
@@ -43,10 +38,32 @@
             z-index: 1;
         }
 
-        /* Full size — zoom-lock.js keeps visual size stable under Ctrl+/- zoom */
+        /*
+         * Explore default scale: match ~67% browser zoom at 100% for chrome (nav, buttons, cards, footer).
+         * Shirt grid (#exploreProducts) is counter-scaled so product heroes stay unchanged.
+         */
         body.explore-page {
-            zoom: 1;
-            transform: none;
+            zoom: 67%;
+            transform: none; /* do not stack with style.css body { transform: scale(1) } */
+        }
+        body.explore-page #exploreProducts {
+            zoom: calc(100% / 0.67);
+        }
+        @supports not (zoom: 1) {
+            body.explore-page {
+                zoom: unset;
+                transform: scale(0.67);
+                transform-origin: top center;
+                width: calc(100% / 0.67);
+                min-height: calc(100vh / 0.67);
+                margin-left: auto;
+                margin-right: auto;
+            }
+            body.explore-page #exploreProducts {
+                zoom: unset;
+                transform: scale(calc(1 / 0.67));
+                transform-origin: top center;
+            }
         }
 
         .dropdown-menu.active {
@@ -576,39 +593,8 @@
         }
 
         @media (max-width: 768px) {
-            .hero-section-3 {
-                padding: 0.5rem 0.15rem !important;
-            }
-            .hero-section-3-container {
-                padding: 0.35rem 0.15rem !important;
-            }
             .hero-section-3-cards {
-                grid-template-columns: repeat(3, 1fr) !important;
-                gap: 0.12rem !important;
-            }
-            .hero-section-3-card {
-                padding: 0.32rem 0.12rem !important;
-                border-radius: 2px !important;
-            }
-            .hero-section-3-icon {
-                font-size: 0.85rem !important;
-                margin-bottom: 0.25rem !important;
-            }
-            .hero-section-3-title {
-                font-size: 0.5rem !important;
-                margin: 0 0 0.2rem 0 !important;
-                letter-spacing: 0 !important;
-            }
-            .hero-section-3-desc {
-                font-size: 0.42rem !important;
-                line-height: 1.4 !important;
-                margin: 0 0 0.3rem 0 !important;
-            }
-            .hero-section-3-btn {
-                padding: 0.2rem 0.32rem !important;
-                font-size: 0.38rem !important;
-                letter-spacing: 0 !important;
-                border-width: 1px !important;
+                grid-template-columns: 1fr;
             }
         }
 
@@ -798,6 +784,10 @@
             box-shadow: none;
         }
 
+    </style>
+    <style id="phone-only-fixes" media="(max-width: 768px)">
+        /* PHONES ONLY (max-width: 768px). Desktop never applies these rules:
+           the <style media> attribute and every @media block limit them to phones. */
         /* ========================================
            MOBILE-ONLY FIXES (max-width: 768px)
            Desktop layout at 1280px+ is unchanged.
@@ -937,7 +927,19 @@
                 font-size: 0.9rem !important;
             }
         }
-
+        /* Phone parity: phones render explore at full size (no 67% desktop composition) */
+        @media (max-width: 768px) {
+            body.explore-page {
+                zoom: 1 !important;
+                transform: none !important;
+                width: auto !important;
+                min-height: 0 !important;
+            }
+            body.explore-page #exploreProducts {
+                zoom: 1 !important;
+                transform: none !important;
+            }
+        }
     </style>
 </head>
 <body class="dark-theme explore-page">

@@ -1,11 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script>
-/* zoom pin boot — blocks Ctrl+scroll immediately (desktop only) */
-(function(){if(('ontouchstart' in window||navigator.maxTouchPoints>0)&&(window.innerWidth<=768||/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)))return;function b(e){if(e.ctrlKey||e.metaKey){e.preventDefault();e.stopPropagation();}}window.addEventListener("wheel",b,{passive:false,capture:true});document.addEventListener("wheel",b,{passive:false,capture:true});})();
-</script>
-    <script src="js/zoom-lock.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EeksEye Official Store | Custom Dice, Digital Tools & TTRPG Designs</title>
@@ -887,35 +882,33 @@
             min-height: 100vh;
         }
 
-        /* Edge vignette: keeps center (figure) slightly lifted vs pure black void */
+        /* Black overlay on hero section 1 */
         body.dark-theme .hero-section::before {
             content: '';
             position: absolute;
             inset: 0;
             z-index: 2;
             pointer-events: none;
-            background:
-                radial-gradient(ellipse 70% 60% at 50% 50%, transparent 0%, transparent 42%, rgba(0, 0, 0, 0.55) 100%),
-                linear-gradient(to bottom, rgba(0, 0, 0, 0.4) 0%, transparent 18%, transparent 82%, rgba(0, 0, 0, 0.55) 100%);
+            background: rgba(0, 0, 0, 0.55);
         }
         /*
          * Global style.css adds .hero-section::after (z-index:2, mix-blend overlay).
-         * It stacks above the scale-root (z-index auto), so it sat on top of the whole hero.
+         * Keep it off so only the black overlay above is used.
          */
         .hero-section::after {
             display: none;
         }
         /*
-         * Hero content full size (zoom locked). Large black field,
+         * Hero content at ~25% browser-zoom composition at 100% zoom: large black field,
          * small centered cluster (matches Ctrl/Cmd minus until ~25% on hero only).
          */
         .hero-section-scale-root {
             position: absolute;
             left: 50%;
             top: 50%;
-            width: 100%;
-            height: 100%;
-            transform: translate(-50%, -50%);
+            width: 400%;
+            height: 400%;
+            transform: translate(-50%, -50%) scale(0.25);
             transform-origin: center center;
             pointer-events: auto;
             z-index: 1;
@@ -1041,39 +1034,8 @@
         }
 
         @media (max-width: 768px) {
-            .hero-section-3 {
-                padding: 0.5rem 0.15rem !important;
-            }
-            .hero-section-3-container {
-                padding: 0.35rem 0.15rem !important;
-            }
             .hero-section-3-cards {
-                grid-template-columns: repeat(3, 1fr) !important;
-                gap: 0.12rem !important;
-            }
-            .hero-section-3-card {
-                padding: 0.32rem 0.12rem !important;
-                border-radius: 2px !important;
-            }
-            .hero-section-3-icon {
-                font-size: 0.85rem !important;
-                margin-bottom: 0.25rem !important;
-            }
-            .hero-section-3-title {
-                font-size: 0.5rem !important;
-                margin: 0 0 0.2rem 0 !important;
-                letter-spacing: 0 !important;
-            }
-            .hero-section-3-desc {
-                font-size: 0.42rem !important;
-                line-height: 1.4 !important;
-                margin: 0 0 0.3rem 0 !important;
-            }
-            .hero-section-3-btn {
-                padding: 0.2rem 0.32rem !important;
-                font-size: 0.38rem !important;
-                letter-spacing: 0 !important;
-                border-width: 1px !important;
+                grid-template-columns: 1fr;
             }
         }
         
@@ -1751,15 +1713,7 @@
         }
 
         .hero-section::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 2;
-            mix-blend-mode: normal;
+            display: none;
         }
 
         /* Moving sign (marquee) - hero section top/bottom */
@@ -2209,7 +2163,10 @@
             font-size: 0.75rem;
             margin-top: 0.25rem;
         }
-
+    </style>
+    <style id="phone-only-fixes" media="(max-width: 768px)">
+        /* PHONES ONLY (max-width: 768px). Desktop never applies these rules:
+           the <style media> attribute and every @media block limit them to phones. */
         /* ========================================
            MOBILE-ONLY FIXES (max-width: 768px)
            Desktop layout at 1280px+ is unchanged.
@@ -2394,6 +2351,14 @@
                 margin-top: 0.5rem !important;
                 flex-wrap: wrap !important;
                 justify-content: center !important;
+            }
+        }
+        /* Phone parity: phones keep the full-size hero composition the phone fixes were tuned for */
+        @media (max-width: 768px) {
+            .hero-section-scale-root {
+                width: 100% !important;
+                height: 100% !important;
+                transform: translate(-50%, -50%) !important;
             }
         }
     </style>

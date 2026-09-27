@@ -1,11 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script>
-/* zoom pin boot — blocks Ctrl+scroll immediately */
-(function(){function b(e){if(e.ctrlKey||e.metaKey){e.preventDefault();e.stopPropagation();}}window.addEventListener("wheel",b,{passive:false,capture:true});document.addEventListener("wheel",b,{passive:false,capture:true});})();
-</script>
-    <script src="js/zoom-lock.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>About - Eeks-Eye</title>
@@ -472,39 +467,8 @@
         }
 
         @media (max-width: 768px) {
-            .about-page .hero-section-3 {
-                padding: 0.5rem 0.15rem !important;
-            }
-            .about-page .hero-section-3-container {
-                padding: 0.35rem 0.15rem !important;
-            }
             .about-page .hero-section-3-cards {
-                grid-template-columns: repeat(3, 1fr) !important;
-                gap: 0.12rem !important;
-            }
-            .about-page .hero-section-3-card {
-                padding: 0.32rem 0.12rem !important;
-                border-radius: 2px !important;
-            }
-            .about-page .hero-section-3-icon {
-                font-size: 0.85rem !important;
-                margin-bottom: 0.25rem !important;
-            }
-            .about-page .hero-section-3-title {
-                font-size: 0.5rem !important;
-                margin: 0 0 0.2rem 0 !important;
-                letter-spacing: 0 !important;
-            }
-            .about-page .hero-section-3-desc {
-                font-size: 0.42rem !important;
-                line-height: 1.4 !important;
-                margin: 0 0 0.3rem 0 !important;
-            }
-            .about-page .hero-section-3-btn {
-                padding: 0.2rem 0.32rem !important;
-                font-size: 0.38rem !important;
-                letter-spacing: 0 !important;
-                border-width: 1px !important;
+                grid-template-columns: 1fr;
             }
         }
 
@@ -570,6 +534,46 @@
 
         .slider-nav.next {
             right: 20px;
+        }
+    </style>
+    <style id="phone-only-fixes" media="(max-width: 768px)">
+        /* PHONES ONLY (max-width: 768px). Desktop never applies these rules:
+           the <style media> attribute and every @media block limit them to phones. */
+        @media (max-width: 768px) {
+            .about-page .hero-section-3 {
+                padding: 0.5rem 0.15rem !important;
+            }
+            .about-page .hero-section-3-container {
+                padding: 0.35rem 0.15rem !important;
+            }
+            .about-page .hero-section-3-cards {
+                grid-template-columns: repeat(3, 1fr) !important;
+                gap: 0.12rem !important;
+            }
+            .about-page .hero-section-3-card {
+                padding: 0.32rem 0.12rem !important;
+                border-radius: 2px !important;
+            }
+            .about-page .hero-section-3-icon {
+                font-size: 0.85rem !important;
+                margin-bottom: 0.25rem !important;
+            }
+            .about-page .hero-section-3-title {
+                font-size: 0.5rem !important;
+                margin: 0 0 0.2rem 0 !important;
+                letter-spacing: 0 !important;
+            }
+            .about-page .hero-section-3-desc {
+                font-size: 0.42rem !important;
+                line-height: 1.4 !important;
+                margin: 0 0 0.3rem 0 !important;
+            }
+            .about-page .hero-section-3-btn {
+                padding: 0.2rem 0.32rem !important;
+                font-size: 0.38rem !important;
+                letter-spacing: 0 !important;
+                border-width: 1px !important;
+            }
         }
     </style>
 </head>
