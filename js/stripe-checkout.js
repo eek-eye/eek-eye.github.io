@@ -1,12 +1,8 @@
 /**
- * Stripe checkout client — call serverless API or open a Payment Link.
+ * Stripe checkout client — open the product's Payment Link.
  */
 (function () {
     'use strict';
-
-    function getConfig() {
-        return window.EeksStripeConfig || {};
-    }
 
     function getProduct(productId) {
         var id = parseInt(productId, 10);
@@ -38,6 +34,10 @@
         }
     }
 
+    function paymentLinkFor(product) {
+        return (product && product.stripePaymentLink) ? String(product.stripePaymentLink).trim() : '';
+    }
+
     async function runCheckout(productId, buttonEl, customerEmail) {
         var product = getProduct(productId);
         if (!product) {
@@ -45,51 +45,17 @@
             return;
         }
 
-        if (product.stripePaymentLink) {
-            var link = product.stripePaymentLink;
-            if (customerEmail && link.indexOf('prefilled_email') === -1) {
-                link += (link.indexOf('?') >= 0 ? '&' : '?') + 'prefilled_email=' + encodeURIComponent(customerEmail);
-            }
-            window.location.href = link;
+        var link = paymentLinkFor(product);
+        if (!link) {
+            showError('Checkout is not available for this product yet.');
             return;
         }
 
-        var config = getConfig();
-        var apiUrl = config.checkoutApiUrl;
-        if (!apiUrl) {
-            showError('Stripe checkout is not configured yet. Add your API URL in js/stripe-config.js.');
-            return;
+        if (customerEmail && link.indexOf('prefilled_email') === -1) {
+            link += (link.indexOf('?') >= 0 ? '&' : '?') + 'prefilled_email=' + encodeURIComponent(customerEmail);
         }
-
         setButtonState(buttonEl, 'loading');
-
-        try {
-            var payload = { productId: String(productId) };
-            if (customerEmail) payload.customerEmail = customerEmail;
-            var res = await fetch(apiUrl, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-
-            var data = await res.json().catch(function () {
-                return {};
-            });
-
-            if (!res.ok) {
-                throw new Error(data.error || 'Could not start checkout.');
-            }
-
-            if (data.url) {
-                window.location.href = data.url;
-                return;
-            }
-
-            throw new Error('Checkout URL missing from server response.');
-        } catch (err) {
-            setButtonState(buttonEl, 'idle');
-            showError(err.message || 'Checkout failed. Please try again.');
-        }
+        window.location.href = link;
     }
 
     async function startCheckout(productId, buttonEl) {

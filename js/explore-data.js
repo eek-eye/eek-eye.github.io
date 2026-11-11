@@ -22,7 +22,7 @@ window.EXPLORE_PRODUCTS = {
     image: "eekseye.png/I 伊克西 I I eeks eye I I 2026.png",
     modelImage: "Product-Models/Model-XI.jpg",
     description: "EEKSEYE | Yīkèxī Collection oversized T-shirt in black.",
-    stripePaymentLink: "https://buy.stripe.com/test_eVq28ra9y1Xd0Df3li9MY01",
+    stripePaymentLink: "https://buy.stripe.com/28E6oA8JT5LJbSTeIjeQM01",
     purchaseUrl: "https://fuchendeonze.wixsite.com/my-site-2"
   },
   2: {
@@ -33,7 +33,7 @@ window.EXPLORE_PRODUCTS = {
     image: "eekseye.png/I 满月 I eekseye I 2026.png",
     modelImage: null,
     description: "Exclusive design from the Eeks Eye collection — contemporary art and fashion.",
-    stripePaymentLink: "",
+    stripePaymentLink: "https://buy.stripe.com/8x26oA8JT1vt5uvas3eQM02",
     purchaseUrl: "https://fuchendeonze.wixsite.com/my-site-2"
   },
   3: {
@@ -44,7 +44,7 @@ window.EXPLORE_PRODUCTS = {
     image: "eekseye.png/I 多重人格 I eekseye I 2026.png",
     modelImage: null,
     description: "Exclusive design from the Eeks Eye collection — contemporary art and fashion.",
-    stripePaymentLink: "",
+    stripePaymentLink: "https://buy.stripe.com/9B64gse4d6PNg990RteQM03",
     purchaseUrl: "https://fuchendeonze.wixsite.com/my-site-2"
   },
   4: {
@@ -55,7 +55,7 @@ window.EXPLORE_PRODUCTS = {
     image: "eekseye.png/I メタ I eekseye I I 2026.png",
     modelImage: null,
     description: "Eeks Eye signature design — oversized T-shirt in premium dry jersey.",
-    stripePaymentLink: "",
+    stripePaymentLink: "https://buy.stripe.com/dRmbIUd09b637CD8jVeQM04",
     purchaseUrl: "https://fuchendeonze.wixsite.com/my-site-2"
   },
   5: {
@@ -66,7 +66,7 @@ window.EXPLORE_PRODUCTS = {
     image: "eekseye.png/I 冷笑主義 I eekseye I 2029.png",
     modelImage: null,
     description: "Eeks Eye collection — future-facing graphic capturing the cold smile ideology of 2029.",
-    stripePaymentLink: "",
+    stripePaymentLink: "https://buy.stripe.com/00weV60dngqng9943FeQM05",
     purchaseUrl: "https://fuchendeonze.wixsite.com/my-site-2"
   },
   6: {
@@ -80,19 +80,9 @@ window.EXPLORE_PRODUCTS = {
       "eekseye.png/I y I eekseye I I 2026.png"
     ],
     modelImage: null,
+    designs: ["x", "y"],
     description: "Exclusive design from the Eeks Eye collection — contemporary art and fashion.",
-    stripePaymentLink: "",
-    purchaseUrl: "https://fuchendeonze.wixsite.com/my-site-2"
-  },
-  7: {
-    id: 7,
-    title: "I x I eekseye I 2026 · I y I eekseye I 2026",
-    category: "Runway",
-    price: 350,
-    image: "eekseye.png/I y I eekseye I I 2026.png",
-    modelImage: null,
-    description: "Exclusive design from the Eeks Eye collection — contemporary art and fashion.",
-    stripePaymentLink: "",
+    stripePaymentLink: "https://buy.stripe.com/fZu14g2lva1ZbSTcAbeQM06",
     purchaseUrl: "https://fuchendeonze.wixsite.com/my-site-2"
   }
 };

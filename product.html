@@ -457,10 +457,10 @@
                 <div class="product-price" id="product-price" data-price=""></div>
                 <div class="product-description" id="product-description"></div>
                 <div class="product-actions">
-                <button type="button" class="checkout-button" id="add-to-cart-btn">Add to cart</button>
+                <button type="button" class="checkout-button" id="buy-now-btn">Buy now</button>
                 </div>
-                <p id="add-to-cart-status" class="checkout-note" hidden></p>
-                <p class="checkout-note">Add to cart, then checkout from Cart — Stripe accepts card, Apple Pay, and more.</p>
+                <p id="buy-now-status" class="checkout-note" hidden></p>
+                <p class="checkout-note" id="checkout-size-note">Sizes S–XL are chosen at checkout. Stripe accepts card, Apple Pay, and more.</p>
                 <a href="#" class="find-in-store">Find in store</a>
                 <hr class="divider">
                 <div class="accordion">
@@ -473,7 +473,7 @@
                     <details>
                         <summary>Size &amp; fit</summary>
                         <div class="accordion-content">
-                            This style fits oversized. For a closer fit, consider sizing down.
+                            Sizes S, M, L, and XL are chosen at checkout. This style fits oversized. For a closer fit, consider sizing down.
                         </div>
                     </details>
                     <details>
@@ -537,6 +537,12 @@
             var params = new URLSearchParams(window.location.search);
             var rawId = params.get('id') || '1';
             var id = parseInt(rawId, 10);
+            if (id === 7) {
+                id = 6;
+                if (window.history && window.history.replaceState) {
+                    window.history.replaceState({}, '', 'product.html?id=6' + (window.location.hash || ''));
+                }
+            }
             if (!id || !window.EXPLORE_PRODUCTS || !window.EXPLORE_PRODUCTS[id]) {
                 id = 1;
             }
@@ -615,6 +621,15 @@
                 applyGalleryIndex();
             }
 
+            var sizeNote = document.getElementById('checkout-size-note');
+            if (sizeNote) {
+                if (product.designs && product.designs.length) {
+                    sizeNote.textContent = 'Sizes S–XL and design (x or y) are chosen at checkout. Stripe accepts card, Apple Pay, and more.';
+                } else {
+                    sizeNote.textContent = 'Sizes S–XL are chosen at checkout. Stripe accepts card, Apple Pay, and more.';
+                }
+            }
+
             if (typeof window.EeksConvertPrices === 'function') {
                 window.EeksConvertPrices();
             }
@@ -625,21 +640,14 @@
             var params = new URLSearchParams(window.location.search);
             var rawId = params.get('id') || '1';
             var id = parseInt(rawId, 10) || 1;
-            var addBtn = document.getElementById('add-to-cart-btn');
-            var addStatus = document.getElementById('add-to-cart-status');
-            if (addBtn && window.EeksCart) {
-                addBtn.addEventListener('click', function () {
-                    var result = window.EeksCart.addItem(id, 1);
-                    if (addStatus) {
-                        addStatus.hidden = false;
-                        addStatus.textContent = result && result.ok ? 'Added to cart.' : 'Could not add to cart.';
-                    }
-                    if (window.EeksProfilePanel) {
-                        if (window.EeksProfilePanel.refresh) window.EeksProfilePanel.refresh();
-                        if (result && result.ok && window.EeksProfilePanel.open) {
-                            window.EeksProfilePanel.open();
-                        }
-                    }
+            if (id === 7) id = 6;
+            var buyBtn = document.getElementById('buy-now-btn');
+            if (buyBtn && window.EeksStripeCheckout && window.EeksStripeCheckout.bindPurchaseButton) {
+                window.EeksStripeCheckout.bindPurchaseButton(buyBtn, id);
+            } else if (buyBtn && window.EeksStripeCheckout && window.EeksStripeCheckout.startCheckout) {
+                buyBtn.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    window.EeksStripeCheckout.startCheckout(id, buyBtn);
                 });
             }
         });
