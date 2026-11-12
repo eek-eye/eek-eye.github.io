@@ -119,7 +119,7 @@ export function packingSlipHtml(order, env = {}, opts = {}) {
       flex-direction: column;
     }
     header { border-bottom: 3px solid #000; padding-bottom: 6px; margin-bottom: 8px; }
-    .brand { font-size: 15px; font-weight: 800; letter-spacing: 0.22em; }
+    .brand { font-size: 15px; font-weight: 800; letter-spacing: 0; }
     .num { font-size: 12px; font-weight: 600; letter-spacing: 0.02em; margin-top: 3px; }
     .num .lbl { font-weight: 400; color: #444; }
     .banner { margin: 0 0 8px; padding: 4px 6px; border: 2px solid #000; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; text-align: center; }
