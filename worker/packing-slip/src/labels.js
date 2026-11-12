@@ -7,6 +7,9 @@
  *   FEDEX_CLIENT_ID, FEDEX_CLIENT_SECRET, FEDEX_ACCOUNT_NUMBER,
  *   FEDEX_BASE_URL (https://apis-sandbox.fedex.com then https://apis.fedex.com)
  * plus ship-from vars already on the Worker.
+ *
+ * Labels should be requested as LABEL_STOCK_4X6 (PNG or PDF) so the packing-slip
+ * HTML can print the label on its own 4x6 page after a page break.
  */
 export async function createShippingLabel(env, order) {
   if (!env.FEDEX_CLIENT_ID || !env.FEDEX_CLIENT_SECRET || !env.FEDEX_ACCOUNT_NUMBER) {

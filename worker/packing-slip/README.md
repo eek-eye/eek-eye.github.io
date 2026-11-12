@@ -14,7 +14,7 @@ Stripe webhook id: `we_1UalNy2X7APw4VwXr4LObWzz` (event: `checkout.session.compl
 - Shirt name, size, and design (x/y when that shirt has it)
 - Customer name, shipping address, phone, email
 - Amount and the date/time in America/Los_Angeles
-- A print-ready HTML slip (print the email, or open the signed link)
+- A print-ready 4x6 packing slip for a thermal label printer (print the email, or open the signed link). A FedEx 4x6 label, when present, prints on the next page.
 - A placeholder for a FedEx label, filled in later when Ship API credentials are set
 
 ## Email path

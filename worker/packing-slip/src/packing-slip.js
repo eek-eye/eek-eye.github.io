@@ -19,7 +19,6 @@ export function formatDate(ms, timeZone = "America/Los_Angeles") {
   const d = new Date(ms);
   const fmt = new Intl.DateTimeFormat("en-US", {
     timeZone,
-    weekday: "short",
     month: "short",
     day: "numeric",
     year: "numeric",
@@ -30,31 +29,50 @@ export function formatDate(ms, timeZone = "America/Los_Angeles") {
   return fmt.format(d);
 }
 
-function addressBlock(c) {
-  const lines = [c.name, c.line1, c.line2, [c.city, c.state, c.postalCode].filter(Boolean).join(", "), c.country]
+function addressLines(c) {
+  return [c.name, c.line1, c.line2, [c.city, c.state, c.postalCode].filter(Boolean).join(", "), c.country]
     .map((x) => String(x || "").trim())
     .filter(Boolean);
-  return lines.map(escapeHtml).join("<br>");
 }
 
-function shipFrom(env) {
-  return {
-    name: env.SHIP_FROM_NAME || "EEKSEYE",
-    line1: env.SHIP_FROM_LINE1 || "",
-    line2: "",
-    city: env.SHIP_FROM_CITY || "",
-    state: env.SHIP_FROM_STATE || "",
-    postalCode: env.SHIP_FROM_POSTAL || "",
-    country: env.SHIP_FROM_COUNTRY || "US",
-    phone: env.SHIP_FROM_PHONE || ""
-  };
+function labelImageSrc(label) {
+  if (!label) return "";
+  if (label.imageUrl) return label.imageUrl;
+  const png = label.pngBase64 || label.imagePngBase64 || label.pdfBase64;
+  if (!png) return "";
+  if (String(png).startsWith("data:")) return png;
+  if (label.pdfBase64 && !label.pngBase64 && !label.imagePngBase64) {
+    return `data:application/pdf;base64,${label.pdfBase64}`;
+  }
+  return `data:image/png;base64,${png}`;
+}
+
+function isPdfLabel(label, src) {
+  return Boolean(label && (label.pdfBase64 && !label.pngBase64 && !label.imagePngBase64 && !label.imageUrl)) ||
+    String(src).startsWith("data:application/pdf");
+}
+
+function labelPage(order) {
+  const label = order.label;
+  if (!label) return "";
+  const src = labelImageSrc(label);
+  if (!src) return "";
+  const tracking = label.trackingNumber
+    ? `<div class="label-tracking">${escapeHtml(label.provider || "FedEx")} ${escapeHtml(label.trackingNumber)}</div>`
+    : "";
+  const media = isPdfLabel(label, src)
+    ? `<embed class="label-art" src="${escapeHtml(src)}" type="application/pdf">`
+    : `<img class="label-art" src="${escapeHtml(src)}" alt="Shipping label">`;
+  return `<section class="label-page">${media}${tracking}</section>`;
 }
 
 export function packingSlipHtml(order, env = {}, opts = {}) {
   const brand = env.BRAND_NAME || "EEKSEYE";
-  const from = shipFrom(env);
   const when = formatDate(order.createdAt, order.timezone || env.TIMEZONE || "America/Los_Angeles");
   const money = formatMoney(order.amountCents, order.currency);
+  const c = order.customer || {};
+  const addr = addressLines(c).map(escapeHtml).join("<br>");
+
   const items = (order.items || [])
     .map((it) => {
       const design = it.design || order.design;
@@ -64,31 +82,15 @@ export function packingSlipHtml(order, env = {}, opts = {}) {
       ]
         .filter(Boolean)
         .join(" · ");
-      return `<tr>
-        <td>${escapeHtml(it.name)}${extra ? `<div class="muted">${extra}</div>` : ""}</td>
-        <td class="qty">${escapeHtml(it.quantity || 1)}</td>
-        <td class="right">${escapeHtml(formatMoney(it.amountCents, it.currency || order.currency))}</td>
-      </tr>`;
+      return `<div class="item">
+        <div class="item-name">${escapeHtml(it.name)}</div>
+        ${extra ? `<div class="item-meta">${extra}</div>` : ""}
+        <div class="item-row"><span>Qty ${escapeHtml(it.quantity || 1)}</span><span>${escapeHtml(formatMoney(it.amountCents, it.currency || order.currency))}</span></div>
+      </div>`;
     })
     .join("");
 
-  const testBanner = order.isTest
-    ? `<div class="banner">TEST ORDER — do not ship</div>`
-    : "";
-  const labelBlock = order.label
-    ? `<section>
-        <h2>Shipping label</h2>
-        <p>Carrier: ${escapeHtml(order.label.provider || "FedEx")} · Tracking: ${escapeHtml(order.label.trackingNumber || "pending")}</p>
-        ${order.label.imageUrl ? `<img class="label" src="${escapeHtml(order.label.imageUrl)}" alt="Shipping label">` : "<p class='muted'>Label PDF is attached to this email.</p>"}
-      </section>`
-    : `<section>
-        <h2>Shipping label</h2>
-        <p class="muted">FedEx label will appear here once Ship API credentials are added.</p>
-      </section>`;
-
-  const printHint = opts.printable
-    ? `<p class="hint">Print this page on letter paper. Write the order number on the package.</p>`
-    : "";
+  const testBanner = order.isTest ? `<div class="banner">TEST — do not ship</div>` : "";
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -97,33 +99,66 @@ export function packingSlipHtml(order, env = {}, opts = {}) {
   <title>Packing slip ${escapeHtml(order.orderNumber)}</title>
   <style>
     :root { color-scheme: light; }
-    * { box-sizing: border-box; }
-    body { margin: 0; background: #fff; color: #111; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
-    .sheet { width: 8.5in; min-height: 11in; margin: 0 auto; padding: 0.6in 0.7in; }
-    header { display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #111; padding-bottom: 16px; }
-    .brand { font-size: 28px; letter-spacing: 0.22em; font-weight: 700; }
-    .order-no { text-align: right; }
-    .order-no .num { font-size: 32px; font-weight: 700; letter-spacing: 0.04em; }
-    .banner { margin: 16px 0 0; padding: 8px 10px; border: 2px solid #111; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; }
-    .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; margin: 24px 0; }
-    h2 { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; margin: 0 0 8px; }
-    .addr { line-height: 1.45; font-size: 14px; }
-    table { width: 100%; border-collapse: collapse; margin: 8px 0 18px; }
-    th { text-align: left; font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; border-bottom: 1px solid #111; padding: 6px 0; }
-    td { padding: 10px 0; border-bottom: 1px solid #ddd; vertical-align: top; }
-    td.right, th.right { text-align: right; }
-    td.qty, th.qty { text-align: center; width: 70px; }
-    .muted { color: #444; font-size: 12px; margin-top: 4px; }
-    .totals { text-align: right; font-size: 16px; font-weight: 700; }
-    .meta { margin-top: 18px; font-size: 12px; color: #333; line-height: 1.5; }
-    .hint { margin-top: 28px; font-size: 12px; }
-    .cut { margin: 28px 0; border-top: 1px dashed #111; position: relative; }
-    .cut span { position: absolute; top: -8px; left: 0; background: #fff; padding-right: 8px; font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; }
-    .label { max-width: 100%; border: 1px solid #111; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      background: #fff;
+      color: #000;
+      font-family: Arial, Helvetica, sans-serif;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    @page { size: 4in 6in; margin: 0.15in; }
+    @page label-sheet { size: 4in 6in; margin: 0; }
+    html, body { width: 4in; height: 6in; }
+    .sheet {
+      width: 4in;
+      height: 6in;
+      padding: 0.15in;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    header { border-bottom: 3px solid #000; padding-bottom: 6px; margin-bottom: 8px; }
+    .brand { font-size: 15px; font-weight: 800; letter-spacing: 0.22em; }
+    .num { font-size: 26px; font-weight: 800; letter-spacing: 0.01em; line-height: 1.05; word-break: break-all; margin-top: 2px; }
+    .banner { margin: 0 0 8px; padding: 4px 6px; border: 2px solid #000; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; text-align: center; }
+    h2 { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 800; margin: 0 0 4px; }
+    .ship { margin-bottom: 10px; }
+    .addr { font-size: 14px; font-weight: 700; line-height: 1.25; }
+    .phone { font-size: 13px; font-weight: 700; margin-top: 4px; }
+    .item { border-top: 2px solid #000; padding: 8px 0; }
+    .item-name { font-size: 13px; font-weight: 800; line-height: 1.2; }
+    .item-meta { font-size: 13px; font-weight: 700; margin-top: 3px; }
+    .item-row { display: flex; justify-content: space-between; font-size: 13px; font-weight: 700; margin-top: 4px; }
+    .footer { margin-top: auto; border-top: 3px solid #000; padding-top: 6px; }
+    .totals { font-size: 18px; font-weight: 800; }
+    .date { font-size: 11px; font-weight: 700; margin-top: 3px; }
+    .label-page {
+      width: 4in;
+      height: 6in;
+      padding: 0;
+      overflow: hidden;
+      page: label-sheet;
+      page-break-before: always;
+      break-before: page;
+      position: relative;
+      background: #fff;
+    }
+    .label-page .label-art { width: 4in; height: 6in; object-fit: contain; display: block; border: 0; }
+    .label-tracking { display: none; }
     @media print {
+      html, body { width: auto; height: auto; }
       body { background: #fff; }
-      .sheet { margin: 0; padding: 0.45in; width: auto; min-height: auto; }
-      .hint { display: none; }
+      .sheet {
+        width: auto;
+        height: 5.7in;
+        max-height: 5.7in;
+        padding: 0;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+      }
+      .label-page { margin: 0; }
     }
   </style>
 </head>
@@ -131,45 +166,21 @@ export function packingSlipHtml(order, env = {}, opts = {}) {
   <div class="sheet">
     ${testBanner}
     <header>
-      <div>
-        <div class="brand">${escapeHtml(brand)}</div>
-        <div class="muted">Packing slip</div>
-      </div>
-      <div class="order-no">
-        <div class="muted">Order number</div>
-        <div class="num">${escapeHtml(order.orderNumber)}</div>
-      </div>
+      <div class="brand">${escapeHtml(brand)}</div>
+      <div class="num">${escapeHtml(order.orderNumber)}</div>
     </header>
-    <div class="cols">
-      <div>
-        <h2>Ship from</h2>
-        <div class="addr">${addressBlock(from)}${from.phone ? `<br>${escapeHtml(from.phone)}` : ""}</div>
-      </div>
-      <div>
-        <h2>Ship to</h2>
-        <div class="addr">${addressBlock(order.customer)}</div>
-        <div class="muted">
-          ${order.customer.phone ? `Phone: ${escapeHtml(order.customer.phone)}<br>` : ""}
-          ${order.customer.email ? `Email: ${escapeHtml(order.customer.email)}` : ""}
-        </div>
-      </div>
+    <div class="ship">
+      <h2>Ship to</h2>
+      <div class="addr">${addr}</div>
+      ${c.phone ? `<div class="phone">${escapeHtml(c.phone)}</div>` : ""}
     </div>
-    <h2>Items</h2>
-    <table>
-      <thead><tr><th>Item</th><th class="qty">Qty</th><th class="right">Amount</th></tr></thead>
-      <tbody>${items}</tbody>
-    </table>
-    <div class="totals">Total ${escapeHtml(money)}${order.amountShipping === 0 ? " · Free shipping" : ""}</div>
-    <div class="meta">
-      Date: ${escapeHtml(when)} (${escapeHtml(order.timezone || "America/Los_Angeles")})<br>
-      Stripe session: ${escapeHtml(order.sessionId || "")}<br>
-      ${order.paymentIntentId ? `Payment: ${escapeHtml(order.paymentIntentId)}<br>` : ""}
-      Size: ${escapeHtml(order.size || "—")}${order.design ? ` · Design: ${escapeHtml(order.design)}` : ""}
+    ${items}
+    <div class="footer">
+      <div class="totals">Total ${escapeHtml(money)}</div>
+      <div class="date">${escapeHtml(when)}</div>
     </div>
-    <div class="cut"><span>Cut or fold</span></div>
-    ${labelBlock}
-    ${printHint}
   </div>
+  ${labelPage(order)}
 </body>
 </html>`;
 }
@@ -178,29 +189,29 @@ export function packingSlipText(order, env = {}) {
   const when = formatDate(order.createdAt, order.timezone || env.TIMEZONE || "America/Los_Angeles");
   const money = formatMoney(order.amountCents, order.currency);
   const c = order.customer || {};
-  const addr = [c.name, c.line1, c.line2, [c.city, c.state, c.postalCode].filter(Boolean).join(", "), c.country]
-    .filter(Boolean)
-    .join("\n");
+  const addr = addressLines(c).join("\n");
   const items = (order.items || [])
-    .map((it) => `- ${it.name} x${it.quantity || 1} (${formatMoney(it.amountCents, it.currency || order.currency)})`)
-    .join("\n");
+    .map((it) => {
+      const design = it.design || order.design;
+      const extra = [order.size ? `Size ${order.size}` : "", design ? `Design ${design}` : ""].filter(Boolean).join(" · ");
+      return `${it.name}\n${extra}\nQty ${it.quantity || 1}  ${formatMoney(it.amountCents, it.currency || order.currency)}`;
+    })
+    .join("\n\n");
   return [
-    order.isTest ? "TEST ORDER — do not ship" : "",
-    `EEKSEYE packing slip`,
-    `Order ${order.orderNumber}`,
+    order.isTest ? "TEST — do not ship" : "",
+    "EEKSEYE",
+    order.orderNumber,
     "",
     "Ship to:",
     addr,
-    c.phone ? `Phone: ${c.phone}` : "",
-    c.email ? `Email: ${c.email}` : "",
+    c.phone ? c.phone : "",
     "",
     items,
-    order.size ? `Size: ${order.size}` : "",
-    order.design ? `Design: ${order.design}` : "",
-    `Total: ${money}`,
-    `Date: ${when}`,
-    `Stripe session: ${order.sessionId}`
+    "",
+    `Total ${money}`,
+    when
   ]
-    .filter((line, i, arr) => line !== "" || (arr[i - 1] !== "" && i !== 0))
-    .join("\n");
+    .filter((line, i, arr) => !(line === "" && (i === 0 || arr[i - 1] === "")))
+    .join("\n")
+    .trim();
 }

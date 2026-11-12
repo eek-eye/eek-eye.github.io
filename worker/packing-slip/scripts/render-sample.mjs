@@ -3,7 +3,7 @@ import { packingSlipHtml } from "../src/packing-slip.js";
 
 const sampleOrder = {
   orderNumber: "EE-261111-KMPL",
-  isTest: true,
+  isTest: false,
   sessionId: "cs_test_fixture_sample",
   paymentIntentId: "pi_test_fixture_sample",
   createdAt: Date.parse("2026-11-11T15:00:00-08:00"),
@@ -40,6 +40,6 @@ const env = {
   TIMEZONE: "America/Los_Angeles"
 };
 
-const out = process.argv[2] || "/tmp/packing-slip-sample.html";
+const out = process.argv[2] || "/tmp/packing-slip-4x6.html";
 writeFileSync(out, packingSlipHtml(sampleOrder, env, { printable: true }));
 console.log("wrote", out);
