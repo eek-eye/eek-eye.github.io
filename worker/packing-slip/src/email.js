@@ -87,8 +87,15 @@ async function sendViaResend(env, { from, to, subject, text, html }) {
 export async function emailPackingSlip(env, order, slipUrl) {
   const to = env.OWNER_EMAIL || "fuchendeonze@gmail.com";
   const fromName = env.BRAND_NAME || "EEKSEYE";
-  const fromAddr = env.EMAIL_FROM || `orders@${env.EMAIL_FROM_DOMAIN || "eekseye.com"}`;
-  const from = `${fromName} <${fromAddr}>`;
+  const rawFrom = (env.EMAIL_FROM || "").trim();
+  let from;
+  if (rawFrom.includes("<") && rawFrom.includes(">")) {
+    from = rawFrom;
+  } else if (rawFrom.includes("@")) {
+    from = `${fromName} <${rawFrom}>`;
+  } else {
+    from = `${fromName} <orders@${env.EMAIL_FROM_DOMAIN || "eekseye.com"}>`;
+  }
   const subject = `${order.isTest ? "[TEST] " : ""}EEKSEYE packing slip ${order.orderNumber}`;
   const html = packingSlipHtml(order, env, { printable: true });
   const text = packingSlipText(order, env) + (slipUrl ? `\n\nPrintable slip: ${slipUrl}` : "");
