@@ -1,0 +1,15 @@
+{
+  "name": "eekseye-orders",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Stripe webhook worker: packing slip email for EEKSEYE shirt orders",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "bash scripts/deploy.sh",
+    "render-sample": "node scripts/render-sample.mjs"
+  },
+  "devDependencies": {
+    "wrangler": "^4.160.1"
+  }
+}

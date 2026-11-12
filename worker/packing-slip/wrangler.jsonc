@@ -1,0 +1,27 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "eekseye-orders",
+  "main": "src/index.js",
+  "compatibility_date": "2026-11-11",
+  "account_id": "436fa630c3903b6bb680222a6963dad5",
+  "workers_dev": true,
+  "preview_urls": false,
+  "observability": {
+    "enabled": true,
+    "traces": { "enabled": true }
+  },
+  "vars": {
+    "OWNER_EMAIL": "fuchendeonze@gmail.com",
+    "ORDER_PREFIX": "EE-",
+    "ORDER_START": "1001",
+    "TIMEZONE": "America/Los_Angeles",
+    "BRAND_NAME": "EEKSEYE",
+    "SHIP_FROM_NAME": "EEKSEYE",
+    "SHIP_FROM_LINE1": "2200 Sendero St",
+    "SHIP_FROM_CITY": "Calexico",
+    "SHIP_FROM_STATE": "CA",
+    "SHIP_FROM_POSTAL": "92231",
+    "SHIP_FROM_COUNTRY": "US",
+    "SHIP_FROM_PHONE": "+14424786003"
+  }
+}
