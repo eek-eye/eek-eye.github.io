@@ -4,6 +4,7 @@ const s = (f) => readFileSync(`/home/box/.secrets/${f}`, "utf8").trim();
 const env = {
   FEDEX_CLIENT_ID: s("fedex_client_id"), FEDEX_CLIENT_SECRET: s("fedex_client_secret"),
   FEDEX_ACCOUNT_NUMBER: process.env.ACCT || s("fedex_account_number"),
+  FEDEX_US_SERVICE: process.env.SVC || undefined,
   FEDEX_BASE_URL: "https://apis-sandbox.fedex.com",
   SHIP_FROM_NAME: "eekseye", SHIP_FROM_LINE1: "2200 Sendero St", SHIP_FROM_CITY: "Calexico",
   SHIP_FROM_STATE: "CA", SHIP_FROM_POSTAL: "92231", SHIP_FROM_COUNTRY: "US", SHIP_FROM_PHONE: "+14424786003"
