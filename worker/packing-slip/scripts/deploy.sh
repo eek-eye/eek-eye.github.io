@@ -11,7 +11,7 @@ mkdir -p "$DIST" "$BUNDLE"
 npx wrangler deploy --dry-run --outdir "$BUNDLE"
 cp "$BUNDLE/index.js" "$DIST/_worker.js"
 cat > "$DIST/index.html" << 'HTML'
-<!doctype html><meta charset="utf-8"><title>EEKSEYE Orders</title>
-<p>EEKSEYE order webhook is running.</p>
+<!doctype html><meta charset="utf-8"><title>eekseye Orders</title>
+<p>eekseye order webhook is running.</p>
 HTML
 npx wrangler pages deploy "$DIST" --project-name eekseye-orders --commit-dirty=true --branch main

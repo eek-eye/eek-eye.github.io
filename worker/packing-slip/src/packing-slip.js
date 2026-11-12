@@ -67,7 +67,7 @@ function labelPage(order) {
 }
 
 export function packingSlipHtml(order, env = {}, opts = {}) {
-  const brand = env.BRAND_NAME || "EEKSEYE";
+  const brand = env.BRAND_NAME || "eekseye";
   const when = formatDate(order.createdAt, order.timezone || env.TIMEZONE || "America/Los_Angeles");
   const money = formatMoney(order.amountCents, order.currency);
   const c = order.customer || {};
@@ -120,7 +120,8 @@ export function packingSlipHtml(order, env = {}, opts = {}) {
     }
     header { border-bottom: 3px solid #000; padding-bottom: 6px; margin-bottom: 8px; }
     .brand { font-size: 15px; font-weight: 800; letter-spacing: 0.22em; }
-    .num { font-size: 26px; font-weight: 800; letter-spacing: 0.01em; line-height: 1.05; word-break: break-all; margin-top: 2px; }
+    .num { font-size: 12px; font-weight: 600; letter-spacing: 0.02em; margin-top: 3px; }
+    .num .lbl { font-weight: 400; color: #444; }
     .banner { margin: 0 0 8px; padding: 4px 6px; border: 2px solid #000; font-weight: 800; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; text-align: center; }
     h2 { font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase; font-weight: 800; margin: 0 0 4px; }
     .ship { margin-bottom: 10px; }
@@ -167,7 +168,7 @@ export function packingSlipHtml(order, env = {}, opts = {}) {
     ${testBanner}
     <header>
       <div class="brand">${escapeHtml(brand)}</div>
-      <div class="num">${escapeHtml(order.orderNumber)}</div>
+      <div class="num"><span class="lbl">Order number:</span> ${escapeHtml(order.orderNumber)}</div>
     </header>
     <div class="ship">
       <h2>Ship to</h2>
@@ -199,8 +200,8 @@ export function packingSlipText(order, env = {}) {
     .join("\n\n");
   return [
     order.isTest ? "TEST — do not ship" : "",
-    "EEKSEYE",
-    order.orderNumber,
+    "eekseye",
+    `Order number: ${order.orderNumber}`,
     "",
     "Ship to:",
     addr,

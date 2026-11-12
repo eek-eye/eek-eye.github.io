@@ -2,7 +2,7 @@ import { writeFileSync } from "node:fs";
 import { packingSlipHtml } from "../src/packing-slip.js";
 
 const sampleOrder = {
-  orderNumber: "EE-261111-KMPL",
+  orderNumber: "261111-KMPL",
   isTest: false,
   sessionId: "cs_test_fixture_sample",
   paymentIntentId: "pi_test_fixture_sample",
@@ -29,8 +29,8 @@ const sampleOrder = {
 };
 
 const env = {
-  BRAND_NAME: "EEKSEYE",
-  SHIP_FROM_NAME: "EEKSEYE",
+  BRAND_NAME: "eekseye",
+  SHIP_FROM_NAME: "eekseye",
   SHIP_FROM_LINE1: "2200 Sendero St",
   SHIP_FROM_CITY: "Calexico",
   SHIP_FROM_STATE: "CA",

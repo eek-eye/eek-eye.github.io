@@ -24,7 +24,7 @@ export async function suffixFromSessionId(sessionId) {
 }
 
 /**
- * Unique, storage-free order number: EE-YYMMDD-XXXX
+ * Unique, storage-free order number: YYMMDD-XXXX
  * YYMMDD is the session created date in America/Los_Angeles.
  * XXXX is 4 uppercase letters derived from the Stripe Checkout Session id,
  * so webhook retries for the same session always get the same number.
@@ -32,7 +32,7 @@ export async function suffixFromSessionId(sessionId) {
 export async function assignOrderNumber(env, sessionId, createdAtMs) {
   const tz = env.TIMEZONE || "America/Los_Angeles";
   const ms = Number(createdAtMs) || Date.now();
-  const prefix = env.ORDER_PREFIX || "EE-";
+  const prefix = env.ORDER_PREFIX ?? "";
   const orderNumber = `${prefix}${dateStampInZone(ms, tz)}-${await suffixFromSessionId(sessionId)}`;
   return { orderNumber, sessionId, createdAt: ms, reused: false };
 }
