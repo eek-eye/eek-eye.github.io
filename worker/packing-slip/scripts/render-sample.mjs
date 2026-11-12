@@ -2,7 +2,7 @@ import { writeFileSync } from "node:fs";
 import { packingSlipHtml } from "../src/packing-slip.js";
 
 const sampleOrder = {
-  orderNumber: "EE-1001",
+  orderNumber: "EE-261111-KMPL",
   isTest: true,
   sessionId: "cs_test_fixture_sample",
   paymentIntentId: "pi_test_fixture_sample",

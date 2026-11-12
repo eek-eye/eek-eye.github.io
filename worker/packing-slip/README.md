@@ -1,6 +1,6 @@
 # EEKSEYE order packing slips
 
-Cloudflare Pages Worker that receives Stripe `checkout.session.completed` events from the six live Payment Links, assigns a short order number (`EE-1001`, `EE-1002`, …), and emails a printable packing slip to `fuchendeonze@gmail.com`. Customers only get Stripe’s own receipt — this Worker does not email buyers.
+Cloudflare Pages Worker that receives Stripe `checkout.session.completed` events from the six live Payment Links, assigns a unique order number (`EE-YYMMDD-XXXX`), and emails a printable packing slip to `fuchendeonze@gmail.com`. Customers only get Stripe’s own receipt — this Worker does not email buyers.
 
 Live webhook:
 
@@ -35,14 +35,14 @@ Nothing is sent to the customer from this Worker.
 
 ## Order numbers
 
-`EE-1001` increments when one of these is available:
+Format: `EE-YYMMDD-XXXX`
 
-- A Workers KV namespace bound as `ORDERS` (the current API token cannot create KV)
-- Or a Stripe secret key (`STRIPE_SECRET_KEY`), which stores the next number on an internal Stripe product `eekseye-order-seq` and writes `metadata.order_number` on the Checkout Session
+- `YYMMDD` is the Checkout Session date in America/Los_Angeles
+- `XXXX` is four uppercase letters derived from a SHA-256 of the Stripe Checkout Session id
 
-**Recommended one-time step:** In the Stripe Dashboard, create a restricted live key with permission to read Checkout Sessions (and expand line items), update session metadata, and read/write Products. Add it as the Pages secret `STRIPE_SECRET_KEY`. Do not paste the key into chat.
+The same session always gets the same number, including Stripe webhook retries. No KV, Durable Object, or Stripe secret key is required to assign numbers.
 
-Without that key or KV, the Worker still builds a slip from the webhook payload and the Payment Link catalog, and uses a short fallback number.
+A restricted Stripe secret key (`STRIPE_SECRET_KEY`) is still optional if you want the Worker to retrieve and expand line items when the webhook payload is thin. The Payment Link catalog is the fallback without that key. Do not paste keys into chat.
 
 ## Secrets (never commit these)
 

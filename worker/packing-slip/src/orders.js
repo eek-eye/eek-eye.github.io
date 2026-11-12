@@ -1,100 +1,40 @@
 import { SHIRTS, siteIdFromSession } from "./catalog.js";
 import { fieldValue, lineItemsFromSession, retrieveSession, shippingFromSession } from "./stripe.js";
 
-const COUNTER_PRODUCT_ID = "eekseye-order-seq";
+const enc = new TextEncoder();
+const SUFFIX_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-async function stripeForm(env, method, path, params) {
-  const key = env.STRIPE_SECRET_KEY;
-  if (!key) return null;
-  const body = params
-    ? new URLSearchParams(
-        Object.entries(params).flatMap(([k, v]) =>
-          v && typeof v === "object"
-            ? Object.entries(v).map(([ik, iv]) => [`${k}[${ik}]`, String(iv)])
-            : [[k, String(v)]]
-        )
-      )
-    : null;
-  const res = await fetch(`https://api.stripe.com/v1/${path}`, {
-    method,
-    headers: {
-      Authorization: `Bearer ${key}`,
-      "Content-Type": "application/x-www-form-urlencoded"
-    },
-    body
-  });
-  const data = await res.json();
-  if (!res.ok) {
-    console.log(JSON.stringify({ msg: "stripe_api_failed", path, status: res.status, code: data.code || data.error }));
-    return null;
-  }
-  return data;
+export function dateStampInZone(ms, timeZone) {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: timeZone || "America/Los_Angeles",
+    year: "2-digit",
+    month: "2-digit",
+    day: "2-digit"
+  }).formatToParts(new Date(ms));
+  const get = (type) => (parts.find((p) => p.type === type) || {}).value || "00";
+  return `${get("year")}${get("month")}${get("day")}`;
 }
 
-async function assignFromStripe(env, sessionId) {
-  const session = await stripeForm(env, "GET", `checkout/sessions/${encodeURIComponent(sessionId)}`);
-  if (session && session.metadata && session.metadata.order_number) {
-    return { orderNumber: session.metadata.order_number, sessionId, createdAt: Date.now(), reused: true };
-  }
-
-  let counter = await stripeForm(env, "GET", `products/${COUNTER_PRODUCT_ID}`);
-  if (!counter) {
-    counter = await stripeForm(env, "POST", "products", {
-      id: COUNTER_PRODUCT_ID,
-      name: "EEKSEYE Order Sequence",
-      active: "false",
-      "metadata[next_order]": String(env.ORDER_START || "1001"),
-      "metadata[purpose]": "internal-order-counter"
-    });
-    // Retry GET if create failed because it already exists
-    if (!counter) counter = await stripeForm(env, "GET", `products/${COUNTER_PRODUCT_ID}`);
-  }
-  const start = Number(env.ORDER_START || "1001");
-  let next = Number((counter && counter.metadata && counter.metadata.next_order) || start);
-  if (!Number.isFinite(next) || next < start) next = start;
-  const orderNumber = `${env.ORDER_PREFIX || "EE-"}${next}`;
-  await stripeForm(env, "POST", `products/${COUNTER_PRODUCT_ID}`, {
-    "metadata[next_order]": String(next + 1)
-  });
-  if (sessionId && !String(sessionId).startsWith("cs_test_fixture_")) {
-    await stripeForm(env, "POST", `checkout/sessions/${encodeURIComponent(sessionId)}`, {
-      "metadata[order_number]": orderNumber
-    });
-  }
-  return { orderNumber, sessionId, createdAt: Date.now(), reused: false };
+export async function suffixFromSessionId(sessionId) {
+  const digest = await crypto.subtle.digest("SHA-256", enc.encode(String(sessionId || "")));
+  const bytes = new Uint8Array(digest);
+  let out = "";
+  for (let i = 0; i < 4; i++) out += SUFFIX_ALPHABET[bytes[i] % 26];
+  return out;
 }
 
-export async function assignOrderNumber(env, sessionId, preset) {
-  if (preset) return { orderNumber: preset, sessionId, createdAt: Date.now(), reused: true };
-
-  if (env.ORDERS) {
-    const existing = await env.ORDERS.get(`session:${sessionId}`);
-    if (existing) {
-      try {
-        return { ...JSON.parse(existing), reused: true };
-      } catch {
-        return { orderNumber: existing, sessionId, reused: true };
-      }
-    }
-    const start = Number(env.ORDER_START || "1001");
-    const raw = await env.ORDERS.get("next_order");
-    let next = raw ? Number(raw) : start;
-    if (!Number.isFinite(next) || next < start) next = start;
-    const orderNumber = `${env.ORDER_PREFIX || "EE-"}${next}`;
-    await env.ORDERS.put("next_order", String(next + 1));
-    const record = { orderNumber, sessionId, createdAt: Date.now() };
-    await env.ORDERS.put(`session:${sessionId}`, JSON.stringify(record));
-    return { ...record, reused: false };
-  }
-
-  if (env.STRIPE_SECRET_KEY) {
-    const fromStripe = await assignFromStripe(env, sessionId);
-    if (fromStripe) return fromStripe;
-  }
-
-  // Last resort for fixtures / first deploy without storage.
-  const suffix = String(sessionId || "order").replace(/[^a-zA-Z0-9]/g, "").slice(-6).toUpperCase();
-  return { orderNumber: `${env.ORDER_PREFIX || "EE-"}T${suffix}`, sessionId, createdAt: Date.now(), reused: false, ephemeral: true };
+/**
+ * Unique, storage-free order number: EE-YYMMDD-XXXX
+ * YYMMDD is the session created date in America/Los_Angeles.
+ * XXXX is 4 uppercase letters derived from the Stripe Checkout Session id,
+ * so webhook retries for the same session always get the same number.
+ */
+export async function assignOrderNumber(env, sessionId, createdAtMs) {
+  const tz = env.TIMEZONE || "America/Los_Angeles";
+  const ms = Number(createdAtMs) || Date.now();
+  const prefix = env.ORDER_PREFIX || "EE-";
+  const orderNumber = `${prefix}${dateStampInZone(ms, tz)}-${await suffixFromSessionId(sessionId)}`;
+  return { orderNumber, sessionId, createdAt: ms, reused: false };
 }
 
 export async function saveOrder(env, order) {
@@ -114,13 +54,14 @@ export async function buildOrder(env, session, opts = {}) {
     Boolean(opts.isTest) ||
     (session.metadata && session.metadata.source === "test") ||
     String(session.id || "").startsWith("cs_test_");
-  const preset = (session.metadata && session.metadata.order_number) || opts.orderNumber;
-  const assigned = await assignOrderNumber(env, session.id, preset);
   let full = session;
   if (env.STRIPE_SECRET_KEY && session.id && !String(session.id).startsWith("cs_test_fixture_")) {
     const retrieved = await retrieveSession(env, session.id);
     if (retrieved) full = retrieved;
   }
+
+  const createdSec = full.created || session.created || Math.floor(Date.now() / 1000);
+  const assigned = await assignOrderNumber(env, full.id || session.id, createdSec * 1000);
 
   const ship = shippingFromSession(full);
   const fields = full.custom_fields || session.custom_fields || [];
@@ -140,7 +81,6 @@ export async function buildOrder(env, session, opts = {}) {
   }
   if (design && items[0]) items[0].design = design;
 
-  const createdSec = full.created || Math.floor(Date.now() / 1000);
   return {
     orderNumber: assigned.orderNumber,
     reused: assigned.reused,
