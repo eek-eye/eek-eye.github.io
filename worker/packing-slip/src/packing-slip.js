@@ -38,32 +38,24 @@ function addressLines(c) {
 function labelImageSrc(label) {
   if (!label) return "";
   if (label.imageUrl) return label.imageUrl;
-  const png = label.pngBase64 || label.imagePngBase64 || label.pdfBase64;
+  const png = label.pngBase64 || label.imagePngBase64;
   if (!png) return "";
-  if (String(png).startsWith("data:")) return png;
-  if (label.pdfBase64 && !label.pngBase64 && !label.imagePngBase64) {
-    return `data:application/pdf;base64,${label.pdfBase64}`;
-  }
-  return `data:image/png;base64,${png}`;
+  return String(png).startsWith("data:") ? png : `data:image/png;base64,${png}`;
 }
 
-function isPdfLabel(label, src) {
-  return Boolean(label && (label.pdfBase64 && !label.pngBase64 && !label.imagePngBase64 && !label.imageUrl)) ||
-    String(src).startsWith("data:application/pdf");
-}
-
+/** Page 2: only for raster labels. PDF labels travel as an email attachment (prints 4x6 as-is). */
 function labelPage(order) {
-  const label = order.label;
-  if (!label) return "";
-  const src = labelImageSrc(label);
+  const src = labelImageSrc(order.label);
   if (!src) return "";
-  const tracking = label.trackingNumber
-    ? `<div class="label-tracking">${escapeHtml(label.provider || "FedEx")} ${escapeHtml(label.trackingNumber)}</div>`
-    : "";
-  const media = isPdfLabel(label, src)
-    ? `<embed class="label-art" src="${escapeHtml(src)}" type="application/pdf">`
-    : `<img class="label-art" src="${escapeHtml(src)}" alt="Shipping label">`;
-  return `<section class="label-page">${media}${tracking}</section>`;
+  return `<section class="label-page"><img class="label-art" src="${escapeHtml(src)}" alt="Shipping label"></section>`;
+}
+
+export function shippingStatus(order) {
+  const l = order.label;
+  if (!l) return null;
+  if (l.ok === false) return { ok: false, text: `Label failed: ${l.error || "unknown error"}` };
+  if (!l.trackingNumber) return null;
+  return { ok: true, text: `${l.provider || "FedEx"} tracking: ${l.trackingNumber}${l.sandbox ? " (sandbox test)" : ""}` };
 }
 
 export function packingSlipHtml(order, env = {}, opts = {}) {
@@ -90,6 +82,7 @@ export function packingSlipHtml(order, env = {}, opts = {}) {
     })
     .join("");
 
+  const status = shippingStatus(order);
   const testBanner = order.isTest ? `<div class="banner">TEST — do not ship</div>` : "";
 
   return `<!DOCTYPE html>
@@ -134,6 +127,8 @@ export function packingSlipHtml(order, env = {}, opts = {}) {
     .footer { margin-top: auto; border-top: 3px solid #000; padding-top: 6px; }
     .totals { font-size: 18px; font-weight: 800; }
     .date { font-size: 11px; font-weight: 700; margin-top: 3px; }
+    .shipline { font-size: 11px; font-weight: 700; margin-top: 3px; word-break: break-word; }
+    .shipline.bad { font-weight: 400; }
     .label-page {
       width: 4in;
       height: 6in;
@@ -179,9 +174,10 @@ export function packingSlipHtml(order, env = {}, opts = {}) {
     <div class="footer">
       <div class="totals">Total ${escapeHtml(money)}</div>
       <div class="date">${escapeHtml(when)}</div>
+      ${status ? `<div class="shipline${status.ok ? "" : " bad"}">${escapeHtml(status.text)}</div>` : ""}
     </div>
   </div>
-  ${labelPage(order)}
+  ${opts.includeLabel === false ? "" : labelPage(order)}
 </body>
 </html>`;
 }
@@ -210,7 +206,8 @@ export function packingSlipText(order, env = {}) {
     items,
     "",
     `Total ${money}`,
-    when
+    when,
+    shippingStatus(order) ? shippingStatus(order).text : ""
   ]
     .filter((line, i, arr) => !(line === "" && (i === 0 || arr[i - 1] === "")))
     .join("\n")

@@ -67,7 +67,7 @@ async function sendViaEmailJs(env, { to, subject, text, html, order, slipUrl }) 
   return { ok: true, provider: "emailjs" };
 }
 
-async function sendViaResend(env, { from, to, subject, text, html }) {
+async function sendViaResend(env, { from, to, subject, text, html, attachments }) {
   if (!env.RESEND_API_KEY) return null;
   const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -75,7 +75,7 @@ async function sendViaResend(env, { from, to, subject, text, html }) {
       Authorization: `Bearer ${env.RESEND_API_KEY}`,
       "Content-Type": "application/json"
     },
-    body: JSON.stringify({ from, to: [to], subject, text, html })
+    body: JSON.stringify({ from, to: [to], subject, text, html, ...(attachments && attachments.length ? { attachments } : {}) })
   });
   if (!res.ok) {
     const err = await res.text();
@@ -97,9 +97,21 @@ export async function emailPackingSlip(env, order, slipUrl) {
     from = `${fromName} <orders@${env.EMAIL_FROM_DOMAIN || "eekseye.com"}>`;
   }
   const subject = `${order.isTest ? "[TEST] " : ""}eekseye packing slip ${order.orderNumber}`;
-  const html = packingSlipHtml(order, env, { printable: true });
-  const text = packingSlipText(order, env) + (slipUrl ? `\n\nPrintable slip: ${slipUrl}` : "");
-  const payload = { from, to, subject, text, html, order, slipUrl };
+  const label = order.label || null;
+  const attachments = [];
+  if (label && label.ok && label.pdfBase64) {
+    attachments.push({ filename: `fedex-label-${order.orderNumber}.pdf`, content: label.pdfBase64 });
+  }
+  if (label && label.ok && label.invoicePdfBase64) {
+    attachments.push({ filename: `commercial-invoice-${order.orderNumber}.pdf`, content: label.invoicePdfBase64 });
+  }
+  // Email HTML never carries the label bytes inline; the 4x6 label PDF is attached.
+  const html = packingSlipHtml(order, env, { printable: true, includeLabel: false });
+  const labelNote = attachments.length
+    ? `\n\nFedEx label (4x6 PDF) attached: ${attachments[0].filename}${attachments[1] ? " — print 3 copies of the commercial invoice and put them in the pouch" : ""}`
+    : "";
+  const text = packingSlipText(order, env) + labelNote + (slipUrl ? `\n\nPrintable slip: ${slipUrl}` : "");
+  const payload = { from, to, subject, text, html, order, slipUrl, attachments };
 
   const attempts = [];
   for (const fn of [sendViaCloudflareBinding, sendViaResend, sendViaEmailJs]) {

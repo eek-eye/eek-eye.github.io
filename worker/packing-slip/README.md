@@ -15,7 +15,7 @@ Stripe webhook id: `we_1UalNy2X7APw4VwXr4LObWzz` (event: `checkout.session.compl
 - Customer name, shipping address, phone, email
 - Amount and the date/time in America/Los_Angeles
 - A print-ready 4x6 packing slip for a thermal label printer (print the email, or open the signed link). A FedEx 4x6 label, when present, prints on the next page.
-- A placeholder for a FedEx label, filled in later when Ship API credentials are set
+- A FedEx 4x6 label PDF attached to the owner email (see "FedEx labels")
 
 ## Email path
 
@@ -56,7 +56,7 @@ Already set as Pages `secret_text` on `eekseye-orders`: `STRIPE_WEBHOOK_SECRET`,
 | `RESEND_API_KEY` | Recommended email path |
 | `EMAILJS_PUBLIC_KEY` / `EMAILJS_SERVICE_ID` / `EMAILJS_TEMPLATE_ID` / `EMAILJS_PRIVATE_KEY` | Optional EmailJS path |
 | `EMAIL_FROM` | Sender address (e.g. `onboarding@resend.dev` or `orders@eekseye.com`) |
-| `FEDEX_CLIENT_ID` / `FEDEX_CLIENT_SECRET` / `FEDEX_ACCOUNT_NUMBER` | Later, for the Ship API label step |
+| `FEDEX_CLIENT_ID` / `FEDEX_CLIENT_SECRET` / `FEDEX_ACCOUNT_NUMBER` | Ship API label step (Pages secrets) |
 | `FEDEX_BASE_URL` | `https://apis-sandbox.fedex.com` then `https://apis.fedex.com` |
 
 ## Deploy
@@ -71,9 +71,15 @@ export CLOUDFLARE_ACCOUNT_ID=436fa630c3903b6bb680222a6963dad5
 
 Health check: `GET https://eekseye-orders.pages.dev/` → `{"ok":true,"service":"eekseye-orders"}`.
 
-## FedEx labels (later)
+## FedEx labels
 
-`src/labels.js` is the hook. When `FEDEX_CLIENT_ID`, `FEDEX_CLIENT_SECRET`, and `FEDEX_ACCOUNT_NUMBER` are present it will be wired to create a label; until then it returns `null` and the slip shows a placeholder. After production credentials and label validation, that module should return `{ provider, trackingNumber, pdfBase64 }` and the owner email will include the label.
+`src/labels.js` creates a FedEx label for every paid `checkout.session.completed` (OAuth → `POST /ship/v1/shipments`, 4x6 `STOCK_4X6` PDF). US orders use `GROUND_HOME_DELIVERY`; other countries use `FEDEX_INTERNATIONAL_PRIORITY` with customs (Cotton t-shirt, HS 610910, value = order total, made in US, duties paid by recipient) plus a commercial invoice. Default package 1 lb, 12x10x2 in (`FEDEX_PKG_WEIGHT_LB`, `FEDEX_PKG_DIMS_IN`, `FEDEX_US_SERVICE`, `FEDEX_INTL_SERVICE` override).
+
+- Success: the owner email gets `fedex-label-<order>.pdf` (one 4x6 page) attached and the slip shows the tracking number.
+- Failure never blocks the slip: the email still goes out and the slip says `Label failed: <FedEx error>`.
+- Stripe test-mode orders never buy a production label (unless `FEDEX_LABEL_TEST_ORDERS=1`).
+- Sandbox (`apis-sandbox.fedex.com`) requires the **test account number** FedEx assigns to the project (My Projects → project → Test Key), not the real account.
+- Local check: `node scripts/fedex-test.mjs` (reads keys from /home/box/.secrets; `ACCT=<test acct>` overrides the account, `INTL=1` ships to Mexicali).
 
 Official setup (US/Canada shipper):
 

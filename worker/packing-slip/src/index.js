@@ -2,7 +2,7 @@ import { verifyStripeSignature } from "./stripe.js";
 import { buildOrder, loadOrder, saveOrder } from "./orders.js";
 import { packingSlipHtml } from "./packing-slip.js";
 import { emailPackingSlip } from "./email.js";
-import { createShippingLabel, withLabel } from "./labels.js";
+import { createShippingLabel, withLabel, withoutLabelImages } from "./labels.js";
 
 const enc = new TextEncoder();
 
@@ -108,13 +108,22 @@ async function handleWebhook(request, env) {
   }
 
   let order = await buildOrder(env, session, { isTest: event.livemode === false || session.metadata?.source === "test" });
-  const label = await createShippingLabel(env, order);
+  let label = null;
+  try {
+    label = await createShippingLabel(env, order);
+  } catch (err) {
+    label = { ok: false, provider: "FedEx", error: String(err && err.message ? err.message : err).slice(0, 300) };
+  }
   order = withLabel(order, label);
-  await saveOrder(env, order);
+  try {
+    await saveOrder(env, order);
+  } catch (err) {
+    console.log(JSON.stringify({ msg: "order_save_failed", error: String(err && err.message ? err.message : err) }));
+  }
 
   const origin = new URL(request.url).origin;
   const token = await slipToken(env, order.orderNumber);
-  const packed = await encodeOrderPayload(env, order);
+  const packed = await encodeOrderPayload(env, withoutLabelImages(order));
   const qs = new URLSearchParams();
   if (token) qs.set("t", token);
   if (order.sessionId) qs.set("session", order.sessionId);
@@ -129,7 +138,10 @@ async function handleWebhook(request, env) {
       sessionId: order.sessionId,
       reused: order.reused,
       emailed: emailed.ok,
-      emailProvider: emailed.provider
+      emailProvider: emailed.provider,
+      labelOk: label ? label.ok : null,
+      tracking: label && label.trackingNumber ? label.trackingNumber : undefined,
+      labelError: label && !label.ok ? label.error : undefined
     })
   );
 
@@ -141,6 +153,7 @@ async function handleWebhook(request, env) {
     emailed: emailed.ok,
     emailProvider: emailed.provider,
     slipUrl,
+    label: label ? { ok: label.ok, trackingNumber: label.trackingNumber || undefined, error: label.ok ? undefined : label.error } : null,
     emailError: emailed.ok ? undefined : emailed.error
   });
 }
