@@ -1,6 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script>
+        (function () {
+            try {
+                var fromQuery = /(?:^|[?&])from=void-up(?:&|$)/.test(location.search);
+                var fromStore = false;
+                try { fromStore = sessionStorage.getItem('eekseyeVoidReturn') === '1'; } catch (err) {}
+                if (fromQuery || fromStore) {
+                    try { sessionStorage.removeItem('eekseyeVoidReturn'); } catch (err) {}
+                    document.documentElement.classList.add('void-returning');
+                    window.EEKSEYE_skipEntrance = true;
+                    window.EEKSEYE_voidForwardLock = true;
+                    if (fromQuery) {
+                        var url = new URL(location.href);
+                        url.searchParams.delete('from');
+                        var q = url.searchParams.toString();
+                        history.replaceState(null, '', url.pathname + (q ? '?' + q : '') + url.hash);
+                    }
+                }
+            } catch (err) {}
+        })();
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EeksEye Official Store | Custom Dice, Digital Tools & TTRPG Designs</title>
@@ -75,6 +96,54 @@
             z-index: 0;
             pointer-events: none;
         }
+
+        html.void-returning,
+        html.void-returning body {
+            background-color: #000;
+        }
+        html.void-returning .page-transition-overlay {
+            z-index: 10080;
+            background-color: #000;
+            pointer-events: none;
+        }
+        html.void-returning .page-transition-overlay:not(.void-arrival-release) {
+            opacity: 1 !important;
+            transition: none !important;
+        }
+        html.void-returning .cookie-consent-banner,
+        html.void-returning .cookie-settings-panel {
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+        html.void-returning.void-arrival-armed .explore-footer-scale-wrap,
+        html.void-returning.void-arrival-armed #index-void {
+            transform: translateY(32px);
+            filter: blur(8px);
+        }
+        html.void-returning.is-void-emerging .explore-footer-scale-wrap,
+        html.void-returning.is-void-emerging #index-void {
+            transform: none;
+            filter: none;
+            transition: transform 1.25s cubic-bezier(0.22, 1, 0.36, 1), filter 1s ease;
+        }
+        html.void-returning.is-void-emerging .page-transition-overlay.void-arrival-release {
+            opacity: 0 !important;
+            transition: opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1) !important;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            html.void-returning.void-arrival-armed .explore-footer-scale-wrap,
+            html.void-returning.void-arrival-armed #index-void,
+            html.void-returning.is-void-emerging .explore-footer-scale-wrap,
+            html.void-returning.is-void-emerging #index-void {
+                transform: none;
+                filter: none;
+                transition: none;
+            }
+            html.void-returning.is-void-emerging .page-transition-overlay.void-arrival-release {
+                transition: opacity 0.6s ease !important;
+            }
+        }
+
 
         body {
             opacity: 1;
@@ -2693,6 +2762,7 @@
     <script src="js/mix-player.js"></script>
     <script src="js/page-transition.js"></script>
     <script src="js/index-void-transition.js"></script>
+    <script src="js/index-void-return.js"></script>
 <script>
 (function() {
     var canvas = document.getElementById('hero-three-canvas');

@@ -47,8 +47,16 @@
         ov.style.opacity = String(eased);
     }
 
+    function locked() {
+        try {
+            if (window.EEKSEYE_voidForwardLock) return true;
+            if (document.documentElement.classList.contains('void-returning')) return true;
+        } catch (err) {}
+        return false;
+    }
+
     function go() {
-        if (triggered) return;
+        if (triggered || locked()) return;
         triggered = true;
         try {
             sessionStorage.setItem('eekseyeVoidArrival', '1');
@@ -68,7 +76,7 @@
 
     function tick() {
         rafId = 0;
-        if (triggered) return;
+        if (triggered || locked()) return;
         var p = voidProgress();
         paintOverlay(p);
         if (p >= TRIGGER) go();

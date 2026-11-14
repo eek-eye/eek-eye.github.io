@@ -15,6 +15,7 @@
         try {
             if (window.EEKSEYE_skipEntrance) return true;
             if (document.documentElement.classList.contains('void-arriving')) return true;
+            if (document.documentElement.classList.contains('void-returning')) return true;
         } catch (err) {}
         return false;
     }
