@@ -998,6 +998,12 @@ main {
     box-shadow: 0 0 10px var(--color-pink);
 }
 
+/* Services strip is retired; keep rules in case it is restored. */
+.index-cards-footer-scale,
+.hero-section-3 {
+    display: none !important;
+}
+
 /* Services strip — match index.html compact size (53.6% ≈ 80% × 0.67) */
 .index-cards-footer-scale {
     zoom: 53.6%;
