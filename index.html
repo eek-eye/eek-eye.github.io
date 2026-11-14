@@ -115,12 +115,17 @@
             visibility: hidden !important;
             pointer-events: none !important;
         }
-        html.void-returning.void-arrival-armed .explore-footer-scale-wrap,
+        /* Home page only: no footer — the mannequin hero flows into the void. */
+        .explore-footer-scale-wrap {
+            display: none !important;
+        }
+
+        html.void-returning.void-arrival-armed .hero-section,
         html.void-returning.void-arrival-armed #index-void {
             transform: translateY(32px);
             filter: blur(8px);
         }
-        html.void-returning.is-void-emerging .explore-footer-scale-wrap,
+        html.void-returning.is-void-emerging .hero-section,
         html.void-returning.is-void-emerging #index-void {
             transform: none;
             filter: none;
@@ -131,9 +136,9 @@
             transition: opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1) !important;
         }
         @media (prefers-reduced-motion: reduce) {
-            html.void-returning.void-arrival-armed .explore-footer-scale-wrap,
+            html.void-returning.void-arrival-armed .hero-section,
             html.void-returning.void-arrival-armed #index-void,
-            html.void-returning.is-void-emerging .explore-footer-scale-wrap,
+            html.void-returning.is-void-emerging .hero-section,
             html.void-returning.is-void-emerging #index-void {
                 transform: none;
                 filter: none;
@@ -2445,7 +2450,7 @@
         }
     </style>
 </head>
-<body class="dark-theme">
+<body class="dark-theme index-page">
     <div class="page-transition-overlay"></div>
     <div class="contact-dropdown-overlay" id="contactDropdownOverlay"></div>
     <div class="x-border x-border-left">X</div>
@@ -2679,7 +2684,7 @@
     </section>
     </div>
 
-    <div class="explore-footer-scale-wrap">
+    <div class="explore-footer-scale-wrap" hidden>
     <footer class="site-footer explore-footer-editorial">
         <div class="explore-footer-grid">
             <div class="explore-footer-col">

@@ -1,5 +1,5 @@
 /**
- * Home page: scrolling past the footer into a black void silently
+ * Home page: scrolling past the hero into a black void silently
  * hands off to the Aesthetic (explore) page. No XI logo — the
  * visitor should feel like they kept scrolling into darkness.
  */

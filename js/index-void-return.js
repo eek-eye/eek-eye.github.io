@@ -1,6 +1,6 @@
 /**
  * Home page arrival after scrolling up from the Aesthetic page void.
- * Direct visits are left alone. Lands at the footer / void edge.
+ * Direct visits are left alone. Lands at the bottom of the hero, at the void edge.
  */
 (function () {
     'use strict';
@@ -13,16 +13,16 @@
         }
     }
 
-    function placeAtFooter() {
+    function placeAtVoidEdge() {
         var voidEl = document.getElementById('index-void');
-        var footer = document.querySelector('footer.site-footer') || document.querySelector('.explore-footer-scale-wrap');
+        var hero = document.querySelector('.hero-section');
         var y = 0;
         if (voidEl) {
             var top = voidEl.getBoundingClientRect().top + (window.scrollY || window.pageYOffset || 0);
             y = Math.max(0, top - (window.innerHeight || 0) + 8);
-        } else if (footer) {
-            var ft = footer.getBoundingClientRect().top + (window.scrollY || window.pageYOffset || 0);
-            y = Math.max(0, ft - 24);
+        } else if (hero) {
+            var ht = hero.getBoundingClientRect().bottom + (window.scrollY || window.pageYOffset || 0);
+            y = Math.max(0, ht - (window.innerHeight || 0) + 8);
         } else {
             y = Math.max(0, (document.documentElement.scrollHeight || 0) - (window.innerHeight || 0));
         }
@@ -40,9 +40,9 @@
         if (!root.classList.contains('void-returning')) return;
 
         window.EEKSEYE_voidForwardLock = true;
-        placeAtFooter();
-        window.setTimeout(placeAtFooter, 0);
-        window.addEventListener('load', placeAtFooter, { once: true });
+        placeAtVoidEdge();
+        window.setTimeout(placeAtVoidEdge, 0);
+        window.addEventListener('load', placeAtVoidEdge, { once: true });
 
         var reduced = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
         var overlay = document.querySelector('.page-transition-overlay');
@@ -52,7 +52,7 @@
 
         var holdMs = reduced ? 80 : 260;
         window.setTimeout(function () {
-            placeAtFooter();
+            placeAtVoidEdge();
             window.requestAnimationFrame(function () {
                 root.classList.add('is-void-emerging');
                 if (overlay) overlay.classList.add('void-arrival-release', 'fade-out');

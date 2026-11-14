@@ -135,6 +135,9 @@
     }
 
     function syncFooter() {
+        if (document.body && document.body.classList.contains('index-page')) {
+            return;
+        }
         var canonical = buildFooter();
         if (!canonical) {
             return;
