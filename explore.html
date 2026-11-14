@@ -1284,6 +1284,11 @@
                 filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.08));
             }
         }
+
+        body.explore-page .index-cards-footer-scale,
+        body.explore-page .hero-section-3 {
+            display: none !important;
+        }
     </style>
 </head>
 <body class="dark-theme explore-page">
@@ -1435,8 +1440,8 @@
             <a href="#" class="btn">Care</a>
             <a href="#" class="btn">Wholesale</a>
         </section>
-        <div class="index-cards-footer-scale">
-        <section class="hero-section-3">
+        <div class="index-cards-footer-scale" hidden>
+        <section class="hero-section-3" hidden>
             <div class="hero-section-3-container">
                 <div class="hero-section-3-cards">
                     <div class="hero-section-3-card">
