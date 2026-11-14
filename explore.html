@@ -353,7 +353,8 @@
                 background 0.35s ease,
                 padding 0.5s cubic-bezier(0.33, 1, 0.68, 1),
                 min-height 0.5s cubic-bezier(0.33, 1, 0.68, 1),
-                border-color 0.35s ease;
+                border-color 0.35s ease,
+                filter 0.4s ease;
         }
         .explore-hero-section:hover {
             background: transparent;
@@ -1288,6 +1289,50 @@
         body.explore-page .index-cards-footer-scale,
         body.explore-page .hero-section-3 {
             display: none !important;
+        }
+    </style>
+    <style id="explore-dream-blur">
+        /* Dreamy blur on grid cards only — header, nav, and layout icons stay sharp. */
+        body.explore-page .explore-hero-section,
+        body.explore-page .explore-grid-placeholder {
+            filter: blur(2.5px);
+        }
+        body.explore-page .explore-grid-placeholder {
+            transition: filter 0.4s ease;
+        }
+        body.explore-page .explore-hero-section.is-dream-focus,
+        body.explore-page .explore-grid-placeholder.is-dream-focus {
+            filter: none;
+        }
+        @media (hover: hover) and (pointer: fine) {
+            body.explore-page .explore-hero-section:hover,
+            body.explore-page .explore-grid-placeholder:hover {
+                filter: none;
+            }
+            body.explore-page .explore-hero-section:hover,
+            body.explore-page .explore-grid-placeholder:hover,
+            body.explore-page .explore-hero-section.is-dream-focus,
+            body.explore-page .explore-grid-placeholder.is-dream-focus {
+                will-change: filter;
+            }
+        }
+        @media (hover: none), (pointer: coarse) {
+            body.explore-page .explore-hero-section.is-dream-focus,
+            body.explore-page .explore-grid-placeholder.is-dream-focus {
+                will-change: filter;
+            }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            body.explore-page .explore-hero-section,
+            body.explore-page .explore-grid-placeholder {
+                transition: filter 0.25s ease;
+            }
+            body.explore-page .explore-hero-section:hover,
+            body.explore-page .explore-grid-placeholder:hover,
+            body.explore-page .explore-hero-section.is-dream-focus,
+            body.explore-page .explore-grid-placeholder.is-dream-focus {
+                will-change: auto;
+            }
         }
     </style>
 </head>
@@ -2308,5 +2353,6 @@ if (copyrightLink && copyrightModal && closeCopyrightModal) {
     <script src="js/explore-text-glitch.js"></script>
     <script src="js/explore-void-arrival.js"></script>
     <script src="js/explore-void-up.js"></script>
+    <script src="js/explore-dream-blur.js"></script>
 </body>
 </html> 
