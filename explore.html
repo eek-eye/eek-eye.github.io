@@ -1,6 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script>
+        (function () {
+            try {
+                var fromQuery = /(?:^|[?&])from=void(?:&|$)/.test(location.search);
+                var fromStore = false;
+                try { fromStore = sessionStorage.getItem('eekseyeVoidArrival') === '1'; } catch (err) {}
+                if (fromQuery || fromStore) {
+                    try { sessionStorage.removeItem('eekseyeVoidArrival'); } catch (err) {}
+                    document.documentElement.classList.add('void-arriving');
+                    window.EEKSEYE_skipEntrance = true;
+                    if (fromQuery) {
+                        var url = new URL(location.href);
+                        url.searchParams.delete('from');
+                        var q = url.searchParams.toString();
+                        history.replaceState(null, '', url.pathname + (q ? '?' + q : '') + url.hash);
+                    }
+                }
+            } catch (err) {}
+        })();
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Explore - Eeks-Eye</title>
@@ -31,6 +51,94 @@
         .page-transition-overlay.fade-out {
             opacity: 0;
         }
+
+        html.void-arriving,
+        html.void-arriving body {
+            background-color: #000;
+        }
+        html.void-arriving .cookie-consent-banner,
+        html.void-arriving .cookie-settings-panel {
+            visibility: hidden !important;
+            pointer-events: none !important;
+        }
+        html.void-arriving .page-transition-overlay {
+            z-index: 10080;
+            background-color: #000;
+            pointer-events: none;
+        }
+        html.void-arriving .page-transition-overlay:not(.void-arrival-release) {
+            opacity: 1 !important;
+            transition: none !important;
+        }
+        html.void-arriving.void-arrival-armed main {
+            transform: scale(1.08);
+            transform-origin: 50% 12%;
+            filter: blur(10px);
+        }
+        html.void-arriving.void-arrival-armed .explore-hero-section {
+            opacity: 0;
+            transform: translateY(28px);
+        }
+        html.void-arriving.is-void-emerging main {
+            transform: scale(1);
+            filter: blur(0);
+            transition: transform 1.55s cubic-bezier(0.22, 1, 0.36, 1), filter 1.2s ease;
+        }
+        html.void-arriving.is-void-emerging .explore-hero-section {
+            opacity: 1;
+            transform: none;
+            transition: opacity 0.75s ease, transform 0.85s cubic-bezier(0.22, 1, 0.36, 1);
+            transition-delay: calc(var(--void-i, 0) * 70ms + 280ms);
+        }
+        html.void-arriving.is-void-emerging .page-transition-overlay.void-arrival-release {
+            opacity: 0 !important;
+            transition: opacity 1.45s cubic-bezier(0.22, 1, 0.36, 1) !important;
+        }
+        .void-arrival-static {
+            position: fixed;
+            inset: 0;
+            z-index: 10081;
+            pointer-events: none;
+            opacity: 0;
+            background:
+                repeating-linear-gradient(0deg, rgba(255,255,255,0.07) 0 1px, transparent 1px 3px),
+                repeating-linear-gradient(90deg, rgba(255,0,60,0.08) 0 2px, rgba(0,255,242,0.08) 2px 4px, transparent 4px 7px);
+            mix-blend-mode: screen;
+        }
+        .void-arrival-static.is-burst {
+            animation: void-static-burst 0.52s steps(2, end);
+        }
+        @keyframes void-static-burst {
+            0%, 100% { opacity: 0; transform: none; }
+            12% { opacity: 0.55; transform: translateX(-3px); }
+            28% { opacity: 0.12; transform: translateX(2px); }
+            46% { opacity: 0.7; transform: translateX(3px) skewX(-6deg); }
+            64% { opacity: 0.18; transform: translateX(-1px); }
+            80% { opacity: 0.4; transform: none; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            html.void-arriving.void-arrival-armed main,
+            html.void-arriving.is-void-emerging main {
+                transform: none;
+                filter: none;
+                transition: none;
+            }
+            html.void-arriving.void-arrival-armed .explore-hero-section,
+            html.void-arriving.is-void-emerging .explore-hero-section {
+                opacity: 1;
+                transform: none;
+                transition: none;
+            }
+            html.void-arriving.is-void-emerging .page-transition-overlay.void-arrival-release {
+                transition: opacity 0.65s ease !important;
+            }
+            .void-arrival-static,
+            .void-arrival-static.is-burst {
+                animation: none;
+                opacity: 0;
+            }
+        }
+
 
         body {
             opacity: 1;
@@ -634,6 +742,40 @@
             text-transform: uppercase;
             line-height: 1.35;
         }
+
+
+        .explore-hero-text-line.explore-text-glitch {
+            text-transform: none;
+            font-variant-ligatures: none;
+            text-shadow: 0.4px 0 rgba(0, 255, 242, 0.28), -0.4px 0 rgba(255, 0, 60, 0.28);
+        }
+        .explore-hero-text-line.explore-text-glitch.is-rgb {
+            text-shadow: -1.4px 0 #ff003c, 1.4px 0 #00fff2;
+        }
+        .explore-hero-text-line.explore-text-glitch.is-jitter {
+            transform: translate(1px, 0) skewX(-9deg);
+        }
+        .explore-hero-text-line.explore-text-glitch.is-flicker {
+            opacity: 0.42;
+        }
+        .explore-hero-text-fill {
+            overflow: hidden;
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .explore-hero-text-line.explore-text-glitch {
+                text-shadow: 0.3px 0 rgba(0, 255, 242, 0.16), -0.3px 0 rgba(255, 0, 60, 0.16);
+            }
+            .explore-hero-text-line.explore-text-glitch.is-jitter {
+                transform: none;
+            }
+            .explore-hero-text-line.explore-text-glitch.is-rgb {
+                text-shadow: 0.5px 0 rgba(0, 255, 242, 0.28), -0.5px 0 rgba(255, 0, 60, 0.28);
+            }
+            .explore-hero-text-line.explore-text-glitch.is-flicker {
+                opacity: 0.82;
+            }
+        }
+
 
         /* Top-of-screen icon row — above page overlay (9999) and x-borders (9997); below password modal when open */
         .explore-top-icons-bar {
@@ -1564,6 +1706,9 @@
                         section.insertBefore(node, section.firstChild);
                     }
                 });
+                if (window.EEKSEYE_textGlitch && typeof window.EEKSEYE_textGlitch.refresh === 'function') {
+                    window.EEKSEYE_textGlitch.refresh();
+                }
             }
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', injectExploreHeroText);
@@ -1953,5 +2098,7 @@ if (copyrightLink && copyrightModal && closeCopyrightModal) {
     <script src="js/site-footer.js"></script>
     <script src="js/footer-links.js"></script>
     <script src="translation-system.js"></script>
+    <script src="js/explore-text-glitch.js"></script>
+    <script src="js/explore-void-arrival.js"></script>
 </body>
 </html> 

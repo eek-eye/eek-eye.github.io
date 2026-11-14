@@ -11,8 +11,17 @@
     var XI_HOLD_MS = 700;
     var TOTAL_EXIT_MS = FADE_TO_BLACK_MS + XI_FADE_IN_MS + XI_HOLD_MS;
 
+    function shouldSkipEntrance() {
+        try {
+            if (window.EEKSEYE_skipEntrance) return true;
+            if (document.documentElement.classList.contains('void-arriving')) return true;
+        } catch (err) {}
+        return false;
+    }
+
     // Entrance: new page loads under black; overlay fades out so page fades in smoothly
     function initEntrance() {
+        if (shouldSkipEntrance()) return;
         var overlay = document.querySelector('.page-transition-overlay');
         if (overlay) {
             overlay.style.transition = 'opacity 2s cubic-bezier(0.4, 0, 0.2, 1)';
