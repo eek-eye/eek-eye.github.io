@@ -1010,6 +1010,97 @@
             }
         }
         
+        /* Water reflection under the mannequin. Horizon clips the figure; the
+           reflection is painted on a separate 1x canvas so the scale-root
+           (thumbnail, PAST/PRESENT) is left alone. */
+        .hero-section {
+            --hero-horizon: 64%;
+        }
+        .hero-mannequin-air {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+            -webkit-mask-image: linear-gradient(
+                to bottom,
+                #000 0,
+                #000 calc(var(--hero-horizon) - 12px),
+                transparent var(--hero-horizon)
+            );
+            mask-image: linear-gradient(
+                to bottom,
+                #000 0,
+                #000 calc(var(--hero-horizon) - 12px),
+                transparent var(--hero-horizon)
+            );
+        }
+        .hero-water {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: calc(100% - var(--hero-horizon));
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+            background: #000;
+        }
+        .hero-water-svg {
+            position: absolute;
+            width: 0;
+            height: 0;
+            overflow: hidden;
+        }
+        #hero-reflection-canvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            filter: url(#heroWaterRipple);
+            opacity: 0.88;
+        }
+        .hero-water-tint {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                to bottom,
+                rgba(8, 18, 32, 0.18) 0%,
+                rgba(4, 10, 22, 0.48) 48%,
+                rgba(0, 0, 0, 0.88) 100%
+            );
+            pointer-events: none;
+        }
+        .hero-horizon {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            height: 2px;
+            background: linear-gradient(
+                to right,
+                transparent 8%,
+                rgba(170, 200, 230, 0.1) 30%,
+                rgba(200, 220, 240, 0.2) 50%,
+                rgba(170, 200, 230, 0.1) 70%,
+                transparent 92%
+            );
+            box-shadow: 0 0 18px 2px rgba(140, 180, 220, 0.08);
+            pointer-events: none;
+        }
+        @media (max-width: 768px) {
+            .hero-section {
+                --hero-horizon: 60%;
+            }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            #hero-reflection-canvas {
+                filter: none;
+                opacity: 0.8;
+            }
+        }
+
         .hero-section-3 {
             position: relative;
             width: 100%;
@@ -2629,10 +2720,12 @@
             <img src="eekseye.png/I 多重人格 I eekseye I 2026.png" alt="I 多重人格 I eekseye I 2026">
             <img src="eekseye.png/I メタ I eekseye I I 2026.png" alt="I メタ I eekseye I I 2026">
         </div>
+        <div class="hero-mannequin-air">
         <img src="images/gone gone.png" alt="Gone gone" class="hero-gone-image hero-gone-image-1 hero-gone-image--visible">
         <img src="images/gone gone 3.png" alt="Gone gone 3" class="hero-gone-image hero-gone-image-2 hero-gone-image--hiding">
         <a href="explore.html" class="hero-gone-click-box hero-gone-click-box-1 hero-gone-image--visible" aria-label="Open gone gone in explore page" data-translate-aria="ariaOpenGone1"></a>
         <a href="explore.html" class="hero-gone-click-box hero-gone-click-box-2 hero-gone-image--hiding" aria-label="Open gone gone 3 in explore page" data-translate-aria="ariaOpenGone2"></a>
+        </div>
         <button type="button" class="hero-gone-nav hero-gone-nav-prev" aria-label="Past image" data-translate="heroPast" data-translate-aria="ariaPastImage">Past</button>
         <button type="button" class="hero-gone-nav hero-gone-nav-next" aria-label="Present image" data-translate="heroPresent" data-translate-aria="ariaPresentImage">Present</button>
         <div class="hero-gone-mini-wrapper">
@@ -2651,6 +2744,19 @@
                 <span data-translate="mq1">頑張っても手に入らないって約束する</span><span data-translate="mq2">◆ EEKSEYE ◆</span><span data-translate="mq3">RUNWAY</span><span data-translate="mq4">I KNOW YOU SAY YOU KNOW ME</span><span data-translate="mq5">GONE GONE</span><span data-translate="mq6">X I</span><span data-translate="mq7">伊克西 · 满月 · 多重人格</span><span data-translate="mq8">DARK SIDE · INTERSTELLA · VIBRATION</span><span data-translate="mq9">SEASON 1 · 2 · 3 · 4 · 5</span><span data-translate="mq1">頑張っても手に入らないって約束する</span><span data-translate="mq10">EXPLORE — DESIGNS — NEWS</span><span data-translate="mq11">I メタ I eekseye I I 2026</span><span data-translate="mq12">冷笑主義 I eekseye I 2029</span><span data-translate="mq13">TRUTH SHOULD SET YOU FREE</span><span data-translate="mq14">NO REPRODUCTION WITHOUT PERMISSION</span><span data-translate="mq15">Eeks Eye</span><span data-translate="mq1">頑張っても手に入らないって約束する</span><span data-translate="mq16">· XI ·</span><span data-translate="mq17">CH@0S · UNGUIDED · SEEK</span><span data-translate="mq18">Rockstar · Martyr · Nightmare</span>
             </div>
         </div>
+        </div>
+        <div class="hero-water" aria-hidden="true">
+            <svg class="hero-water-svg" aria-hidden="true" focusable="false">
+                <filter id="heroWaterRipple" x="-8%" y="-8%" width="116%" height="116%" color-interpolation-filters="sRGB">
+                    <feTurbulence id="heroWaterTurbulence" type="fractalNoise" baseFrequency="0.009 0.04" numOctaves="2" seed="3" result="rippleNoise">
+                        <animate attributeName="baseFrequency" dur="16s" values="0.009 0.04; 0.016 0.055; 0.009 0.04" repeatCount="indefinite"/>
+                    </feTurbulence>
+                    <feDisplacementMap in="SourceGraphic" in2="rippleNoise" scale="14" xChannelSelector="R" yChannelSelector="G"/>
+                </filter>
+            </svg>
+            <canvas id="hero-reflection-canvas"></canvas>
+            <div class="hero-water-tint"></div>
+            <div class="hero-horizon"></div>
         </div>
     </section>
 
@@ -2770,6 +2876,7 @@
     <script src="js/page-transition.js"></script>
     <script src="js/index-void-transition.js"></script>
     <script src="js/index-void-return.js"></script>
+    <script src="js/index-hero-reflection.js"></script>
 <script>
 (function() {
     var canvas = document.getElementById('hero-three-canvas');
