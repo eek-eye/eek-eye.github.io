@@ -69,7 +69,7 @@
         ctx.save();
         ctx.imageSmoothingEnabled = true;
         ctx.imageSmoothingQuality = coarse ? 'low' : 'medium';
-        ctx.filter = 'brightness(0.72) saturate(0.78) hue-rotate(196deg)';
+        ctx.filter = 'brightness(0.8) saturate(0.8) hue-rotate(196deg)';
         // Flip around the horizon (y = 0 in water space) so the figure
         // meets the water line feet-to-feet and reads upside down.
         ctx.scale(1, -1);

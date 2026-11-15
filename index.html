@@ -963,7 +963,9 @@
 
         body.dark-theme .hero-section {
             height: 100vh;
+            height: 100svh;
             min-height: 100vh;
+            min-height: 100svh;
         }
 
         /* Black overlay on hero section 1 */
@@ -1010,11 +1012,16 @@
             }
         }
         
-        /* Water reflection under the mannequin. Horizon clips the figure; the
-           reflection is painted on a separate 1x canvas so the scale-root
-           (thumbnail, PAST/PRESENT) is left alone. */
+        /* Water reflection: full figure stands on the horizon, full mirror below.
+           Art is 4000² with the body from 11.4%–85.0% of the frame. */
         .hero-section {
-            --hero-horizon: 64%;
+            --hero-figure-top-pad: 9.5%;
+            --hero-figure-height: 43%;
+            --hero-img-top-frac: 0.114;
+            --hero-img-bottom-frac: 0.8498;
+            --hero-img-h: calc(var(--hero-figure-height) / (var(--hero-img-bottom-frac) - var(--hero-img-top-frac)));
+            --hero-horizon: calc(var(--hero-figure-top-pad) + var(--hero-figure-height));
+            --hero-img-top: calc(var(--hero-horizon) - var(--hero-img-h) * var(--hero-img-bottom-frac));
         }
         .hero-mannequin-air {
             position: absolute;
@@ -1025,13 +1032,13 @@
             -webkit-mask-image: linear-gradient(
                 to bottom,
                 #000 0,
-                #000 calc(var(--hero-horizon) - 12px),
+                #000 calc(var(--hero-horizon) - 3px),
                 transparent var(--hero-horizon)
             );
             mask-image: linear-gradient(
                 to bottom,
                 #000 0,
-                #000 calc(var(--hero-horizon) - 12px),
+                #000 calc(var(--hero-horizon) - 3px),
                 transparent var(--hero-horizon)
             );
         }
@@ -1059,16 +1066,16 @@
             height: 100%;
             display: block;
             filter: url(#heroWaterRipple);
-            opacity: 0.88;
+            opacity: 0.95;
         }
         .hero-water-tint {
             position: absolute;
             inset: 0;
             background: linear-gradient(
                 to bottom,
-                rgba(8, 18, 32, 0.18) 0%,
-                rgba(4, 10, 22, 0.48) 48%,
-                rgba(0, 0, 0, 0.88) 100%
+                rgba(8, 18, 32, 0.12) 0%,
+                rgba(4, 10, 22, 0.32) 55%,
+                rgba(0, 0, 0, 0.55) 100%
             );
             pointer-events: none;
         }
@@ -1091,7 +1098,8 @@
         }
         @media (max-width: 768px) {
             .hero-section {
-                --hero-horizon: 60%;
+                --hero-figure-top-pad: 19%;
+                --hero-figure-height: 38%;
             }
         }
         @media (prefers-reduced-motion: reduce) {
@@ -1384,7 +1392,7 @@
             position: absolute;
             z-index: 3;
             width: auto;
-            height: 180vh;
+            height: var(--hero-img-h);
             max-width: none;
             max-height: none;
             object-fit: contain;
@@ -1396,9 +1404,9 @@
 
         .hero-gone-image-1,
         .hero-gone-image-2 {
-            top: 2%;
+            top: var(--hero-img-top);
             left: 50%;
-            transform: translateX(-50%) scale(5);
+            transform: translateX(-50%);
             transform-origin: center top;
         }
 
@@ -1412,12 +1420,12 @@
 
         .hero-gone-click-box {
             position: absolute;
-            top: 52%;
+            top: calc(var(--hero-figure-top-pad) + var(--hero-figure-height) * 0.5);
             left: 50%;
-            transform: translate(-50%, -50%) scale(5);
+            transform: translate(-50%, -50%);
             transform-origin: center center;
-            width: min(40vw, 520px);
-            height: min(72vh, 760px);
+            width: 22%;
+            height: calc(var(--hero-figure-height) + 4%);
             z-index: 4;
             opacity: 0;
             text-decoration: none;
@@ -1625,7 +1633,7 @@
 
         .hero-gone-nav {
             position: absolute;
-            top: 50%;
+            top: calc(var(--hero-figure-top-pad) + var(--hero-figure-height) * 0.5);
             transform: translateY(-50%) scale(4.2);
             transform-origin: center center;
             z-index: 5;
@@ -2405,26 +2413,20 @@
                 padding: 0 0.5rem !important;
             }
 
-            /* Hero section: keep visible on phones */
+            /* Hero section: fit the visible phone viewport so the
+               full figure and its reflection stay on screen. */
             .hero-section {
                 height: 100vh !important;
+                height: 100svh !important;
                 min-height: 100vh !important;
+                min-height: 100svh !important;
                 overflow: hidden !important;
             }
 
             /* Scale-root stays centered, don't change its transform */
 
-            /* Hero images: scale down dramatically for mobile (from 5x to ~0.6x) */
             .hero-gone-image {
-                transform: translateX(-50%) scale(0.55) !important;
-                transform-origin: center top !important;
-                height: 160vh !important;
-                top: 8% !important;
                 filter: brightness(1.3) !important;
-            }
-
-            .hero-gone-click-box {
-                transform: translate(-50%, -50%) scale(0.55) !important;
             }
 
             /* Past/Present nav buttons - scale down and reposition */
