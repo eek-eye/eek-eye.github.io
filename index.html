@@ -697,7 +697,7 @@
         /* Home index only: nav actions (scoped — avoids shared css/style.css .header-buttons-container) */
         .nav-header .index-header-buttons {
             display: flex;
-            gap: 0.5rem;
+            gap: 0.4rem;
             flex-wrap: wrap;
             justify-content: flex-end;
             align-items: center;
@@ -778,8 +778,8 @@
             z-index: 10;
         }
         .nav-header .index-header-buttons a {
-            font-size: 0.46rem;
-            padding: 0.26rem 0.68rem;
+            font-size: 0.36rem;
+            padding: 0.2rem 0.53rem;
             border-radius: 1rem;
             color: white;
             border: none;
@@ -794,10 +794,10 @@
             transform: translateY(-2px);
         }
         .nav-header.header-scrolled .index-header-buttons a {
-            font-size: 0.48rem;
-            padding: 0.2rem 0.58rem;
+            font-size: 0.37rem;
+            padding: 0.16rem 0.45rem;
             border-radius: 0.75rem;
-            text-shadow: 0 0 6px #ff006e, 0 0 14px #ff006e, 0 0 28px rgba(255, 0, 110, 0.85);
+            text-shadow: 0 0 5px #ff006e, 0 0 11px #ff006e, 0 0 22px rgba(255, 0, 110, 0.7);
             box-shadow: none;
             transition: background-color 0.35s ease, color 0.35s ease, transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), text-shadow 0.35s ease;
             color: #ff006e;
@@ -805,7 +805,7 @@
         }
 
         .nav-header.header-scrolled .index-header-buttons a:hover {
-            text-shadow: 0 0 10px #ff006e, 0 0 22px #ff006e, 0 0 44px rgba(255, 0, 110, 0.95);
+            text-shadow: 0 0 8px #ff006e, 0 0 17px #ff006e, 0 0 34px rgba(255, 0, 110, 0.78);
             transform: translateY(-1px);
             box-shadow: none;
         }
@@ -895,17 +895,25 @@
         }
 
         body.dark-theme .nav-header .index-header-buttons a {
-            font-size: clamp(0.46rem, 0.82vw, 0.58rem);
-            padding: 0.24rem 0.62rem;
+            font-size: clamp(0.36rem, 0.64vw, 0.45rem);
+            padding: 0.19rem 0.48rem;
         }
 
         body.dark-theme .nav-header .currency-button {
-            font-size: clamp(0.44rem, 0.78vw, 0.56rem);
-            padding: 0.22rem 0.56rem;
+            font-size: clamp(0.34rem, 0.61vw, 0.44rem);
+            padding: 0.17rem 0.44rem;
         }
 
         body.dark-theme .nav-header .currency-button i {
-            font-size: 0.32rem;
+            font-size: 0.25rem;
+        }
+
+        body.dark-theme .nav-header .eeks-cart-badge {
+            min-width: 0.86rem;
+            height: 0.86rem;
+            padding: 0 0.22rem;
+            margin-left: 0.22rem;
+            font-size: 0.5rem;
         }
 
         body.dark-theme .nav-header .nav-header-top-row {
@@ -2132,8 +2140,8 @@
         }
 
         .currency-button {
-            font-size: 0.46rem;
-            padding: 0.26rem 0.68rem;
+            font-size: 0.36rem;
+            padding: 0.2rem 0.53rem;
             border-radius: 1rem;
             color: white;
             border: none;
@@ -2156,10 +2164,10 @@
         }
 
         .nav-header.header-scrolled .currency-button {
-            font-size: 0.48rem;
-            padding: 0.2rem 0.58rem;
+            font-size: 0.37rem;
+            padding: 0.16rem 0.45rem;
             border-radius: 0.75rem;
-            text-shadow: 0 0 6px #ff006e, 0 0 14px #ff006e, 0 0 28px rgba(255, 0, 110, 0.85);
+            text-shadow: 0 0 5px #ff006e, 0 0 11px #ff006e, 0 0 22px rgba(255, 0, 110, 0.7);
             box-shadow: none;
             transition: all 0.3s ease;
             color: #ff006e;
@@ -2167,17 +2175,17 @@
         }
 
         .nav-header.header-scrolled .currency-button:hover {
-            text-shadow: 0 0 10px #ff006e, 0 0 22px #ff006e, 0 0 44px rgba(255, 0, 110, 0.95);
+            text-shadow: 0 0 8px #ff006e, 0 0 17px #ff006e, 0 0 34px rgba(255, 0, 110, 0.78);
             transform: translateY(-1px);
             box-shadow: none;
         }
 
         .currency-button i {
-            font-size: 0.48rem;
+            font-size: 0.37rem;
         }
         
         .nav-header.header-scrolled .currency-button i {
-            font-size: 0.32rem;
+            font-size: 0.25rem;
         }
 
         .currency-dropdown {
@@ -2254,31 +2262,31 @@
         .nav-header .index-header-buttons .eeks-cart-launch,
         .nav-header .index-header-buttons .google-auth-signout,
         .nav-header .index-header-buttons .google-auth-signed-in {
-            font-size: 0.46rem;
-            padding: 0.26rem 0.68rem;
+            font-size: 0.36rem;
+            padding: 0.2rem 0.53rem;
             border-radius: 1rem;
             color: white;
             border: none;
             background: transparent;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 0.8px;
             font-weight: 600;
             cursor: pointer;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 0.35rem;
+            gap: 0.27rem;
             box-shadow: none;
         }
         .nav-header.header-scrolled .index-header-buttons button.explore-button,
         .nav-header.header-scrolled .index-header-buttons .eeks-cart-launch,
         .nav-header.header-scrolled .index-header-buttons .google-auth-signout,
         .nav-header.header-scrolled .index-header-buttons .google-auth-signed-in {
-            font-size: 0.48rem;
-            padding: 0.2rem 0.58rem;
+            font-size: 0.37rem;
+            padding: 0.16rem 0.45rem;
             border-radius: 0.75rem;
             color: #ff006e;
-            text-shadow: 0 0 6px #ff006e, 0 0 14px #ff006e, 0 0 28px rgba(255, 0, 110, 0.85);
+            text-shadow: 0 0 5px #ff006e, 0 0 11px #ff006e, 0 0 22px rgba(255, 0, 110, 0.7);
             background: transparent;
         }
 
@@ -2402,9 +2410,12 @@
             }
 
             .nav-header .index-header-buttons a,
-            .nav-header .index-header-buttons button {
-                font-size: 0.52rem !important;
-                padding: 0.28rem 0.6rem !important;
+            .nav-header .index-header-buttons button,
+            .nav-header .currency-button {
+                font-size: 0.45rem !important;
+                padding: 0.26rem 0.5rem !important;
+                min-height: 32px;
+                box-sizing: border-box;
             }
 
             /* Search container below nav */
@@ -2448,15 +2459,15 @@
                 right: 4% !important;
             }
 
-            /* Mini images wrapper - position in bottom right */
+            /* Mini shirt thumbnail: top-right so it does not sit on the reflection */
             .hero-gone-mini-wrapper {
-                top: auto !important;
-                bottom: 12% !important;
+                top: 14% !important;
+                bottom: auto !important;
                 right: 3% !important;
                 width: 60px !important;
                 max-height: 180px !important;
                 transform: scale(0.825) !important;
-                transform-origin: bottom right !important;
+                transform-origin: top right !important;
             }
 
             .hero-gone-mini-stage,
