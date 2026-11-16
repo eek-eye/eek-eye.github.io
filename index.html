@@ -1488,6 +1488,55 @@
             -webkit-clip-path: inset(0 0 100% 0);
         }
 
+
+        /* consumerism: under the top-right corner box, nav-button look, lowercase */
+        body.index-page .consumerism-button {
+            position: absolute;
+            z-index: 9;
+            right: 4%;
+            top: 32%;
+            margin: 0;
+            padding: 0.19rem 0.48rem;
+            border: none;
+            border-radius: 1rem;
+            background: transparent;
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-size: clamp(0.36rem, 0.64vw, 0.45rem);
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            line-height: 1.2;
+            text-transform: none;
+            text-decoration: none;
+            color: #ff006e;
+            text-shadow: 0 0 5px #ff006e, 0 0 11px #ff006e, 0 0 22px rgba(255, 0, 110, 0.7);
+            cursor: pointer;
+            white-space: nowrap;
+            pointer-events: auto;
+            -webkit-tap-highlight-color: transparent;
+            transition:
+                background-color 0.35s ease,
+                color 0.35s ease,
+                transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+                text-shadow 0.35s ease,
+                box-shadow 0.35s ease;
+        }
+        body.index-page .consumerism-button:hover,
+        body.index-page .consumerism-button:focus-visible {
+            background: rgba(255, 255, 255, 0.1);
+            color: #ff006e;
+            text-shadow: 0 0 8px #ff006e, 0 0 17px #ff006e, 0 0 34px rgba(255, 0, 110, 0.78);
+            transform: translateY(-2px);
+            text-decoration: none;
+        }
+        body.index-page .consumerism-button:focus-visible {
+            outline: 2px solid rgba(255, 255, 255, 0.95);
+            outline-offset: 2px;
+        }
+        body.index-page .consumerism-button:active {
+            transform: translateY(0);
+            text-shadow: 0 0 5px #ff006e, 0 0 11px #ff006e, 0 0 22px rgba(255, 0, 110, 0.7);
+        }
+
         /* Mini versions in top-right of hero */
         .hero-gone-mini-wrapper {
             position: absolute;
@@ -2473,6 +2522,15 @@
                 right: 4% !important;
             }
 
+
+            body.index-page .consumerism-button {
+                right: 3% !important;
+                font-size: 0.45rem !important;
+                padding: 0.26rem 0.5rem !important;
+                min-height: 32px;
+                box-sizing: border-box;
+            }
+
             /* Mini shirt thumbnail: top-right so it does not sit on the reflection */
             .hero-gone-mini-wrapper {
                 top: 14% !important;
@@ -2787,6 +2845,7 @@
         </div>
         <div class="hero-bottom-fade" aria-hidden="true"></div>
         <div class="hero-scroll-veil" aria-hidden="true"></div>
+        <a href="#exploreProducts" class="consumerism-button" id="consumerismButton">consumerism</a>
     </section>
 
     <div class="hero-gone-image-modal" id="heroGoneImageModal" aria-hidden="true">
@@ -3076,6 +3135,7 @@
     <script src="js/index-grid-underwater.js"></script>
     <script src="js/index-grid-float.js"></script>
     <script src="js/index-scroll-fade.js"></script>
+    <script src="js/index-consumerism.js"></script>
 <script>
 (function() {
     var canvas = document.getElementById('hero-three-canvas');
