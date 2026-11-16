@@ -123,6 +123,13 @@ body.index-page #index-explore-grid:has(.password-overlay.active) .explore-hero-
     animation-play-state: paused;
 }
 
+/* JS buoyancy owns the transform. Keep the CSS drift only as a no-JS fallback. */
+body.index-page #index-explore-grid.is-float-physics .explore-hero-img,
+body.index-page #index-explore-grid.is-float-physics .explore-grid-placeholder-img,
+body.index-page #index-explore-grid.is-float-physics .explore-hero-info {
+    animation: none;
+}
+
 @keyframes index-grid-float {
     0%, 100% { transform: translate3d(0, 0, 0) rotate(-0.35deg); }
     25% { transform: translate3d(6px, -14px, 0) rotate(0.5deg); }
