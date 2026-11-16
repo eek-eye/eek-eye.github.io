@@ -1,7 +1,8 @@
 /**
- * Home page: scrolling past the hero into a black void silently
- * hands off to the Aesthetic (explore) page. No XI logo — the
- * visitor should feel like they kept scrolling into darkness.
+ * Home page: scrolling past the shirt grid into a black void silently
+ * hands off to the Aesthetic (explore) page. The void sits after the
+ * grid, so the handoff does not fire right after the hero. No XI logo —
+ * the visitor should feel like they kept scrolling into darkness.
  */
 (function () {
     'use strict';

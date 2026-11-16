@@ -1,6 +1,7 @@
 /**
  * Home page arrival after scrolling up from the Aesthetic page void.
- * Direct visits are left alone. Lands at the bottom of the hero, at the void edge.
+ * Direct visits are left alone. Lands at the bottom of the index
+ * (the shirt grid / void edge).
  */
 (function () {
     'use strict';

@@ -61,6 +61,7 @@
     </script>
     <link rel="icon" type="image/png" href="images/tags.png">
     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/explore-grid.css">
     <!-- SF Pro Font -->
     <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
     <!-- Inter Font -->
@@ -115,17 +116,19 @@
             visibility: hidden !important;
             pointer-events: none !important;
         }
-        /* Home page only: no footer — the mannequin hero flows into the void. */
+        /* Home page only: no footer — the mannequin hero flows into the shirt grid, then the void. */
         .explore-footer-scale-wrap {
             display: none !important;
         }
 
         html.void-returning.void-arrival-armed .hero-section,
+        html.void-returning.void-arrival-armed #index-explore-grid,
         html.void-returning.void-arrival-armed #index-void {
             transform: translateY(32px);
             filter: blur(8px);
         }
         html.void-returning.is-void-emerging .hero-section,
+        html.void-returning.is-void-emerging #index-explore-grid,
         html.void-returning.is-void-emerging #index-void {
             transform: none;
             filter: none;
@@ -137,8 +140,10 @@
         }
         @media (prefers-reduced-motion: reduce) {
             html.void-returning.void-arrival-armed .hero-section,
+            html.void-returning.void-arrival-armed #index-explore-grid,
             html.void-returning.void-arrival-armed #index-void,
             html.void-returning.is-void-emerging .hero-section,
+            html.void-returning.is-void-emerging #index-explore-grid,
             html.void-returning.is-void-emerging #index-void {
                 transform: none;
                 filter: none;
@@ -2778,6 +2783,117 @@
         <img src="eekseye.png/I 伊克西 I I eeks eye I I 2026.png" alt="I 伊克西 I I eeks eye I I 2026 original view">
     </div>
 
+
+    <section id="index-explore-grid" class="index-explore-grid" aria-label="Aesthetic shirts">
+    <template id="explore-hero-text-template">
+        <div class="explore-hero-text-fill" aria-hidden="true">
+            <p class="explore-hero-text-line">◆ EEKSEYE ◆ RUNWAY I KNOW YOU SAY YOU KNOW ME GONE GONE X I DARK SIDE · INTERSTELLA · VIBRATION SEASON 1 · 2 · 3 · 4 · 5 EXPLORE — DESIGNS — NEWS TRUTH SHOULD SET YOU FREE NO REPRODUCTION WITHOUT PERMISSION · XI · CH@0S · UNGUIDED · SEEK Rockstar · Martyr · Nightmare</p>
+            <p class="explore-hero-text-line">頑張っても手に入らないって約束する 伊克西 · 满月 · 多重人格 I メタ I eekseye I I 2026 冷笑主義 I eekseye I 2029 Eeks Eye ◆ EEKSEYE ◆ RUNWAY I KNOW YOU SAY YOU KNOW ME GONE GONE</p>
+            <p class="explore-hero-text-line">DARK SIDE · INTERSTELLA · VIBRATION SEASON 1 · 2 · 3 · 4 · 5 EXPLORE — DESIGNS — NEWS TRUTH SHOULD SET YOU FREE NO REPRODUCTION WITHOUT PERMISSION · XI · CH@0S · UNGUIDED · SEEK Rockstar · Martyr · Nightmare</p>
+            <p class="explore-hero-text-line">◆ EEKSEYE ◆ RUNWAY I KNOW YOU SAY YOU KNOW ME X I 頑張っても手に入らないって約束する 伊克西 · 满月 · 多重人格 I メタ I eekseye I I 2026 冷笑主義 I eekseye I 2029</p>
+            <p class="explore-hero-text-line">GONE GONE Eeks Eye DARK SIDE · INTERSTELLA · VIBRATION SEASON 1 · 2 · 3 · 4 · 5 EXPLORE — DESIGNS — NEWS TRUTH SHOULD SET YOU FREE NO REPRODUCTION WITHOUT PERMISSION</p>
+            <p class="explore-hero-text-line">· XI · CH@0S · UNGUIDED · SEEK Rockstar · Martyr · Nightmare ◆ EEKSEYE ◆ RUNWAY I KNOW YOU SAY YOU KNOW ME 頑張っても手に入らないって約束する 伊克西 · 满月 · 多重人格</p>
+        </div>
+    </template>
+
+    <div id="explore-password-pool" aria-hidden="true">
+        <div class="password-overlay">
+            <!-- Outside .password-modal so the full-width label cannot sit on top of the hit target -->
+            <button type="button" class="password-close-btn" aria-label="Close password dialog" onclick="event.stopPropagation(); event.preventDefault(); closePasswordModal();">&times;</button>
+            <div class="password-modal">
+                <label class="password-modal-label" for="explore-password-field" data-translate="password">Password</label>
+                <input type="password" id="explore-password-field" class="password-input" placeholder="" autocomplete="off" aria-hidden="true">
+            </div>
+        </div>
+    </div>
+
+        <div class="explore-products explore-products--columns-3" id="exploreProducts">
+        <!-- Hero 1: First shirt -->
+        <section class="explore-hero-section" id="first-product" data-product-id="1" onclick="handleExploreProductClick(event, 1, this)">
+            <div class="explore-hero-bg"></div>
+            <img src="eekseye.png/I 伊克西 I I eeks eye I I 2026.png" alt="I 伊克西 I I eeks eye I I 2026" class="explore-hero-img">
+            <div class="explore-hero-info">
+                <div class="explore-hero-title">I Eeks Eye I 2026</div>
+                <div class="explore-hero-category">Runway</div>
+                <div class="explore-hero-price" data-price="275">$275.00</div>
+            </div>
+        </section>
+        <!-- Hero 2: Second shirt -->
+        <section class="explore-hero-section" id="second-product" data-product-id="2" onclick="handleExploreProductClick(event, 2, this)">
+            <div class="explore-hero-bg"></div>
+            <img src="eekseye.png/I 满月 I eekseye I 2026.png" alt="I 满月 I eekseye I 2026" class="explore-hero-img">
+            <div class="explore-hero-extra explore-hero-extra--white"></div>
+            <div class="explore-hero-loader">
+                <img src="images/loading.png" alt="Loading">
+            </div>
+            <div class="explore-hero-info">
+                <div class="explore-hero-title">I Full Moon I eekseye I 2026</div>
+                <div class="explore-hero-category">Runway</div>
+                <div class="explore-hero-price" data-price="275">$275.00</div>
+            </div>
+        </section>
+        <!-- Hero 3: Third shirt -->
+        <section class="explore-hero-section" id="third-product" data-product-id="3" onclick="handleExploreProductClick(event, 3, this)">
+            <div class="explore-hero-bg"></div>
+            <img src="eekseye.png/I 多重人格 I eekseye I 2026.png" alt="I 多重人格 I eekseye I 2026" class="explore-hero-img">
+            <div class="explore-hero-extra explore-hero-extra--white"></div>
+            <div class="explore-hero-loader">
+                <img src="images/loading.png" alt="Loading">
+            </div>
+            <div class="explore-hero-info">
+                <div class="explore-hero-title">I Multiple Personality I eekseye I 2026</div>
+                <div class="explore-hero-category">Runway</div>
+                <div class="explore-hero-price" data-price="275">$275.00</div>
+            </div>
+        </section>
+        <!-- Hero 4: Fourth shirt - I メタ I eekseye I I 2026 -->
+        <section class="explore-hero-section" id="fourth-product" data-product-id="4" onclick="handleExploreProductClick(event, 4, this)">
+            <div class="explore-hero-bg"></div>
+            <img src="eekseye.png/I メタ I eekseye I I 2026.png" alt="I メタ I eekseye I I 2026" class="explore-hero-img">
+            <div class="explore-hero-extra explore-hero-extra--white"></div>
+            <div class="explore-hero-loader">
+                <img src="images/loading.png" alt="Loading">
+            </div>
+            <div class="explore-hero-info">
+                <div class="explore-hero-title">I Meta I eekseye I 2026</div>
+                <div class="explore-hero-category">Runway</div>
+                <div class="explore-hero-price" data-price="275">$275.00</div>
+            </div>
+        </section>
+        <!-- Hero 5: Fifth shirt - I 冷笑主義 I eekseye I 2029 -->
+        <section class="explore-hero-section" id="fifth-product" data-product-id="5" onclick="handleExploreProductClick(event, 5, this)">
+            <div class="explore-hero-bg"></div>
+            <img src="eekseye.png/I 冷笑主義 I eekseye I 2029.png" alt="I 冷笑主義 I eekseye I 2029" class="explore-hero-img">
+            <div class="explore-hero-extra explore-hero-extra--white"></div>
+            <div class="explore-hero-loader">
+                <img src="images/loading.png" alt="Loading">
+            </div>
+            <div class="explore-hero-info">
+                <div class="explore-hero-title">I Cold Smile Ideology I eekseye I 2029</div>
+                <div class="explore-hero-category">Runway</div>
+                <div class="explore-hero-price" data-price="275">$275.00</div>
+            </div>
+        </section>
+        <!-- Hero 6: x + y sold together — one section, one password / product id -->
+        <section class="explore-hero-section explore-hero-section--pair" id="sixth-product" data-product-id="6" onclick="handleExploreProductClick(event, 6, this)">
+            <div class="explore-hero-bg"></div>
+            <div class="explore-hero-pair-row">
+                <div class="explore-hero-pair-col">
+                    <img src="eekseye.png/I x I eekseye  I 2026.png" alt="I x I eekseye  I 2026" class="explore-hero-img">
+                </div>
+                <div class="explore-hero-pair-col">
+                    <img src="eekseye.png/I y I eekseye I I 2026.png" alt="I y I eekseye I I 2026" class="explore-hero-img">
+                </div>
+            </div>
+            <div class="explore-hero-info explore-hero-info--pair">
+                <div class="explore-hero-title">I x I eekseye  I 2026 · I y I eekseye I I 2026</div>
+                <div class="explore-hero-category">Runway</div>
+                <div class="explore-hero-price" data-price="350">$350.00</div>
+            </div>
+        </section>
+        </div>
+    </section>
+
     <div class="index-cards-footer-scale" hidden>
     <section class="hero-section-3" hidden>
         <div class="hero-section-3-container">
@@ -2890,6 +3006,9 @@
     <script src="js/index-void-transition.js"></script>
     <script src="js/index-void-return.js"></script>
     <script src="js/index-hero-reflection.js"></script>
+    <script src="js/explore-grid.js"></script>
+    <script src="js/explore-text-glitch.js"></script>
+    <script src="js/explore-dream-blur.js"></script>
 <script>
 (function() {
     var canvas = document.getElementById('hero-three-canvas');
