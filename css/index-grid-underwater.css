@@ -464,30 +464,34 @@ body.index-page #index-explore-grid .explore-hero-text-fill {
     }
 }
 
-/* 3D tumble + cloth canvas overlay (JS wraps each shirt image). */
+/* 3D tumble + cloth canvas overlay (JS wraps each shirt image).
+   Perspective stays on the card, but we flatten (no preserve-3d) so a
+   rotated shirt is composited as a 2D layer and cannot slip behind the
+   card's black background. The wrap sits above the glitch text. */
 body.index-page #index-explore-grid .explore-hero-section,
 body.index-page #index-explore-grid .explore-grid-placeholder {
     perspective: 1100px;
-    transform-style: preserve-3d;
+    transform-style: flat;
     overflow: visible;
 }
 
 body.index-page #index-explore-grid .index-shirt-cloth {
     position: relative;
+    z-index: 2;
     display: inline-block;
     max-width: 100%;
     line-height: 0;
-    transform-style: preserve-3d;
     transform-origin: 50% 55%;
-    filter:
-        drop-shadow(0 10px 28px rgba(0, 0, 0, 0.55))
-        drop-shadow(0 0 22px rgba(255, 255, 255, 0.1));
+    backface-visibility: visible;
 }
 
+/* Keep the original <img> visible until the cloth canvas has a real frame. */
 body.index-page #index-explore-grid .index-shirt-cloth .explore-hero-img,
 body.index-page #index-explore-grid .index-shirt-cloth .explore-grid-placeholder-img {
-    opacity: 0;
-    filter: none;
+    opacity: 1;
+    filter:
+        drop-shadow(0 10px 28px rgba(0, 0, 0, 0.55))
+        drop-shadow(0 0 20px rgba(255, 255, 255, 0.35));
 }
 
 body.index-page #index-explore-grid .index-shirt-cloth-canvas {
@@ -498,13 +502,30 @@ body.index-page #index-explore-grid .index-shirt-cloth-canvas {
     height: 136%;
     display: block;
     pointer-events: none;
+    opacity: 0;
+    backface-visibility: visible;
+    filter:
+        drop-shadow(0 10px 28px rgba(0, 0, 0, 0.55))
+        drop-shadow(0 0 20px rgba(255, 255, 255, 0.35));
+}
+
+body.index-page #index-explore-grid .index-shirt-cloth.is-cloth-live .explore-hero-img,
+body.index-page #index-explore-grid .index-shirt-cloth.is-cloth-live .explore-grid-placeholder-img {
+    opacity: 0;
+    filter: none;
+}
+
+body.index-page #index-explore-grid .index-shirt-cloth.is-cloth-live .index-shirt-cloth-canvas {
+    opacity: 1;
 }
 
 @media (max-width: 768px) {
-    body.index-page #index-explore-grid .index-shirt-cloth {
+    body.index-page #index-explore-grid .index-shirt-cloth .explore-hero-img,
+    body.index-page #index-explore-grid .index-shirt-cloth .explore-grid-placeholder-img,
+    body.index-page #index-explore-grid .index-shirt-cloth-canvas {
         filter:
             drop-shadow(0 10px 28px rgba(0, 0, 0, 0.55))
-            drop-shadow(0 0 18px rgba(255, 255, 255, 0.1));
+            drop-shadow(0 0 16px rgba(255, 255, 255, 0.32));
     }
 }
 

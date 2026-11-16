@@ -35,11 +35,12 @@
     var PUSH_ACCEL = 340;
     var WAKE = 0.12;
     var SCROLL_FORCE = 9.5;
-    var MAX_X = 52;
-    var MAX_Y = 58;
-    var MAX_RX = 32;
-    var MAX_RY = 36;
-    var MAX_RZ = 18;
+    var MAX_X = 22;
+    var MAX_Y = 22;
+    var MAX_RX = 14;
+    var MAX_RY = 16;
+    var MAX_RZ = 8;
+    var LIFT_Z = 80;
 
     function visibleCard(el) {
         if (!el || el.hidden || el.getAttribute('hidden') !== null) return false;
@@ -85,11 +86,11 @@
                 canvas: canvas,
                 info: info,
                 mass: 0.78 + hash(s * 3.1) * 0.7,
-                ampX: 10 + hash(s * 5.2) * 14,
-                ampY: 12 + hash(s * 8.9) * 14,
-                ampRx: 12 + hash(s * 1.9) * 14,
-                ampRy: 16 + hash(s * 2.7) * 16,
-                ampRz: 6 + hash(s * 3.3) * 9,
+                ampX: 6 + hash(s * 5.2) * 8,
+                ampY: 8 + hash(s * 8.9) * 8,
+                ampRx: 5 + hash(s * 1.9) * 6,
+                ampRy: 6 + hash(s * 2.7) * 7,
+                ampRz: 3 + hash(s * 3.3) * 4,
                 w1: 0.22 + hash(s * 2.4) * 0.2,
                 w2: 0.48 + hash(s * 4.7) * 0.32,
                 w3: 0.9 + hash(s * 6.1) * 0.5,
@@ -157,7 +158,7 @@
     }
 
     function apply(s) {
-        var shirtTx = 'translate3d(' + s.x.toFixed(3) + 'px, ' + s.y.toFixed(3) + 'px, 0) rotateX(' + s.rx.toFixed(3) + 'deg) rotateY(' + s.ry.toFixed(3) + 'deg) rotateZ(' + s.rz.toFixed(3) + 'deg)';
+        var shirtTx = 'translate3d(' + s.x.toFixed(3) + 'px, ' + s.y.toFixed(3) + 'px, ' + LIFT_Z + 'px) rotateX(' + s.rx.toFixed(3) + 'deg) rotateY(' + s.ry.toFixed(3) + 'deg) rotateZ(' + s.rz.toFixed(3) + 'deg)';
         var infoTx = 'translate3d(' + s.x.toFixed(3) + 'px, ' + s.y.toFixed(3) + 'px, 0) rotate(' + (s.rz * 0.28).toFixed(3) + 'deg)';
         if (s.wrap) s.wrap.style.transform = shirtTx;
         if (s.info) s.info.style.transform = infoTx;
@@ -355,19 +356,72 @@
         gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
         gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
         useGL = true;
+        glCanvas.addEventListener('webglcontextlost', function (e) {
+            e.preventDefault();
+            useGL = false;
+            gl = null;
+            var i;
+            for (i = 0; i < shirts.length; i++) {
+                shirts[i].tex = null;
+                shirts[i].texReady = false;
+                shirts[i].usingFallback = false;
+                showImgFallback(shirts[i]);
+            }
+        }, false);
+        glCanvas.addEventListener('webglcontextrestored', function () {
+            var i;
+            gl = null;
+            useGL = false;
+            if (!initGL()) {
+                for (i = 0; i < shirts.length; i++) showImgFallback(shirts[i]);
+                return;
+            }
+            for (i = 0; i < shirts.length; i++) {
+                shirts[i].tex = null;
+                shirts[i].texReady = false;
+                shirts[i].usingFallback = false;
+                bindTexture(shirts[i]);
+                if (!shirts[i].texReady) showImgFallback(shirts[i]);
+            }
+        }, false);
         return true;
     }
 
     function showImgFallback(s) {
+        if (s.wrap) s.wrap.classList.remove('is-cloth-live');
         if (s.img) s.img.style.opacity = '1';
-        if (s.canvas) s.canvas.style.display = 'none';
+        if (s.canvas) s.canvas.style.opacity = '0';
         s.usingFallback = true;
+        s.clothLive = false;
     }
 
     function hideImgFallback(s) {
-        if (s.usingFallback) return;
+        s.usingFallback = false;
+        if (s.wrap) s.wrap.classList.add('is-cloth-live');
         if (s.img) s.img.style.opacity = '';
-        if (s.canvas) s.canvas.style.display = '';
+        if (s.canvas) s.canvas.style.opacity = '';
+        s.clothLive = true;
+    }
+
+    var inkProbe = document.createElement('canvas');
+    inkProbe.width = 48;
+    inkProbe.height = 48;
+    var inkProbeCtx = inkProbe.getContext('2d', { willReadFrequently: true });
+
+    function canvasHasInk(s) {
+        if (!s.ctx2d || !s.canvas || s.canvas.width < 4) return false;
+        try {
+            inkProbeCtx.clearRect(0, 0, 48, 48);
+            inkProbeCtx.drawImage(s.canvas, 0, 0, 48, 48);
+            var data = inkProbeCtx.getImageData(0, 0, 48, 48).data;
+            var i, hits = 0;
+            for (i = 3; i < data.length; i += 4) {
+                if (data[i] > 12) hits++;
+            }
+            return hits > 20;
+        } catch (err) {
+            return false;
+        }
     }
 
     function bindTexture(s) {
@@ -382,7 +436,6 @@
         try {
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, s.img);
             s.texReady = true;
-            hideImgFallback(s);
             return true;
         } catch (err) {
             s.texReady = false;
@@ -464,8 +517,13 @@
         gl.uniform1f(glUniforms.phase, s.p5);
         gl.uniform1f(glUniforms.pad, CLOTH_PAD);
         gl.drawElements(gl.TRIANGLES, glIdxCount, gl.UNSIGNED_SHORT, 0);
-        s.ctx2d.clearRect(0, 0, w, h);
-        s.ctx2d.drawImage(glCanvas, 0, 0);
+        try {
+            s.ctx2d.clearRect(0, 0, w, h);
+            s.ctx2d.drawImage(glCanvas, 0, 0);
+            return true;
+        } catch (err) {
+            return false;
+        }
     }
 
     function warp2d(s, u, v, t) {
@@ -505,15 +563,28 @@
     }
 
     function renderCloth(s, t) {
-        if (!s.inView || s.usingFallback || !s.canvas || !s.ctx2d) return;
+        if (!s.inView || !s.canvas || !s.ctx2d) {
+            if (s.inView && s.img && s.img.naturalWidth) showImgFallback(s);
+            return;
+        }
         if (s.canvas.width < 4 || s.canvas.height < 4) {
             sizeCloth(s);
+        }
+        if (useGL && gl && gl.isContextLost && gl.isContextLost()) {
+            useGL = false;
+            showImgFallback(s);
+            return;
         }
         if (useGL && !s.texReady && s.img.complete && s.img.naturalWidth) {
             bindTexture(s);
         }
-        if (useGL && s.texReady) renderClothGL(s, t);
-        else if (s.img.naturalWidth) renderCloth2d(s, t);
+        var drew = false;
+        if (useGL && s.texReady) drew = renderClothGL(s, t);
+        else if (s.img.naturalWidth) {
+            renderCloth2d(s, t);
+            drew = true;
+        }
+        if (drew && canvasHasInk(s)) hideImgFallback(s);
         else showImgFallback(s);
     }
 
