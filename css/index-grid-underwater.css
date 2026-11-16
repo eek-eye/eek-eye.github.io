@@ -1,5 +1,5 @@
 /* Home page only: underwater motion on a pure-black Aesthetic grid.
-   No teal/blue tint or depth color. Shirts stay blurred; they stay clickable. */
+   No teal/blue tint or depth color. Shirts stay sharp and slowly drift, clickable. */
 
 body.index-page .hero-section {
     z-index: 2;
@@ -79,15 +79,55 @@ body.index-page #exploreProducts {
     z-index: 1;
 }
 
-/* Keep every card blurred — no hover or center-focus clear on the home grid. */
+/* No dream blur on the home grid — shirts, cards, and text stay sharp. */
 body.index-page #index-explore-grid .explore-hero-section,
 body.index-page #index-explore-grid .explore-grid-placeholder,
 body.index-page #index-explore-grid .explore-hero-section:hover,
 body.index-page #index-explore-grid .explore-grid-placeholder:hover,
 body.index-page #index-explore-grid .explore-hero-section.is-dream-focus,
 body.index-page #index-explore-grid .explore-grid-placeholder.is-dream-focus {
-    filter: blur(2.5px);
+    filter: none;
     will-change: auto;
+}
+
+/* Weightless, slow-motion drift — shirts hang in the water, not on a rigid grid. */
+body.index-page #index-explore-grid .explore-hero-section,
+body.index-page #index-explore-grid .explore-grid-placeholder {
+    --float-dur: 14s;
+    --float-delay: 0s;
+}
+body.index-page #index-explore-grid #first-product { --float-dur: 13.5s; --float-delay: -2.4s; }
+body.index-page #index-explore-grid #second-product { --float-dur: 15.5s; --float-delay: -7s; }
+body.index-page #index-explore-grid #third-product { --float-dur: 14.2s; --float-delay: -4.1s; }
+body.index-page #index-explore-grid #fourth-product { --float-dur: 16s; --float-delay: -9.5s; }
+body.index-page #index-explore-grid #fifth-product { --float-dur: 13.8s; --float-delay: -1.2s; }
+body.index-page #index-explore-grid .explore-grid-placeholder { --float-dur: 15s; --float-delay: -6.2s; }
+
+body.index-page #index-explore-grid .explore-hero-img,
+body.index-page #index-explore-grid .explore-grid-placeholder-img,
+body.index-page #index-explore-grid .explore-hero-info {
+    animation: index-grid-float var(--float-dur, 14s) var(--float-delay, 0s) ease-in-out infinite;
+    animation-play-state: paused;
+    will-change: transform;
+}
+
+body.index-page #index-explore-grid.is-water-active .explore-hero-img,
+body.index-page #index-explore-grid.is-water-active .explore-grid-placeholder-img,
+body.index-page #index-explore-grid.is-water-active .explore-hero-info {
+    animation-play-state: running;
+}
+
+body.index-page #index-explore-grid:has(.password-overlay.active) .explore-hero-img,
+body.index-page #index-explore-grid:has(.password-overlay.active) .explore-grid-placeholder-img,
+body.index-page #index-explore-grid:has(.password-overlay.active) .explore-hero-info {
+    animation-play-state: paused;
+}
+
+@keyframes index-grid-float {
+    0%, 100% { transform: translate3d(0, 0, 0) rotate(-0.35deg); }
+    25% { transform: translate3d(6px, -14px, 0) rotate(0.5deg); }
+    50% { transform: translate3d(-4px, -7px, 0) rotate(-0.2deg); }
+    75% { transform: translate3d(-8px, -18px, 0) rotate(0.35deg); }
 }
 
 .index-grid-water {
@@ -129,6 +169,23 @@ body.index-page #index-explore-grid .explore-grid-placeholder.is-dream-focus {
     display: none;
 }
 
+/* Soft light falling from the surface above the shirts. Neutral / warm-white only. */
+.index-grid-water-surface {
+    position: absolute;
+    left: -8%;
+    right: -8%;
+    top: 0;
+    height: 78%;
+    pointer-events: none;
+    mix-blend-mode: screen;
+    opacity: 0.85;
+    background:
+        radial-gradient(ellipse 70% 42% at 50% 0%, rgba(255, 250, 240, 0.2), transparent 68%),
+        radial-gradient(ellipse 36% 28% at 28% 8%, rgba(255, 252, 245, 0.1), transparent 70%),
+        radial-gradient(ellipse 32% 24% at 74% 6%, rgba(255, 248, 235, 0.08), transparent 72%),
+        linear-gradient(to bottom, rgba(255, 250, 240, 0.07) 0%, rgba(255, 250, 240, 0.03) 36%, transparent 72%);
+}
+
 .index-grid-water-caustics {
     position: absolute;
     left: -12%;
@@ -140,11 +197,11 @@ body.index-page #index-explore-grid .explore-grid-placeholder.is-dream-focus {
     -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.35) 14%, rgba(0, 0, 0, 0.8) 34%, rgba(0, 0, 0, 0.4) 72%, transparent 100%);
     mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.35) 14%, rgba(0, 0, 0, 0.8) 34%, rgba(0, 0, 0, 0.4) 72%, transparent 100%);
     background-image:
-        radial-gradient(ellipse 42% 22% at 18% 8%, rgba(255, 255, 255, 0.38), transparent 62%),
-        radial-gradient(ellipse 34% 18% at 72% 4%, rgba(255, 255, 255, 0.28), transparent 60%),
-        radial-gradient(ellipse 50% 26% at 48% 22%, rgba(255, 255, 255, 0.16), transparent 70%),
-        radial-gradient(ellipse 28% 16% at 86% 30%, rgba(255, 255, 255, 0.16), transparent 64%),
-        radial-gradient(ellipse 36% 20% at 30% 40%, rgba(255, 255, 255, 0.12), transparent 68%);
+        radial-gradient(ellipse 42% 22% at 18% 8%, rgba(255, 252, 245, 0.4), transparent 62%),
+        radial-gradient(ellipse 34% 18% at 72% 4%, rgba(255, 250, 240, 0.3), transparent 60%),
+        radial-gradient(ellipse 50% 26% at 48% 22%, rgba(255, 250, 240, 0.18), transparent 70%),
+        radial-gradient(ellipse 28% 16% at 86% 30%, rgba(255, 250, 240, 0.18), transparent 64%),
+        radial-gradient(ellipse 36% 20% at 30% 40%, rgba(255, 248, 235, 0.14), transparent 68%);
     background-repeat: no-repeat;
     filter: blur(18px);
     transform: translate3d(0, 0, 0);
@@ -163,20 +220,31 @@ body.index-page #index-explore-grid .explore-grid-placeholder.is-dream-focus {
 .index-grid-water-rays {
     position: absolute;
     inset: 0;
-    opacity: 0.28;
+    opacity: 0.42;
     mix-blend-mode: screen;
-    background: repeating-linear-gradient(
-        104deg,
-        transparent 0,
-        transparent 52px,
-        rgba(255, 255, 255, 0.02) 58px,
-        rgba(255, 255, 255, 0.055) 70px,
-        rgba(255, 255, 255, 0.025) 84px,
-        transparent 110px,
-        transparent 150px
-    );
-    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.45) 20%, rgba(0, 0, 0, 0.24) 52%, transparent 88%);
-    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.45) 20%, rgba(0, 0, 0, 0.24) 52%, transparent 88%);
+    background:
+        repeating-linear-gradient(
+            106deg,
+            transparent 0,
+            transparent 46px,
+            rgba(255, 250, 240, 0.03) 54px,
+            rgba(255, 252, 245, 0.09) 66px,
+            rgba(255, 250, 240, 0.035) 80px,
+            transparent 108px,
+            transparent 150px
+        ),
+        repeating-linear-gradient(
+            98deg,
+            transparent 0,
+            transparent 90px,
+            rgba(255, 248, 235, 0.025) 102px,
+            rgba(255, 252, 245, 0.07) 114px,
+            rgba(255, 250, 240, 0.02) 128px,
+            transparent 160px,
+            transparent 210px
+        );
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.18) 0%, rgba(0, 0, 0, 0.62) 18%, rgba(0, 0, 0, 0.32) 58%, transparent 90%);
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.18) 0%, rgba(0, 0, 0, 0.62) 18%, rgba(0, 0, 0, 0.32) 58%, transparent 90%);
     animation: index-grid-rays 32s linear infinite;
     animation-play-state: paused;
 }
@@ -189,15 +257,32 @@ body.index-page #index-explore-grid .explore-grid-placeholder.is-dream-focus {
     height: var(--size, 6px);
     border-radius: 50%;
     background: radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.14) 46%, transparent 72%);
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.16);
+    box-shadow: 0 0 8px rgba(255, 250, 240, 0.18);
     animation: index-grid-bubble var(--dur, 16s) var(--delay, 0s) linear infinite;
     animation-play-state: paused;
     will-change: transform, opacity;
 }
 
+.index-grid-water-sparkles span {
+    position: absolute;
+    left: var(--x, 50%);
+    top: var(--y, 50%);
+    width: var(--size, 2px);
+    height: var(--size, 2px);
+    border-radius: 50%;
+    background: rgba(255, 252, 245, 0.95);
+    box-shadow: 0 0 6px 1px rgba(255, 250, 240, 0.65), 0 0 1px rgba(255, 255, 255, 0.9);
+    animation: index-grid-glint var(--dur, 6s) var(--delay, 0s) ease-in-out infinite;
+    animation-play-state: paused;
+    opacity: 0;
+    will-change: transform, opacity;
+    pointer-events: none;
+}
+
 #index-explore-grid.is-water-active .index-grid-water-caustics,
 #index-explore-grid.is-water-active .index-grid-water-rays,
-#index-explore-grid.is-water-active .index-grid-water-bubbles span {
+#index-explore-grid.is-water-active .index-grid-water-bubbles span,
+#index-explore-grid.is-water-active .index-grid-water-sparkles span {
     animation-play-state: running;
 }
 
@@ -221,6 +306,29 @@ body.index-page #index-explore-grid .explore-grid-placeholder.is-dream-focus {
     100% {
         transform: translate3d(var(--drift, 12px), -125vh, 0) scale(1.05);
         opacity: 0;
+    }
+}
+
+@keyframes index-grid-glint {
+    0%, 100% {
+        opacity: 0;
+        transform: translate3d(0, 0, 0) scale(0.45);
+    }
+    18% {
+        opacity: 0.95;
+        transform: translate3d(calc(var(--drift, 8px) * 0.25), -8px, 0) scale(1);
+    }
+    42% {
+        opacity: 0.12;
+        transform: translate3d(calc(var(--drift, 8px) * 0.55), -16px, 0) scale(0.6);
+    }
+    68% {
+        opacity: 0.8;
+        transform: translate3d(var(--drift, 8px), -26px, 0) scale(1.2);
+    }
+    88% {
+        opacity: 0.05;
+        transform: translate3d(calc(var(--drift, 8px) * 1.15), -34px, 0) scale(0.4);
     }
 }
 
@@ -256,11 +364,25 @@ body.index-page #index-explore-grid .explore-hero-text-fill {
         display: none;
     }
     .index-grid-water-rays {
-        opacity: 0.2;
+        opacity: 0.3;
         animation-duration: 48s;
     }
     .index-grid-water-bubbles span:nth-child(n+6) {
         display: none;
+    }
+    .index-grid-water-sparkles span:nth-child(n+10) {
+        display: none;
+    }
+    body.index-page #index-explore-grid .explore-hero-img,
+    body.index-page #index-explore-grid .explore-grid-placeholder-img,
+    body.index-page #index-explore-grid .explore-hero-info {
+        animation-name: index-grid-float-mobile;
+    }
+    @keyframes index-grid-float-mobile {
+        0%, 100% { transform: translate3d(0, 0, 0) rotate(-0.25deg); }
+        25% { transform: translate3d(4px, -10px, 0) rotate(0.35deg); }
+        50% { transform: translate3d(-3px, -5px, 0) rotate(-0.15deg); }
+        75% { transform: translate3d(-6px, -13px, 0) rotate(0.25deg); }
     }
 }
 
@@ -268,10 +390,15 @@ body.index-page #index-explore-grid .explore-hero-text-fill {
     .index-grid-water-caustics,
     .index-grid-water-caustics--sheen,
     .index-grid-water-rays,
-    .index-grid-water-bubbles span {
+    .index-grid-water-bubbles span,
+    .index-grid-water-sparkles span,
+    body.index-page #index-explore-grid .explore-hero-img,
+    body.index-page #index-explore-grid .explore-grid-placeholder-img,
+    body.index-page #index-explore-grid .explore-hero-info {
         animation: none !important;
     }
-    .index-grid-water-bubbles {
+    .index-grid-water-bubbles,
+    .index-grid-water-sparkles {
         display: none;
     }
     body.index-page #index-explore-grid .explore-hero-img,
