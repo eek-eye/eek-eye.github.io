@@ -121,6 +121,14 @@
             display: none !important;
         }
 
+        /* Temporarily hide the x+y pair row (#sixth-product) at the bottom of the
+           home Aesthetic grid. Restore by removing this rule and the hidden
+           attribute on #sixth-product. Markup is left in place. */
+        #index-explore-grid #sixth-product,
+        #index-explore-grid .explore-hero-section--pair {
+            display: none !important;
+        }
+
         html.void-returning.void-arrival-armed .hero-section,
         html.void-returning.void-arrival-armed #index-explore-grid,
         html.void-returning.void-arrival-armed #index-void {
@@ -2875,7 +2883,8 @@
             </div>
         </section>
         <!-- Hero 6: x + y sold together — one section, one password / product id -->
-        <section class="explore-hero-section explore-hero-section--pair" id="sixth-product" data-product-id="6" onclick="handleExploreProductClick(event, 6, this)">
+        <!-- Temporarily hidden on index; CSS also hides #sixth-product. Remove hidden to restore. -->
+        <section class="explore-hero-section explore-hero-section--pair" id="sixth-product" data-product-id="6" hidden onclick="handleExploreProductClick(event, 6, this)">
             <div class="explore-hero-bg"></div>
             <div class="explore-hero-pair-row">
                 <div class="explore-hero-pair-col">
