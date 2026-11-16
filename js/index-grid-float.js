@@ -28,18 +28,18 @@
         lastX: 0, lastY: 0, lastT: 0
     };
 
-    var SPRING = 4.2;
-    var DAMPING = 3.2;
-    var ANG_SPRING = 3.4;
-    var ANG_DAMPING = 2.3;
-    var PUSH_ACCEL = 340;
-    var WAKE = 0.12;
-    var SCROLL_FORCE = 9.5;
-    var MAX_X = 22;
-    var MAX_Y = 22;
-    var MAX_RX = 14;
-    var MAX_RY = 16;
-    var MAX_RZ = 8;
+    var SPRING = 1.6;
+    var DAMPING = 5.2;
+    var ANG_SPRING = 1.4;
+    var ANG_DAMPING = 4.2;
+    var PUSH_ACCEL = 90;
+    var WAKE = 0.035;
+    var SCROLL_FORCE = 2.4;
+    var MAX_X = 8;
+    var MAX_Y = 8;
+    var MAX_RX = 6;
+    var MAX_RY = 6;
+    var MAX_RZ = 4;
     var LIFT_Z = 80;
 
     function visibleCard(el) {
@@ -86,17 +86,17 @@
                 canvas: canvas,
                 info: info,
                 mass: 0.78 + hash(s * 3.1) * 0.7,
-                ampX: 6 + hash(s * 5.2) * 8,
-                ampY: 8 + hash(s * 8.9) * 8,
-                ampRx: 5 + hash(s * 1.9) * 6,
-                ampRy: 6 + hash(s * 2.7) * 7,
-                ampRz: 3 + hash(s * 3.3) * 4,
-                w1: 0.22 + hash(s * 2.4) * 0.2,
-                w2: 0.48 + hash(s * 4.7) * 0.32,
-                w3: 0.9 + hash(s * 6.1) * 0.5,
-                wRx: 0.2 + hash(s * 9.1) * 0.22,
-                wRy: 0.16 + hash(s * 7.4) * 0.2,
-                wRz: 0.28 + hash(s * 5.6) * 0.24,
+                ampX: 2 + hash(s * 5.2) * 3,
+                ampY: 2.5 + hash(s * 8.9) * 3,
+                ampRx: 1.6 + hash(s * 1.9) * 2,
+                ampRy: 1.8 + hash(s * 2.7) * 2.2,
+                ampRz: 1 + hash(s * 3.3) * 1.4,
+                w1: 0.08 + hash(s * 2.4) * 0.07,
+                w2: 0.16 + hash(s * 4.7) * 0.1,
+                w3: 0.28 + hash(s * 6.1) * 0.16,
+                wRx: 0.07 + hash(s * 9.1) * 0.07,
+                wRy: 0.055 + hash(s * 7.4) * 0.07,
+                wRz: 0.09 + hash(s * 5.6) * 0.08,
                 p1: hash(s * 1.3) * Math.PI * 2,
                 p2: hash(s * 2.8) * Math.PI * 2,
                 p3: hash(s * 3.9) * Math.PI * 2,
@@ -106,8 +106,8 @@
                 pRy: hash(s * 6.6) * Math.PI * 2,
                 pRz: hash(s * 4.1) * Math.PI * 2,
                 seed: s * 12.9898,
-                waveAmp: 0.05 + hash(s * 11.2) * 0.035,
-                waveSpeed: 1.15 + hash(s * 10.4) * 0.7,
+                waveAmp: 0.016 + hash(s * 11.2) * 0.012,
+                waveSpeed: 0.4 + hash(s * 10.4) * 0.25,
                 x: 0, y: 0, vx: 0, vy: 0,
                 rx: 0, ry: 0, rz: 0,
                 rvx: 0, rvy: 0, rvz: 0,
@@ -173,9 +173,9 @@
     }
 
     function currents(s, t) {
-        var n = Math.sin(t * 0.31 + s.seed) * Math.sin(t * 0.47 + s.p5) * Math.sin(t * 0.17 + s.seed * 0.4);
-        var flowX = 11 * Math.sin(t * 0.15 + 0.4) + 5 * Math.sin(t * 0.37 + s.p1);
-        var flowY = 6 * Math.sin(t * 0.12 + 1.1) + 3 * Math.sin(t * 0.29 + s.p3);
+        var n = Math.sin(t * 0.11 + s.seed) * Math.sin(t * 0.16 + s.p5) * Math.sin(t * 0.06 + s.seed * 0.4);
+        var flowX = 3.5 * Math.sin(t * 0.055 + 0.4) + 1.6 * Math.sin(t * 0.13 + s.p1);
+        var flowY = 2 * Math.sin(t * 0.045 + 1.1) + 1 * Math.sin(t * 0.1 + s.p3);
         return {
             x: s.ampX * (0.6 * Math.sin(t * s.w1 + s.p1) + 0.26 * Math.sin(t * s.w2 + s.p2) + 0.14 * n) + flowX,
             y: s.ampY * (0.68 * Math.sin(t * s.w1 * 0.86 + s.p3) + 0.22 * Math.sin(t * s.w2 * 1.07 + s.p4) + 0.12 * n) - s.ampY * 0.06 + flowY * 0.55
@@ -210,13 +210,13 @@
                 fy += dy * inv * PUSH_ACCEL * fall;
                 fx += pointer.vx * WAKE * fall;
                 fy += pointer.vy * WAKE * fall;
-                s.rvy += (dx * inv) * 28 * fall * dt;
-                s.rvx += (-dy * inv) * 22 * fall * dt;
+                s.rvy += (dx * inv) * 8 * fall * dt;
+                s.rvx += (-dy * inv) * 6 * fall * dt;
             }
         }
 
         fy += scrollImpulse * SCROLL_FORCE;
-        s.rvx += scrollImpulse * 4 * dt;
+        s.rvx += scrollImpulse * 1.2 * dt;
 
         s.vx += (fx / mass) * dt;
         s.vy += (fy / mass) * dt;
@@ -225,9 +225,9 @@
         s.x = clamp(s.x, -MAX_X, MAX_X);
         s.y = clamp(s.y, -MAX_Y, MAX_Y);
 
-        var restRx = s.ampRx * Math.sin(t * s.wRx + s.pRx) + s.vy * 0.08;
-        var restRy = s.ampRy * Math.sin(t * s.wRy + s.pRy) + s.vx * 0.1;
-        var restRz = s.ampRz * Math.sin(t * s.wRz + s.pRz) + s.vx * 0.07;
+        var restRx = s.ampRx * Math.sin(t * s.wRx + s.pRx) + s.vy * 0.03;
+        var restRy = s.ampRy * Math.sin(t * s.wRy + s.pRy) + s.vx * 0.04;
+        var restRz = s.ampRz * Math.sin(t * s.wRz + s.pRz) + s.vx * 0.03;
         s.rvx += ((restRx - s.rx) * ANG_SPRING - s.rvx * ANG_DAMPING) * dt;
         s.rvy += ((restRy - s.ry) * ANG_SPRING - s.rvy * ANG_DAMPING) * dt;
         s.rvz += ((restRz - s.rz) * ANG_SPRING - s.rvz * ANG_DAMPING) * dt;
@@ -249,6 +249,7 @@
     var meshCols = isMobile ? 8 : 14;
     var meshRows = isMobile ? 10 : 16;
     var CLOTH_PAD = 0.18;
+    var PIXEL_CSS = 6; /* CSS pixels per texel — stable mosaic across DPR. */
 
     function compile(type, src) {
         var sh = gl.createShader(type);
@@ -306,9 +307,12 @@
         var fs = compile(gl.FRAGMENT_SHADER, [
             'precision mediump float;',
             'uniform sampler2D u_tex;',
+            'uniform vec2 u_pix;',
             'varying vec2 v_uv;',
             'void main() {',
-            '  gl_FragColor = texture2D(u_tex, v_uv);',
+            '  vec2 cell = max(u_pix, vec2(1.0));',
+            '  vec2 uv = (floor(v_uv * cell) + 0.5) / cell;',
+            '  gl_FragColor = texture2D(u_tex, uv);',
             '}'
         ].join('\n'));
         if (!vs || !fs) return false;
@@ -328,6 +332,7 @@
         glUniforms.phase = gl.getUniformLocation(glProg, 'u_phase');
         glUniforms.pad = gl.getUniformLocation(glProg, 'u_pad');
         glUniforms.tex = gl.getUniformLocation(glProg, 'u_tex');
+        glUniforms.pix = gl.getUniformLocation(glProg, 'u_pix');
 
         var cols = meshCols, rows = meshRows;
         var verts = [];
@@ -431,8 +436,8 @@
         gl.bindTexture(gl.TEXTURE_2D, s.tex);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
         try {
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, s.img);
             s.texReady = true;
@@ -491,6 +496,8 @@
             s.canvas.width = w;
             s.canvas.height = h;
         }
+        s.pixX = Math.max(16, Math.round(w0 / PIXEL_CSS));
+        s.pixY = Math.max(16, Math.round(h0 / PIXEL_CSS));
     }
 
     function renderClothGL(s, t) {
@@ -516,8 +523,10 @@
         gl.uniform1f(glUniforms.speed, s.waveSpeed);
         gl.uniform1f(glUniforms.phase, s.p5);
         gl.uniform1f(glUniforms.pad, CLOTH_PAD);
+        gl.uniform2f(glUniforms.pix, s.pixX || 64, s.pixY || 64);
         gl.drawElements(gl.TRIANGLES, glIdxCount, gl.UNSIGNED_SHORT, 0);
         try {
+            s.ctx2d.imageSmoothingEnabled = false;
             s.ctx2d.clearRect(0, 0, w, h);
             s.ctx2d.drawImage(glCanvas, 0, 0);
             return true;
@@ -540,12 +549,29 @@
         return { x: (w1 * 0.55 + w2 * 0.3) * amp, y: (w1 * 0.35 + w2 * 0.25) * amp };
     }
 
+    function ensurePixSource(s) {
+        var cx = s.pixX || 64, cy = s.pixY || 64;
+        if (!s.img.naturalWidth) return null;
+        if (!s.pixSrc) {
+            s.pixSrc = document.createElement('canvas');
+            s.pixSrcCtx = s.pixSrc.getContext('2d');
+        }
+        if (s.pixSrc.width !== cx || s.pixSrc.height !== cy) {
+            s.pixSrc.width = cx;
+            s.pixSrc.height = cy;
+            s.pixSrcCtx.imageSmoothingEnabled = false;
+            s.pixSrcCtx.drawImage(s.img, 0, 0, cx, cy);
+        }
+        return s.pixSrc;
+    }
+
     function renderCloth2d(s, t) {
         var ctx = s.ctx2d;
         var w = s.canvas.width, h = s.canvas.height;
         if (!s.img.naturalWidth || w < 2) return;
+        var src = ensurePixSource(s) || s.img;
         var rows = isMobile ? 10 : 16;
-        var imgW = s.img.naturalWidth, imgH = s.img.naturalHeight;
+        var imgW = src.width || s.img.naturalWidth, imgH = src.height || s.img.naturalHeight;
         var innerW = w / (1 + 2 * CLOTH_PAD);
         var innerH = h / (1 + 2 * CLOTH_PAD);
         var ox = (w - innerW) / 2;
@@ -558,7 +584,8 @@
             v = (y + 0.5) / rows;
             d = warp2d(s, 0.5, v, t);
             dx = d.x * innerW;
-            ctx.drawImage(s.img, 0, y * sh, imgW, sh + 1, ox + dx, oy + y * dh + d.y * innerH, innerW, dh + 1);
+            ctx.imageSmoothingEnabled = false;
+            ctx.drawImage(src, 0, y * sh, imgW, sh + 1, ox + dx, oy + y * dh + d.y * innerH, innerW, dh + 1);
         }
     }
 

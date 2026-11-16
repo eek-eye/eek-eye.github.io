@@ -140,15 +140,15 @@ body.index-page #index-explore-grid .explore-grid-placeholder.is-dream-focus {
 /* Weightless, slow-motion drift — shirts hang in the water, not on a rigid grid. */
 body.index-page #index-explore-grid .explore-hero-section,
 body.index-page #index-explore-grid .explore-grid-placeholder {
-    --float-dur: 14s;
+    --float-dur: 36s;
     --float-delay: 0s;
 }
-body.index-page #index-explore-grid #first-product { --float-dur: 13.5s; --float-delay: -2.4s; }
-body.index-page #index-explore-grid #second-product { --float-dur: 15.5s; --float-delay: -7s; }
-body.index-page #index-explore-grid #third-product { --float-dur: 14.2s; --float-delay: -4.1s; }
-body.index-page #index-explore-grid #fourth-product { --float-dur: 16s; --float-delay: -9.5s; }
-body.index-page #index-explore-grid #fifth-product { --float-dur: 13.8s; --float-delay: -1.2s; }
-body.index-page #index-explore-grid .explore-grid-placeholder { --float-dur: 15s; --float-delay: -6.2s; }
+body.index-page #index-explore-grid #first-product { --float-dur: 34s; --float-delay: -6s; }
+body.index-page #index-explore-grid #second-product { --float-dur: 40s; --float-delay: -18s; }
+body.index-page #index-explore-grid #third-product { --float-dur: 36s; --float-delay: -10s; }
+body.index-page #index-explore-grid #fourth-product { --float-dur: 42s; --float-delay: -24s; }
+body.index-page #index-explore-grid #fifth-product { --float-dur: 35s; --float-delay: -3s; }
+body.index-page #index-explore-grid .explore-grid-placeholder { --float-dur: 38s; --float-delay: -16s; }
 
 body.index-page #index-explore-grid .explore-hero-img,
 body.index-page #index-explore-grid .explore-grid-placeholder-img,
@@ -178,10 +178,10 @@ body.index-page #index-explore-grid.is-float-physics .explore-hero-info {
 }
 
 @keyframes index-grid-float {
-    0%, 100% { transform: translate3d(0, 0, 0) rotate(-0.35deg); }
-    25% { transform: translate3d(6px, -14px, 0) rotate(0.5deg); }
-    50% { transform: translate3d(-4px, -7px, 0) rotate(-0.2deg); }
-    75% { transform: translate3d(-8px, -18px, 0) rotate(0.35deg); }
+    0%, 100% { transform: translate3d(0, 0, 0) rotate(-0.12deg); }
+    25% { transform: translate3d(2px, -5px, 0) rotate(0.16deg); }
+    50% { transform: translate3d(-1.5px, -2.5px, 0) rotate(-0.08deg); }
+    75% { transform: translate3d(-2.5px, -6px, 0) rotate(0.12deg); }
 }
 
 .index-grid-water {
@@ -389,10 +389,7 @@ body.index-page #index-explore-grid.is-float-physics .explore-hero-info {
 /* Gentle ripple on shirts and glitch text — same SVG turbulence idea as the hero water. */
 body.index-page #index-explore-grid .explore-hero-img,
 body.index-page #index-explore-grid .explore-grid-placeholder-img {
-    filter:
-        drop-shadow(0 10px 28px rgba(0, 0, 0, 0.55))
-        drop-shadow(0 0 22px rgba(255, 255, 255, 0.1))
-        url(#indexGridWaterRipple);
+    filter: none;
 }
 
 body.index-page #index-explore-grid .explore-hero-text-fill {
@@ -402,9 +399,7 @@ body.index-page #index-explore-grid .explore-hero-text-fill {
 @media (max-width: 768px) {
     body.index-page #index-explore-grid .explore-hero-img,
     body.index-page #index-explore-grid .explore-grid-placeholder-img {
-        filter:
-            drop-shadow(0 10px 28px rgba(0, 0, 0, 0.55))
-            drop-shadow(0 0 18px rgba(255, 255, 255, 0.1));
+        filter: none;
     }
     body.index-page #index-explore-grid .explore-hero-text-fill {
         filter: none;
@@ -433,10 +428,10 @@ body.index-page #index-explore-grid .explore-hero-text-fill {
         animation-name: index-grid-float-mobile;
     }
     @keyframes index-grid-float-mobile {
-        0%, 100% { transform: translate3d(0, 0, 0) rotate(-0.25deg); }
-        25% { transform: translate3d(4px, -10px, 0) rotate(0.35deg); }
-        50% { transform: translate3d(-3px, -5px, 0) rotate(-0.15deg); }
-        75% { transform: translate3d(-6px, -13px, 0) rotate(0.25deg); }
+        0%, 100% { transform: translate3d(0, 0, 0) rotate(-0.1deg); }
+        25% { transform: translate3d(1.5px, -4px, 0) rotate(0.12deg); }
+        50% { transform: translate3d(-1px, -2px, 0) rotate(-0.06deg); }
+        75% { transform: translate3d(-2px, -5px, 0) rotate(0.1deg); }
     }
 }
 
@@ -457,11 +452,19 @@ body.index-page #index-explore-grid .explore-hero-text-fill {
     }
     body.index-page #index-explore-grid .explore-hero-img,
     body.index-page #index-explore-grid .explore-grid-placeholder-img {
-        filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.08));
+        filter: none;
     }
     body.index-page #index-explore-grid .explore-hero-text-fill {
         filter: none;
     }
+}
+
+
+/* Hide glitch lines and product name/RUNWAY labels on the home grid only.
+   Markup and the Aesthetic page stay intact. Clicks still hit the card. */
+body.index-page #index-explore-grid .explore-hero-text-fill,
+body.index-page #index-explore-grid .explore-hero-info {
+    display: none;
 }
 
 /* 3D tumble + cloth canvas overlay (JS wraps each shirt image).
@@ -485,13 +488,15 @@ body.index-page #index-explore-grid .index-shirt-cloth {
     backface-visibility: visible;
 }
 
-/* Keep the original <img> visible until the cloth canvas has a real frame. */
+/* Keep the original <img> visible until the cloth canvas has a real frame.
+   No glow or rim — shirts sit on pure black. */
 body.index-page #index-explore-grid .index-shirt-cloth .explore-hero-img,
 body.index-page #index-explore-grid .index-shirt-cloth .explore-grid-placeholder-img {
     opacity: 1;
-    filter:
-        drop-shadow(0 10px 28px rgba(0, 0, 0, 0.55))
-        drop-shadow(0 0 20px rgba(255, 255, 255, 0.35));
+    filter: none;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
 }
 
 body.index-page #index-explore-grid .index-shirt-cloth-canvas {
@@ -504,9 +509,10 @@ body.index-page #index-explore-grid .index-shirt-cloth-canvas {
     pointer-events: none;
     opacity: 0;
     backface-visibility: visible;
-    filter:
-        drop-shadow(0 10px 28px rgba(0, 0, 0, 0.55))
-        drop-shadow(0 0 20px rgba(255, 255, 255, 0.35));
+    filter: none;
+    image-rendering: -moz-crisp-edges;
+    image-rendering: crisp-edges;
+    image-rendering: pixelated;
 }
 
 body.index-page #index-explore-grid .index-shirt-cloth.is-cloth-live .explore-hero-img,
@@ -523,9 +529,7 @@ body.index-page #index-explore-grid .index-shirt-cloth.is-cloth-live .index-shir
     body.index-page #index-explore-grid .index-shirt-cloth .explore-hero-img,
     body.index-page #index-explore-grid .index-shirt-cloth .explore-grid-placeholder-img,
     body.index-page #index-explore-grid .index-shirt-cloth-canvas {
-        filter:
-            drop-shadow(0 10px 28px rgba(0, 0, 0, 0.55))
-            drop-shadow(0 0 16px rgba(255, 255, 255, 0.32));
+        filter: none;
     }
 }
 
