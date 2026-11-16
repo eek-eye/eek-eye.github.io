@@ -2,23 +2,20 @@
    No teal/blue tint or depth color. Shirts stay sharp and slowly drift, clickable. */
 
 body.index-page .hero-section {
+    position: relative;
     z-index: 2;
+    background: #000;
 }
 
 /*
  * The hard edge was the slightly-gray hero bottom (reflection + 55% veil)
- * cutting off against the grid's pure black. Fade the hero itself to #000
- * on top of that veil, then keep fading the grid content in below.
+ * cutting off against the grid's pure black. The hero's last stretch is
+ * solid #000 (no horizon line). Scroll-linked veils handle fade in/out.
  */
 body.index-page .hero-horizon {
-    opacity: 0.2;
+    opacity: 0;
+    background: none;
     box-shadow: none;
-    background: linear-gradient(
-        to right,
-        transparent 12%,
-        rgba(255, 255, 255, 0.04) 50%,
-        transparent 88%
-    );
 }
 
 body.index-page .hero-bottom-fade {
@@ -26,23 +23,37 @@ body.index-page .hero-bottom-fade {
     left: 0;
     right: 0;
     bottom: 0;
-    height: 58%;
+    height: 70%;
     pointer-events: none;
     z-index: 6;
     background: linear-gradient(
         to bottom,
         transparent 0%,
-        rgba(0, 0, 0, 0.04) 8%,
         rgba(0, 0, 0, 0.12) 16%,
-        rgba(0, 0, 0, 0.26) 26%,
-        rgba(0, 0, 0, 0.44) 38%,
-        rgba(0, 0, 0, 0.64) 50%,
-        rgba(0, 0, 0, 0.8) 62%,
-        rgba(0, 0, 0, 0.91) 74%,
-        rgba(0, 0, 0, 0.97) 86%,
-        #000 94%,
+        rgba(0, 0, 0, 0.35) 30%,
+        rgba(0, 0, 0, 0.68) 46%,
+        rgba(0, 0, 0, 0.92) 58%,
+        #000 70%,
         #000 100%
     );
+}
+
+body.index-page .hero-scroll-veil,
+body.index-page .index-grid-scroll-veil {
+    position: absolute;
+    inset: 0;
+    background: #000;
+    pointer-events: none;
+}
+
+body.index-page .hero-scroll-veil {
+    z-index: 8;
+    opacity: 0;
+}
+
+body.index-page .index-grid-scroll-veil {
+    z-index: 12;
+    opacity: 0;
 }
 
 /* Extra dissolve inside the water layer, in case anything peeks under the veil. */
@@ -58,16 +69,16 @@ body.index-page .hero-water::after {
     background: linear-gradient(
         to bottom,
         transparent 0%,
-        rgba(0, 0, 0, 0.1) 18%,
-        rgba(0, 0, 0, 0.35) 40%,
-        rgba(0, 0, 0, 0.7) 64%,
-        rgba(0, 0, 0, 0.9) 82%,
-        #000 94%,
+        rgba(0, 0, 0, 0.2) 18%,
+        rgba(0, 0, 0, 0.5) 40%,
+        rgba(0, 0, 0, 0.85) 62%,
+        #000 78%,
         #000 100%
     );
 }
 
 body.index-page #index-explore-grid {
+    position: relative;
     overflow: visible;
     isolation: isolate;
     background: #000;
@@ -75,27 +86,17 @@ body.index-page #index-explore-grid {
     padding-top: 28vh;
 }
 
-/* Long melt from the hero, finished before the shirt images so they stay fully opaque. */
+/* Solid black cap over the hero overlap so the seam cannot go gray. */
 body.index-page #index-explore-grid::before {
     content: "";
     position: absolute;
     left: 0;
     right: 0;
     top: 0;
-    height: 42vh;
+    height: 28vh;
     z-index: 8;
     pointer-events: none;
-    background: linear-gradient(
-        to bottom,
-        #000 0%,
-        #000 36%,
-        rgba(0, 0, 0, 0.96) 48%,
-        rgba(0, 0, 0, 0.78) 60%,
-        rgba(0, 0, 0, 0.5) 72%,
-        rgba(0, 0, 0, 0.22) 84%,
-        rgba(0, 0, 0, 0.06) 93%,
-        transparent 100%
-    );
+    background: #000;
 }
 
 @media (max-width: 768px) {
@@ -104,10 +105,10 @@ body.index-page #index-explore-grid::before {
         padding-top: 32vh;
     }
     body.index-page #index-explore-grid::before {
-        height: 46vh;
+        height: 32vh;
     }
     body.index-page .hero-bottom-fade {
-        height: 62%;
+        height: 74%;
     }
 }
 
@@ -221,6 +222,17 @@ body.index-page #index-explore-grid.is-float-physics .explore-hero-info {
 /* No color wash — the black canvas stays black. */
 .index-grid-water-tint {
     display: none;
+}
+
+
+/* Neutralize the layers that were lifting the seam to dark gray.
+   Markup stays in place; the area between hero and shirts stays #000. */
+body.index-page .index-grid-water-surface,
+body.index-page .index-grid-water-caustics,
+body.index-page .index-grid-water-rays {
+    opacity: 0;
+    visibility: hidden;
+    animation: none;
 }
 
 /* Soft light falling from the surface above the shirts. Neutral / warm-white only. */
@@ -542,3 +554,26 @@ body.index-page #index-explore-grid .index-shirt-cloth.is-cloth-live .index-shir
         display: none;
     }
 }
+
+/* Keep the hero corner box, but hide the shirt inside it.
+   Frame, zoom icon, and scroll arrows stay visible and working. */
+body.index-page .hero-gone-mini-wrapper {
+    background: #000;
+}
+body.index-page .hero-gone-mini-wrapper .hero-gone-extra-image,
+body.index-page .hero-gone-mini-wrapper .hero-gone-image-mini {
+    visibility: hidden;
+}
+body.index-page .hero-gone-mini-wrapper .hero-gone-extra-image-button {
+    height: 140px;
+}
+body.index-page .hero-gone-mini-wrapper .hero-gone-zoom-icon {
+    opacity: 1;
+    background: transparent;
+}
+@media (max-width: 768px) {
+    body.index-page .hero-gone-mini-wrapper .hero-gone-extra-image-button {
+        height: 100px;
+    }
+}
+
