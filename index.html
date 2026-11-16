@@ -62,6 +62,7 @@
     <link rel="icon" type="image/png" href="images/tags.png">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/explore-grid.css">
+    <link rel="stylesheet" href="css/index-grid-underwater.css">
     <!-- SF Pro Font -->
     <link href="https://fonts.cdnfonts.com/css/sf-pro-display" rel="stylesheet">
     <!-- Inter Font -->
@@ -1095,8 +1096,9 @@
             background: linear-gradient(
                 to bottom,
                 rgba(8, 18, 32, 0.12) 0%,
-                rgba(4, 10, 22, 0.32) 55%,
-                rgba(0, 0, 0, 0.55) 100%
+                rgba(4, 10, 22, 0.32) 50%,
+                rgba(4, 12, 20, 0.48) 78%,
+                rgba(5, 10, 16, 0.62) 100%
             );
             pointer-events: none;
         }
@@ -2793,6 +2795,36 @@
 
 
     <section id="index-explore-grid" class="index-explore-grid" aria-label="Aesthetic shirts">
+    <div class="index-grid-water" aria-hidden="true">
+        <svg class="index-grid-water-svg" aria-hidden="true" focusable="false">
+            <filter id="indexGridWaterRipple" x="-10%" y="-10%" width="120%" height="120%" color-interpolation-filters="sRGB">
+                <feTurbulence id="indexGridWaterTurbulence" type="fractalNoise" baseFrequency="0.008 0.03" numOctaves="2" seed="5" result="gridRippleNoise">
+                    <animate attributeName="baseFrequency" dur="18s" values="0.008 0.03; 0.014 0.045; 0.008 0.03" repeatCount="indefinite"/>
+                </feTurbulence>
+                <feDisplacementMap in="SourceGraphic" in2="gridRippleNoise" scale="8" xChannelSelector="R" yChannelSelector="G"/>
+            </filter>
+        </svg>
+        <div class="index-grid-water-back">
+            <div class="index-grid-water-tint"></div>
+            <div class="index-grid-water-caustics"></div>
+            <div class="index-grid-water-rays"></div>
+        </div>
+        <div class="index-grid-water-front">
+            <div class="index-grid-water-caustics index-grid-water-caustics--sheen"></div>
+            <div class="index-grid-water-bubbles">
+                <span style="--x:8%;--size:6px;--dur:19s;--delay:0s;--drift:16px"></span>
+                <span style="--x:18%;--size:4px;--dur:15s;--delay:4s;--drift:-12px"></span>
+                <span style="--x:29%;--size:8px;--dur:22s;--delay:1.5s;--drift:22px"></span>
+                <span style="--x:41%;--size:5px;--dur:17s;--delay:7s;--drift:-18px"></span>
+                <span style="--x:52%;--size:7px;--dur:20s;--delay:2.8s;--drift:10px"></span>
+                <span style="--x:63%;--size:4px;--dur:14s;--delay:9s;--drift:-8px"></span>
+                <span style="--x:74%;--size:9px;--dur:24s;--delay:5s;--drift:20px"></span>
+                <span style="--x:83%;--size:5px;--dur:18s;--delay:3.2s;--drift:-14px"></span>
+                <span style="--x:91%;--size:6px;--dur:21s;--delay:11s;--drift:8px"></span>
+                <span style="--x:36%;--size:3px;--dur:13s;--delay:6.5s;--drift:14px"></span>
+            </div>
+        </div>
+    </div>
     <template id="explore-hero-text-template">
         <div class="explore-hero-text-fill" aria-hidden="true">
             <p class="explore-hero-text-line">◆ EEKSEYE ◆ RUNWAY I KNOW YOU SAY YOU KNOW ME GONE GONE X I DARK SIDE · INTERSTELLA · VIBRATION SEASON 1 · 2 · 3 · 4 · 5 EXPLORE — DESIGNS — NEWS TRUTH SHOULD SET YOU FREE NO REPRODUCTION WITHOUT PERMISSION · XI · CH@0S · UNGUIDED · SEEK Rockstar · Martyr · Nightmare</p>
@@ -3018,6 +3050,7 @@
     <script src="js/explore-grid.js"></script>
     <script src="js/explore-text-glitch.js"></script>
     <script src="js/explore-dream-blur.js"></script>
+    <script src="js/index-grid-underwater.js"></script>
 <script>
 (function() {
     var canvas = document.getElementById('hero-three-canvas');
