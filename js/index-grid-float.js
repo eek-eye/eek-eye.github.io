@@ -117,7 +117,7 @@
     }
 
     function copyState(from, to) {
-        var keys = ['x','y','vx','vy','rx','ry','rz','rvx','rvy','rvz','ampX','ampY','ampRx','ampRy','ampRz','mass','w1','w2','w3','wRx','wRy','wRz','p1','p2','p3','p4','p5','pRx','pRy','pRz','seed','waveAmp','waveSpeed'];
+        var keys = ['x','y','vx','vy','rx','ry','rz','rvx','rvy','rvz','ampX','ampY','ampRx','ampRy','ampRz','mass','w1','w2','w3','wRx','wRy','wRz','p1','p2','p3','p4','p5','pRx','pRy','pRz','seed','waveAmp','waveSpeed','tex','texReady'];
         var i;
         for (i = 0; i < keys.length; i++) to[keys[i]] = from[keys[i]];
     }
@@ -247,6 +247,7 @@
     var useGL = false;
     var meshCols = isMobile ? 8 : 14;
     var meshRows = isMobile ? 10 : 16;
+    var CLOTH_PAD = 0.18;
 
     function compile(type, src) {
         var sh = gl.createShader(type);
@@ -275,7 +276,7 @@
 
         var vs = compile(gl.VERTEX_SHADER, [
             'attribute vec2 a_uv;',
-            'uniform float u_time, u_amp, u_speed, u_phase;',
+            'uniform float u_time, u_amp, u_speed, u_phase, u_pad;',
             'varying vec2 v_uv;',
             'void main() {',
             '  float u = a_uv.x;',
@@ -294,8 +295,10 @@
             '    w1 * 0.35 + w3 * 0.4 + w2 * 0.25',
             '  ) * u_amp * wgt;',
             '  float billow = 1.0 + (w2 * 0.55 + w1 * 0.35) * u_amp * 2.4 * edge;',
-            '  vec2 p = (a_uv + disp - 0.5) * billow;',
-            '  gl_Position = vec4(p.x * 2.0, 1.0 - p.y * 2.0, 0.0, 1.0);',
+            '  float scale = 1.0 / (1.0 + 2.0 * u_pad);',
+            '  vec2 p = (a_uv + disp - 0.5) * billow * scale;',
+            /* p is already centered in ~[-0.5,0.5]; +Y in clip space is the top of the canvas. */
+            '  gl_Position = vec4(p.x * 2.0, -p.y * 2.0, 0.0, 1.0);',
             '  v_uv = a_uv;',
             '}'
         ].join('\n'));
@@ -322,6 +325,7 @@
         glUniforms.amp = gl.getUniformLocation(glProg, 'u_amp');
         glUniforms.speed = gl.getUniformLocation(glProg, 'u_speed');
         glUniforms.phase = gl.getUniformLocation(glProg, 'u_phase');
+        glUniforms.pad = gl.getUniformLocation(glProg, 'u_pad');
         glUniforms.tex = gl.getUniformLocation(glProg, 'u_tex');
 
         var cols = meshCols, rows = meshRows;
@@ -354,8 +358,21 @@
         return true;
     }
 
+    function showImgFallback(s) {
+        if (s.img) s.img.style.opacity = '1';
+        if (s.canvas) s.canvas.style.display = 'none';
+        s.usingFallback = true;
+    }
+
+    function hideImgFallback(s) {
+        if (s.usingFallback) return;
+        if (s.img) s.img.style.opacity = '';
+        if (s.canvas) s.canvas.style.display = '';
+    }
+
     function bindTexture(s) {
-        if (!useGL || !s.img || !s.img.naturalWidth) return;
+        if (!s.img || !s.img.naturalWidth) return false;
+        if (!useGL) return false;
         if (!s.tex) s.tex = gl.createTexture();
         gl.bindTexture(gl.TEXTURE_2D, s.tex);
         gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -365,8 +382,32 @@
         try {
             gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, s.img);
             s.texReady = true;
+            hideImgFallback(s);
+            return true;
         } catch (err) {
             s.texReady = false;
+            return false;
+        }
+    }
+
+    function watchImage(s) {
+        function ready() {
+            sizeCloth(s);
+            if (!bindTexture(s) && !useGL) hideImgFallback(s);
+            if (!s.texReady && useGL && !(s.img.complete && s.img.naturalWidth)) return;
+            if (!s.texReady && s.img.complete && s.img.naturalWidth && useGL) {
+                /* WebGL upload failed — keep the original sharp image visible. */
+                showImgFallback(s);
+            }
+        }
+        if (s.img.complete && s.img.naturalWidth) {
+            ready();
+            return;
+        }
+        s.img.addEventListener('load', ready, { once: true });
+        s.img.addEventListener('error', function () { showImgFallback(s); }, { once: true });
+        if (s.img.decode) {
+            s.img.decode().then(ready).catch(function () {});
         }
     }
 
@@ -377,23 +418,22 @@
             s = shirts[i];
             if (!s.canvas) continue;
             if (!s.ctx2d) s.ctx2d = s.canvas.getContext('2d');
-            if (s.img.complete && s.img.naturalWidth) {
-                bindTexture(s);
-            } else {
-                s.img.addEventListener('load', (function (shirt) {
-                    return function () { bindTexture(shirt); sizeCloth(shirt); };
-                })(s));
-            }
+            watchImage(s);
             sizeCloth(s);
         }
     }
 
     function sizeCloth(s) {
         if (!s.canvas || !s.img) return;
-        var r = s.img.getBoundingClientRect();
+        /* Layout size, not the 3D-projected bounding box — otherwise the canvas
+           bakes in foreshortening and the parent rotateX flattens the shirt twice. */
+        var w0 = s.img.offsetWidth || (s.wrap && s.wrap.offsetWidth) || 0;
+        var h0 = s.img.offsetHeight || (s.wrap && s.wrap.offsetHeight) || 0;
+        if (w0 < 2 || h0 < 2) return;
         var dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.25 : 1.5);
-        var w = Math.max(2, Math.round(r.width * dpr));
-        var h = Math.max(2, Math.round(r.height * dpr));
+        var scale = 1 + 2 * CLOTH_PAD;
+        var w = Math.max(2, Math.round(w0 * scale * dpr));
+        var h = Math.max(2, Math.round(h0 * scale * dpr));
         if (s.canvas.width !== w || s.canvas.height !== h) {
             s.canvas.width = w;
             s.canvas.height = h;
@@ -422,6 +462,7 @@
         gl.uniform1f(glUniforms.amp, s.waveAmp);
         gl.uniform1f(glUniforms.speed, s.waveSpeed);
         gl.uniform1f(glUniforms.phase, s.p5);
+        gl.uniform1f(glUniforms.pad, CLOTH_PAD);
         gl.drawElements(gl.TRIANGLES, glIdxCount, gl.UNSIGNED_SHORT, 0);
         s.ctx2d.clearRect(0, 0, w, h);
         s.ctx2d.drawImage(glCanvas, 0, 0);
@@ -447,22 +488,33 @@
         if (!s.img.naturalWidth || w < 2) return;
         var rows = isMobile ? 10 : 16;
         var imgW = s.img.naturalWidth, imgH = s.img.naturalHeight;
+        var innerW = w / (1 + 2 * CLOTH_PAD);
+        var innerH = h / (1 + 2 * CLOTH_PAD);
+        var ox = (w - innerW) / 2;
+        var oy = (h - innerH) / 2;
         var sh = imgH / rows;
-        var dh = h / rows;
+        var dh = innerH / rows;
         var y, v, d, dx;
         ctx.clearRect(0, 0, w, h);
         for (y = 0; y < rows; y++) {
             v = (y + 0.5) / rows;
             d = warp2d(s, 0.5, v, t);
-            dx = d.x * w;
-            ctx.drawImage(s.img, 0, y * sh, imgW, sh + 1, dx, y * dh + d.y * h, w, dh + 1);
+            dx = d.x * innerW;
+            ctx.drawImage(s.img, 0, y * sh, imgW, sh + 1, ox + dx, oy + y * dh + d.y * innerH, innerW, dh + 1);
         }
     }
 
     function renderCloth(s, t) {
-        if (!s.inView || !s.canvas || !s.ctx2d) return;
+        if (!s.inView || s.usingFallback || !s.canvas || !s.ctx2d) return;
+        if (s.canvas.width < 4 || s.canvas.height < 4) {
+            sizeCloth(s);
+        }
+        if (useGL && !s.texReady && s.img.complete && s.img.naturalWidth) {
+            bindTexture(s);
+        }
         if (useGL && s.texReady) renderClothGL(s, t);
-        else renderCloth2d(s, t);
+        else if (s.img.naturalWidth) renderCloth2d(s, t);
+        else showImgFallback(s);
     }
 
     function frame(now) {
@@ -487,10 +539,8 @@
         for (i = 0; i < shirts.length; i++) {
             s = shirts[i];
             step(s, t, dt);
-            if (s.inView) {
-                apply(s);
-                renderCloth(s, t);
-            }
+            apply(s);
+            if (s.inView) renderCloth(s, t);
         }
         running = true;
         rafId = window.requestAnimationFrame(frame);

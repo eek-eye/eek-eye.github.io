@@ -68,34 +68,32 @@ body.index-page .hero-water::after {
 }
 
 body.index-page #index-explore-grid {
-    overflow: hidden;
+    overflow: visible;
     isolation: isolate;
     background: #000;
     margin-top: -18vh;
-    padding-top: 30vh;
+    padding-top: 28vh;
 }
 
-/* Stay solid black past the card/text start, then ease off over the shirts. */
+/* Long melt from the hero, finished before the shirt images so they stay fully opaque. */
 body.index-page #index-explore-grid::before {
     content: "";
     position: absolute;
     left: 0;
     right: 0;
     top: 0;
-    height: 72vh;
+    height: 42vh;
     z-index: 8;
     pointer-events: none;
     background: linear-gradient(
         to bottom,
         #000 0%,
-        #000 40%,
-        rgba(0, 0, 0, 0.98) 48%,
-        rgba(0, 0, 0, 0.9) 56%,
-        rgba(0, 0, 0, 0.72) 64%,
-        rgba(0, 0, 0, 0.48) 72%,
-        rgba(0, 0, 0, 0.26) 80%,
-        rgba(0, 0, 0, 0.12) 88%,
-        rgba(0, 0, 0, 0.04) 94%,
+        #000 36%,
+        rgba(0, 0, 0, 0.96) 48%,
+        rgba(0, 0, 0, 0.78) 60%,
+        rgba(0, 0, 0, 0.5) 72%,
+        rgba(0, 0, 0, 0.22) 84%,
+        rgba(0, 0, 0, 0.06) 93%,
         transparent 100%
     );
 }
@@ -103,10 +101,10 @@ body.index-page #index-explore-grid::before {
 @media (max-width: 768px) {
     body.index-page #index-explore-grid {
         margin-top: -20vh;
-        padding-top: 34vh;
+        padding-top: 32vh;
     }
     body.index-page #index-explore-grid::before {
-        height: 80vh;
+        height: 46vh;
     }
     body.index-page .hero-bottom-fade {
         height: 62%;
@@ -471,6 +469,7 @@ body.index-page #index-explore-grid .explore-hero-section,
 body.index-page #index-explore-grid .explore-grid-placeholder {
     perspective: 1100px;
     transform-style: preserve-3d;
+    overflow: visible;
 }
 
 body.index-page #index-explore-grid .index-shirt-cloth {
@@ -493,10 +492,10 @@ body.index-page #index-explore-grid .index-shirt-cloth .explore-grid-placeholder
 
 body.index-page #index-explore-grid .index-shirt-cloth-canvas {
     position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
+    left: -18%;
+    top: -18%;
+    width: 136%;
+    height: 136%;
     display: block;
     pointer-events: none;
 }
