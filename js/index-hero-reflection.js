@@ -69,7 +69,6 @@
         ctx.save();
         ctx.imageSmoothingEnabled = true;
         ctx.imageSmoothingQuality = coarse ? 'low' : 'medium';
-        ctx.filter = 'brightness(0.8) saturate(0.8) hue-rotate(196deg)';
         // Flip around the horizon (y = 0 in water space) so the figure
         // meets the water line feet-to-feet and reads upside down.
         ctx.scale(1, -1);
@@ -84,6 +83,11 @@
             destX = r.left - wr.left;
             destY = r.top - wr.top;
             ctx.globalAlpha = op * 0.95;
+            /* Past asset is darker; apply the same lift as the on-page figure
+               before the reflection's own dim/tint. */
+            ctx.filter = (img.classList.contains('hero-gone-image-1')
+                ? 'brightness(2.7) contrast(1.1) '
+                : '') + 'brightness(0.8) saturate(0.8) hue-rotate(196deg)';
             try {
                 ctx.drawImage(img, destX, destY, r.width, r.height);
             } catch (err) {}

@@ -992,14 +992,13 @@
             min-height: 170svh;
         }
 
-        /* Black overlay on hero section 1 */
+        /* Don't dim the mannequin: the 55% black veil turned the white
+           figure gray. The hero background is already #000. Scroll fade
+           still covers the hero when you move down the page. */
         body.dark-theme .hero-section::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            z-index: 2;
-            pointer-events: none;
-            background: rgba(0, 0, 0, 0.55);
+            display: none;
+            content: none;
+            background: none;
         }
         /*
          * Global style.css adds .hero-section::after (z-index:2, mix-blend overlay).
@@ -1427,6 +1426,11 @@
             clip-path: inset(0 0 100% 0);
             -webkit-clip-path: inset(0 0 100% 0);
             transition: opacity 2.5s ease-in-out, clip-path 2.5s ease-in-out;
+        }
+        /* Past frame is a darker render of the same figure; lift it so both
+           stay a white mannequin with natural shading. */
+        .hero-gone-image-1 {
+            filter: brightness(2.7) contrast(1.1);
         }
 
         .hero-gone-image-1,
@@ -2456,7 +2460,11 @@
             /* Scale-root stays centered, don't change its transform */
 
             .hero-gone-image {
-                filter: brightness(1.3) !important;
+                /* Keep the white figure undimmed; Past still uses the lift above. */
+                filter: none;
+            }
+            .hero-gone-image-1 {
+                filter: brightness(2.7) contrast(1.1);
             }
 
             /* Past/Present nav buttons - scale down and reposition */
@@ -2753,10 +2761,10 @@
             <img src="eekseye.png/I メタ I eekseye I I 2026.png" alt="I メタ I eekseye I I 2026">
         </div>
         <div class="hero-mannequin-air">
-        <img src="images/gone gone.png" alt="Gone gone" class="hero-gone-image hero-gone-image-1 hero-gone-image--visible">
-        <img src="images/gone gone 3.png" alt="Gone gone 3" class="hero-gone-image hero-gone-image-2 hero-gone-image--hiding">
-        <a href="explore.html" class="hero-gone-click-box hero-gone-click-box-1 hero-gone-image--visible" aria-label="Open gone gone in explore page" data-translate-aria="ariaOpenGone1"></a>
-        <a href="explore.html" class="hero-gone-click-box hero-gone-click-box-2 hero-gone-image--hiding" aria-label="Open gone gone 3 in explore page" data-translate-aria="ariaOpenGone2"></a>
+        <img src="images/gone gone.png" alt="Gone gone" class="hero-gone-image hero-gone-image-1 hero-gone-image--hiding">
+        <img src="images/gone gone 3.png" alt="Gone gone 3" class="hero-gone-image hero-gone-image-2 hero-gone-image--visible">
+        <a href="explore.html" class="hero-gone-click-box hero-gone-click-box-1 hero-gone-image--hiding" aria-label="Open gone gone in explore page" data-translate-aria="ariaOpenGone1"></a>
+        <a href="explore.html" class="hero-gone-click-box hero-gone-click-box-2 hero-gone-image--visible" aria-label="Open gone gone 3 in explore page" data-translate-aria="ariaOpenGone2"></a>
         </div>
         <button type="button" class="hero-gone-nav hero-gone-nav-prev" aria-label="Past image" data-translate="heroPast" data-translate-aria="ariaPastImage">Past</button>
         <button type="button" class="hero-gone-nav hero-gone-nav-next" aria-label="Present image" data-translate="heroPresent" data-translate-aria="ariaPresentImage">Present</button>
@@ -2766,8 +2774,8 @@
                 <span class="hero-gone-zoom-icon"><i class="fas fa-search-plus" aria-hidden="true"></i></span>
             </button>
             <div class="hero-gone-mini-stage">
-                <img src="images/gone gone.png" alt="Gone gone mini" class="hero-gone-image-mini hero-gone-image-mini-1 hero-gone-image--visible">
-                <img src="images/gone gone 3.png" alt="Gone gone 3 mini" class="hero-gone-image-mini hero-gone-image-mini-2 hero-gone-image--hiding">
+                <img src="images/gone gone.png" alt="Gone gone mini" class="hero-gone-image-mini hero-gone-image-mini-1 hero-gone-image--hiding">
+                <img src="images/gone gone 3.png" alt="Gone gone 3 mini" class="hero-gone-image-mini hero-gone-image-mini-2 hero-gone-image--visible">
             </div>
         </div>
         <div class="hero-sign-marquee bottom" aria-hidden="true" hidden>
@@ -3213,9 +3221,10 @@
                     }
                 };
 
-                let showingFirst = true;
+                let showingFirst = false;
                 const INTERVAL_MS = 6000; // slow cycle
-                showFirst();
+                // Start on the white Present frame so the figure is bright at rest.
+                showSecond();
 
                 const runCycle = () => {
                     if (showingFirst) {
