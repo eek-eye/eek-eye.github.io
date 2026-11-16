@@ -1,39 +1,67 @@
-/* Home page only: Aesthetic grid sits below the hero waterline and reads as deep water. */
+/* Home page only: underwater motion on a pure-black Aesthetic grid.
+   No teal/blue tint or depth color. Shirts stay blurred; they stay clickable. */
+
+body.index-page .hero-section {
+    z-index: 2;
+}
+
+/* Dissolve the lower reflection into the same black the grid sits on, so the join is invisible. */
+body.index-page .hero-water::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 48%;
+    pointer-events: none;
+    z-index: 5;
+    background: linear-gradient(
+        to bottom,
+        transparent 0%,
+        rgba(0, 0, 0, 0.2) 28%,
+        rgba(0, 0, 0, 0.65) 64%,
+        rgba(0, 0, 0, 0.92) 86%,
+        #000 100%
+    );
+}
 
 body.index-page #index-explore-grid {
     overflow: hidden;
     isolation: isolate;
-    background:
-        linear-gradient(
-            to bottom,
-            #05070a 0%,
-            #060b11 10%,
-            #08141c 32%,
-            #071a24 52%,
-            #04111a 76%,
-            #02070c 90%,
-            #010203 100%
-        );
+    background: #000;
+    margin-top: -2px;
+    padding-top: 14vh;
 }
 
-/* Soft seam: the first stretch stays as dark as the hero water, then the depth color fades in. */
-body.index-page #index-explore-grid::after {
+/* Long, smooth black fade from the hero/reflection down into the shirts. */
+body.index-page #index-explore-grid::before {
     content: "";
     position: absolute;
     left: 0;
     right: 0;
     top: 0;
-    height: 9.5rem;
-    z-index: 4;
+    height: 36vh;
+    z-index: 8;
     pointer-events: none;
     background: linear-gradient(
         to bottom,
-        #010204 0%,
-        #010204 12%,
-        rgba(1, 2, 4, 0.7) 38%,
-        rgba(3, 8, 12, 0.35) 66%,
+        #000 0%,
+        #000 8%,
+        rgba(0, 0, 0, 0.92) 22%,
+        rgba(0, 0, 0, 0.7) 42%,
+        rgba(0, 0, 0, 0.38) 62%,
+        rgba(0, 0, 0, 0.14) 82%,
         transparent 100%
     );
+}
+
+@media (max-width: 768px) {
+    body.index-page #index-explore-grid {
+        padding-top: 18vh;
+    }
+    body.index-page #index-explore-grid::before {
+        height: 40vh;
+    }
 }
 
 body.index-page #index-explore-grid .explore-products,
@@ -41,14 +69,25 @@ body.index-page #exploreProducts,
 body.index-page #index-explore-grid .explore-hero-section,
 body.index-page #index-explore-grid .explore-hero-section:hover,
 body.index-page #index-explore-grid .explore-grid-placeholder {
-    background-color: transparent;
-    background: transparent;
+    background-color: #000;
+    background: #000;
 }
 
 body.index-page #index-explore-grid .explore-products,
 body.index-page #exploreProducts {
     position: relative;
     z-index: 1;
+}
+
+/* Keep every card blurred — no hover or center-focus clear on the home grid. */
+body.index-page #index-explore-grid .explore-hero-section,
+body.index-page #index-explore-grid .explore-grid-placeholder,
+body.index-page #index-explore-grid .explore-hero-section:hover,
+body.index-page #index-explore-grid .explore-grid-placeholder:hover,
+body.index-page #index-explore-grid .explore-hero-section.is-dream-focus,
+body.index-page #index-explore-grid .explore-grid-placeholder.is-dream-focus {
+    filter: blur(2.5px);
+    will-change: auto;
 }
 
 .index-grid-water {
@@ -85,17 +124,9 @@ body.index-page #exploreProducts {
     visibility: hidden;
 }
 
+/* No color wash — the black canvas stays black. */
 .index-grid-water-tint {
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-        to bottom,
-        rgba(12, 28, 40, 0.04) 0%,
-        rgba(12, 36, 52, 0.16) 24%,
-        rgba(8, 30, 44, 0.3) 52%,
-        rgba(4, 16, 28, 0.48) 78%,
-        rgba(0, 0, 0, 0.62) 100%
-    );
+    display: none;
 }
 
 .index-grid-water-caustics {
@@ -104,16 +135,16 @@ body.index-page #exploreProducts {
     right: -12%;
     top: -8%;
     height: 85%;
-    opacity: 0.2;
+    opacity: 0.16;
     mix-blend-mode: screen;
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.35) 14%, rgba(0, 0, 0, 0.85) 34%, rgba(0, 0, 0, 0.45) 72%, transparent 100%);
-    mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.35) 14%, rgba(0, 0, 0, 0.85) 34%, rgba(0, 0, 0, 0.45) 72%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.35) 14%, rgba(0, 0, 0, 0.8) 34%, rgba(0, 0, 0, 0.4) 72%, transparent 100%);
+    mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.35) 14%, rgba(0, 0, 0, 0.8) 34%, rgba(0, 0, 0, 0.4) 72%, transparent 100%);
     background-image:
-        radial-gradient(ellipse 42% 22% at 18% 8%, rgba(170, 215, 235, 0.42), transparent 62%),
-        radial-gradient(ellipse 34% 18% at 72% 4%, rgba(120, 190, 215, 0.32), transparent 60%),
-        radial-gradient(ellipse 50% 26% at 48% 22%, rgba(80, 160, 185, 0.2), transparent 70%),
-        radial-gradient(ellipse 28% 16% at 86% 30%, rgba(150, 205, 225, 0.18), transparent 64%),
-        radial-gradient(ellipse 36% 20% at 30% 40%, rgba(90, 170, 195, 0.14), transparent 68%);
+        radial-gradient(ellipse 42% 22% at 18% 8%, rgba(255, 255, 255, 0.38), transparent 62%),
+        radial-gradient(ellipse 34% 18% at 72% 4%, rgba(255, 255, 255, 0.28), transparent 60%),
+        radial-gradient(ellipse 50% 26% at 48% 22%, rgba(255, 255, 255, 0.16), transparent 70%),
+        radial-gradient(ellipse 28% 16% at 86% 30%, rgba(255, 255, 255, 0.16), transparent 64%),
+        radial-gradient(ellipse 36% 20% at 30% 40%, rgba(255, 255, 255, 0.12), transparent 68%);
     background-repeat: no-repeat;
     filter: blur(18px);
     transform: translate3d(0, 0, 0);
@@ -123,7 +154,7 @@ body.index-page #exploreProducts {
 
 .index-grid-water-caustics--sheen {
     height: 100%;
-    opacity: 0.08;
+    opacity: 0.06;
     filter: blur(22px);
     animation-duration: 28s;
     animation-direction: alternate-reverse;
@@ -132,20 +163,20 @@ body.index-page #exploreProducts {
 .index-grid-water-rays {
     position: absolute;
     inset: 0;
-    opacity: 0.38;
+    opacity: 0.28;
     mix-blend-mode: screen;
     background: repeating-linear-gradient(
         104deg,
         transparent 0,
         transparent 52px,
-        rgba(160, 200, 225, 0.025) 58px,
-        rgba(180, 215, 235, 0.07) 70px,
-        rgba(160, 200, 225, 0.03) 84px,
+        rgba(255, 255, 255, 0.02) 58px,
+        rgba(255, 255, 255, 0.055) 70px,
+        rgba(255, 255, 255, 0.025) 84px,
         transparent 110px,
         transparent 150px
     );
-    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.5) 20%, rgba(0, 0, 0, 0.28) 52%, transparent 88%);
-    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.12) 0%, rgba(0, 0, 0, 0.5) 20%, rgba(0, 0, 0, 0.28) 52%, transparent 88%);
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.45) 20%, rgba(0, 0, 0, 0.24) 52%, transparent 88%);
+    mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.45) 20%, rgba(0, 0, 0, 0.24) 52%, transparent 88%);
     animation: index-grid-rays 32s linear infinite;
     animation-play-state: paused;
 }
@@ -157,8 +188,8 @@ body.index-page #exploreProducts {
     width: var(--size, 6px);
     height: var(--size, 6px);
     border-radius: 50%;
-    background: radial-gradient(circle at 32% 28%, rgba(240, 250, 255, 0.7), rgba(150, 200, 225, 0.16) 46%, transparent 72%);
-    box-shadow: 0 0 8px rgba(170, 215, 235, 0.18);
+    background: radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.14) 46%, transparent 72%);
+    box-shadow: 0 0 8px rgba(255, 255, 255, 0.16);
     animation: index-grid-bubble var(--dur, 16s) var(--delay, 0s) linear infinite;
     animation-play-state: paused;
     will-change: transform, opacity;
@@ -198,7 +229,7 @@ body.index-page #index-explore-grid .explore-hero-img,
 body.index-page #index-explore-grid .explore-grid-placeholder-img {
     filter:
         drop-shadow(0 10px 28px rgba(0, 0, 0, 0.55))
-        drop-shadow(0 0 22px rgba(150, 200, 225, 0.12))
+        drop-shadow(0 0 22px rgba(255, 255, 255, 0.1))
         url(#indexGridWaterRipple);
 }
 
@@ -211,13 +242,13 @@ body.index-page #index-explore-grid .explore-hero-text-fill {
     body.index-page #index-explore-grid .explore-grid-placeholder-img {
         filter:
             drop-shadow(0 10px 28px rgba(0, 0, 0, 0.55))
-            drop-shadow(0 0 18px rgba(150, 200, 225, 0.1));
+            drop-shadow(0 0 18px rgba(255, 255, 255, 0.1));
     }
     body.index-page #index-explore-grid .explore-hero-text-fill {
         filter: none;
     }
     .index-grid-water-caustics {
-        opacity: 0.2;
+        opacity: 0.12;
         filter: blur(20px);
         animation-duration: 30s;
     }
@@ -225,7 +256,7 @@ body.index-page #index-explore-grid .explore-hero-text-fill {
         display: none;
     }
     .index-grid-water-rays {
-        opacity: 0.32;
+        opacity: 0.2;
         animation-duration: 48s;
     }
     .index-grid-water-bubbles span:nth-child(n+6) {
@@ -245,9 +276,7 @@ body.index-page #index-explore-grid .explore-hero-text-fill {
     }
     body.index-page #index-explore-grid .explore-hero-img,
     body.index-page #index-explore-grid .explore-grid-placeholder-img {
-        filter:
-            drop-shadow(0 0 16px rgba(255, 255, 255, 0.08))
-            drop-shadow(0 0 18px rgba(150, 200, 225, 0.08));
+        filter: drop-shadow(0 0 16px rgba(255, 255, 255, 0.08));
     }
     body.index-page #index-explore-grid .explore-hero-text-fill {
         filter: none;
