@@ -984,10 +984,12 @@
         }
 
         body.dark-theme .hero-section {
-            height: 100vh;
-            height: 100svh;
-            min-height: 100vh;
-            min-height: 100svh;
+            /* Tall enough for a large head-to-feet figure in the first
+               screen, with the reflection extending below into the fade. */
+            height: 170vh;
+            height: 170svh;
+            min-height: 170vh;
+            min-height: 170svh;
         }
 
         /* Black overlay on hero section 1 */
@@ -1034,11 +1036,13 @@
             }
         }
         
-        /* Water reflection: full figure stands on the horizon, full mirror below.
+        /* Restore a large mannequin (original visual weight) while keeping
+           head-to-feet on the first screen. Percentages are of the 170vh
+           hero so the body is ~80vh and the mirror continues below the fold.
            Art is 4000² with the body from 11.4%–85.0% of the frame. */
         .hero-section {
-            --hero-figure-top-pad: 9.5%;
-            --hero-figure-height: 43%;
+            --hero-figure-top-pad: 5.882%;  /* 10vh of 170vh */
+            --hero-figure-height: 47.059%; /* 80vh of 170vh */
             --hero-img-top-frac: 0.114;
             --hero-img-bottom-frac: 0.8498;
             --hero-img-h: calc(var(--hero-figure-height) / (var(--hero-img-bottom-frac) - var(--hero-img-top-frac)));
@@ -1120,8 +1124,9 @@
         }
         @media (max-width: 768px) {
             .hero-section {
-                --hero-figure-top-pad: 19%;
-                --hero-figure-height: 38%;
+                /* 22vh pad + 70vh figure + 70vh mirror on a 162vh hero */
+                --hero-figure-top-pad: 13.58%;
+                --hero-figure-height: 43.21%;
             }
         }
         @media (prefers-reduced-motion: reduce) {
@@ -1492,7 +1497,7 @@
         .hero-gone-mini-wrapper {
             position: absolute;
             z-index: 4;
-            top: calc(5.5% + 2in);
+            top: calc(22vh + 2in); /* was 5.5% at 100vh hero; keep visual place */
             right: 4%;
             width: 140px;
             height: 140px;
@@ -2438,13 +2443,13 @@
                 padding: 0 0.5rem !important;
             }
 
-            /* Hero section: fit the visible phone viewport so the
-               full figure and its reflection stay on screen. */
+            /* Hero is taller so the large figure fits in the first screen
+               and the reflection can extend below into the black fade. */
             .hero-section {
-                height: 100vh !important;
-                height: 100svh !important;
-                min-height: 100vh !important;
-                min-height: 100svh !important;
+                height: 162vh !important;
+                height: 162svh !important;
+                min-height: 162vh !important;
+                min-height: 162svh !important;
                 overflow: hidden !important;
             }
 
@@ -2475,7 +2480,7 @@
 
             /* Mini shirt thumbnail: top-right so it does not sit on the reflection */
             .hero-gone-mini-wrapper {
-                top: 14% !important;
+                top: 14vh !important;
                 bottom: auto !important;
                 right: 3% !important;
                 width: 60px !important;

@@ -22,8 +22,9 @@ body.index-page .hero-bottom-fade {
     position: absolute;
     left: 0;
     right: 0;
+    top: var(--hero-horizon);
     bottom: 0;
-    height: 70%;
+    height: auto;
     pointer-events: none;
     z-index: 6;
     background: linear-gradient(
@@ -108,7 +109,7 @@ body.index-page #index-explore-grid::before {
         height: 32vh;
     }
     body.index-page .hero-bottom-fade {
-        height: 74%;
+        height: auto;
     }
 }
 
