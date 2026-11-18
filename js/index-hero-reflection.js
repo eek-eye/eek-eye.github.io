@@ -95,6 +95,21 @@
 
         ctx.restore();
 
+        /* Fade the flipped figure itself: brightest at the feet (y = 0),
+           smoothly gone by the bottom. Same soft look as the visible
+           fading feet, stretched over the whole reflected body. */
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        var fade = ctx.createLinearGradient(0, 0, 0, bh);
+        fade.addColorStop(0, 'rgba(0,0,0,1)');
+        fade.addColorStop(0.18, 'rgba(0,0,0,0.88)');
+        fade.addColorStop(0.48, 'rgba(0,0,0,0.58)');
+        fade.addColorStop(0.78, 'rgba(0,0,0,0.22)');
+        fade.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.globalCompositeOperation = 'destination-in';
+        ctx.fillStyle = fade;
+        ctx.fillRect(0, 0, bw, bh);
+        ctx.globalCompositeOperation = 'source-over';
+
         if (Date.now() < paintUntil && shouldPaint()) {
             rafId = window.requestAnimationFrame(paint);
         }

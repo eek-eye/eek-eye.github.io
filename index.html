@@ -984,12 +984,12 @@
         }
 
         body.dark-theme .hero-section {
-            /* Large head-to-feet figure on the first screen, with a short
-               reflection just below the fold, then the shirts. */
-            height: 120vh;
-            height: 120svh;
-            min-height: 120vh;
-            min-height: 120svh;
+            /* Large head-to-feet figure on the first screen, with room
+               below the fold for the full-body reflection as it fades. */
+            height: 170vh;
+            height: 170svh;
+            min-height: 170vh;
+            min-height: 170svh;
         }
 
         /* Don't dim the mannequin: the 55% black veil turned the white
@@ -1036,12 +1036,12 @@
         }
         
         /* Restore a large mannequin (original visual weight) while keeping
-           head-to-feet on the first screen. Percentages are of the 120vh
-           hero so the body is ~80vh and a short mirror sits below the fold.
+           head-to-feet on the first screen. Percentages are of the 170vh
+           hero so the body is ~80vh and the full mirror sits below the fold.
            Art is 4000² with the body from 11.4%–85.0% of the frame. */
         .hero-section {
-            --hero-figure-top-pad: 8.333%;  /* 10vh of 120vh */
-            --hero-figure-height: 66.667%; /* 80vh of 120vh */
+            --hero-figure-top-pad: 5.882%;  /* 10vh of 170vh */
+            --hero-figure-height: 47.059%; /* 80vh of 170vh */
             --hero-img-top-frac: 0.114;
             --hero-img-bottom-frac: 0.8498;
             --hero-img-h: calc(var(--hero-figure-height) / (var(--hero-img-bottom-frac) - var(--hero-img-top-frac)));
@@ -1123,9 +1123,9 @@
         }
         @media (max-width: 768px) {
             .hero-section {
-                /* 18vh pad + 70vh figure + 32vh mirror on a 120vh hero */
-                --hero-figure-top-pad: 15%;
-                --hero-figure-height: 58.333%;
+                /* 22vh pad + 70vh figure + 70vh mirror on a 162/170vh hero */
+                --hero-figure-top-pad: 13.58%;
+                --hero-figure-height: 43.21%;
             }
         }
         @media (prefers-reduced-motion: reduce) {
