@@ -1044,6 +1044,8 @@
             --hero-figure-height: 47.059%; /* 80vh of 170vh */
             --hero-img-top-frac: 0.114;
             --hero-img-bottom-frac: 0.8498;
+            --hero-img-left-frac: 0.406; /* body left edge in the 4000² art */
+            --hero-figure-left: 4.5%; /* small margin from the hero's left edge */
             --hero-img-h: calc(var(--hero-figure-height) / (var(--hero-img-bottom-frac) - var(--hero-img-top-frac)));
             --hero-horizon: calc(var(--hero-figure-top-pad) + var(--hero-figure-height));
             --hero-img-top: calc(var(--hero-horizon) - var(--hero-img-h) * var(--hero-img-bottom-frac));
@@ -1436,8 +1438,9 @@
         .hero-gone-image-1,
         .hero-gone-image-2 {
             top: var(--hero-img-top);
-            left: 50%;
-            transform: translateX(-50%);
+            left: var(--hero-figure-left);
+            /* Align the body's left edge, not the square art's left edge. */
+            transform: translateX(calc(var(--hero-img-left-frac) * -100%));
             transform-origin: center top;
         }
 
@@ -1452,9 +1455,9 @@
         .hero-gone-click-box {
             position: absolute;
             top: calc(var(--hero-figure-top-pad) + var(--hero-figure-height) * 0.5);
-            left: 50%;
-            transform: translate(-50%, -50%);
-            transform-origin: center center;
+            left: var(--hero-figure-left);
+            transform: translateY(-50%);
+            transform-origin: left center;
             width: 22%;
             height: calc(var(--hero-figure-height) + 4%);
             z-index: 4;
@@ -1698,7 +1701,8 @@
         }
 
         .hero-gone-nav-prev {
-            left: 24%;
+            /* Sit in the open space to the right of the left-aligned figure. */
+            left: 30%;
         }
 
         .hero-gone-nav-next {
@@ -2479,7 +2483,7 @@
             }
 
             .hero-gone-nav-prev {
-                left: 4% !important;
+                left: 52% !important;
             }
 
             .hero-gone-nav-next {
