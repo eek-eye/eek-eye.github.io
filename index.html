@@ -1437,18 +1437,13 @@
 
         .hero-gone-image-1,
         .hero-gone-image-2 {
-            /* Box is just the body, left-aligned, so the 4000² art
-               cannot hang off-canvas and get clipped. */
-            top: var(--hero-figure-top-pad);
+            /* Original ~80vh body size: art is sized with --hero-img-h so
+               the figure (11.4%–85%) fills --hero-figure-height. */
+            top: var(--hero-img-top);
             left: var(--hero-figure-left);
-            height: var(--hero-figure-height);
-            width: auto;
-            aspect-ratio: 0.19 / 0.74;
-            max-width: none;
-            object-fit: cover;
-            object-position: 49.7% 48%;
-            transform: none;
-            transform-origin: left top;
+            /* Align the body's left edge, not the square art's left edge. */
+            transform: translateX(calc(var(--hero-img-left-frac) * -100%));
+            transform-origin: center top;
         }
 
         .hero-gone-image.hero-gone-image--visible {
