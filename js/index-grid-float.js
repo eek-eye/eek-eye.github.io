@@ -28,18 +28,19 @@
         lastX: 0, lastY: 0, lastT: 0
     };
 
-    var SPRING = 1.6;
-    var DAMPING = 5.2;
-    var ANG_SPRING = 1.4;
-    var ANG_DAMPING = 4.2;
-    var PUSH_ACCEL = 90;
-    var WAKE = 0.035;
-    var SCROLL_FORCE = 2.4;
-    var MAX_X = 8;
-    var MAX_Y = 8;
-    var MAX_RX = 6;
-    var MAX_RY = 6;
-    var MAX_RZ = 4;
+    var SPRING = 2.0;
+    var DAMPING = 4.6;
+    var ANG_SPRING = 1.8;
+    var ANG_DAMPING = 3.8;
+    var PUSH_ACCEL = 180;
+    var WAKE = 0.07;
+    var SCROLL_FORCE = 4.8;
+    var MAX_X = 14;
+    var MAX_Y = 14;
+    var MAX_RX = 10;
+    var MAX_RY = 10;
+    var MAX_RZ = 6;
+    var PUSH_RADIUS = 320;
     var LIFT_Z = 80;
 
     function visibleCard(el) {
@@ -86,17 +87,17 @@
                 canvas: canvas,
                 info: info,
                 mass: 0.78 + hash(s * 3.1) * 0.7,
-                ampX: 2 + hash(s * 5.2) * 3,
-                ampY: 2.5 + hash(s * 8.9) * 3,
-                ampRx: 1.6 + hash(s * 1.9) * 2,
-                ampRy: 1.8 + hash(s * 2.7) * 2.2,
-                ampRz: 1 + hash(s * 3.3) * 1.4,
-                w1: 0.08 + hash(s * 2.4) * 0.07,
-                w2: 0.16 + hash(s * 4.7) * 0.1,
-                w3: 0.28 + hash(s * 6.1) * 0.16,
-                wRx: 0.07 + hash(s * 9.1) * 0.07,
-                wRy: 0.055 + hash(s * 7.4) * 0.07,
-                wRz: 0.09 + hash(s * 5.6) * 0.08,
+                ampX: 4 + hash(s * 5.2) * 6,
+                ampY: 5 + hash(s * 8.9) * 6,
+                ampRx: 3.2 + hash(s * 1.9) * 4,
+                ampRy: 3.6 + hash(s * 2.7) * 4.4,
+                ampRz: 2 + hash(s * 3.3) * 2.8,
+                w1: 0.10 + hash(s * 2.4) * 0.09,
+                w2: 0.20 + hash(s * 4.7) * 0.13,
+                w3: 0.36 + hash(s * 6.1) * 0.20,
+                wRx: 0.09 + hash(s * 9.1) * 0.09,
+                wRy: 0.07 + hash(s * 7.4) * 0.09,
+                wRz: 0.11 + hash(s * 5.6) * 0.10,
                 p1: hash(s * 1.3) * Math.PI * 2,
                 p2: hash(s * 2.8) * Math.PI * 2,
                 p3: hash(s * 3.9) * Math.PI * 2,
@@ -106,8 +107,8 @@
                 pRy: hash(s * 6.6) * Math.PI * 2,
                 pRz: hash(s * 4.1) * Math.PI * 2,
                 seed: s * 12.9898,
-                waveAmp: 0.016 + hash(s * 11.2) * 0.012,
-                waveSpeed: 0.4 + hash(s * 10.4) * 0.25,
+                waveAmp: 0.032 + hash(s * 11.2) * 0.024,
+                waveSpeed: 0.55 + hash(s * 10.4) * 0.30,
                 x: 0, y: 0, vx: 0, vy: 0,
                 rx: 0, ry: 0, rz: 0,
                 rvx: 0, rvy: 0, rvz: 0,
@@ -173,9 +174,9 @@
     }
 
     function currents(s, t) {
-        var n = Math.sin(t * 0.11 + s.seed) * Math.sin(t * 0.16 + s.p5) * Math.sin(t * 0.06 + s.seed * 0.4);
-        var flowX = 3.5 * Math.sin(t * 0.055 + 0.4) + 1.6 * Math.sin(t * 0.13 + s.p1);
-        var flowY = 2 * Math.sin(t * 0.045 + 1.1) + 1 * Math.sin(t * 0.1 + s.p3);
+        var n = Math.sin(t * 0.15 + s.seed) * Math.sin(t * 0.22 + s.p5) * Math.sin(t * 0.08 + s.seed * 0.4);
+        var flowX = 7 * Math.sin(t * 0.07 + 0.4) + 3.2 * Math.sin(t * 0.17 + s.p1);
+        var flowY = 4 * Math.sin(t * 0.06 + 1.1) + 2 * Math.sin(t * 0.13 + s.p3);
         return {
             x: s.ampX * (0.6 * Math.sin(t * s.w1 + s.p1) + 0.26 * Math.sin(t * s.w2 + s.p2) + 0.14 * n) + flowX,
             y: s.ampY * (0.68 * Math.sin(t * s.w1 * 0.86 + s.p3) + 0.22 * Math.sin(t * s.w2 * 1.07 + s.p4) + 0.12 * n) - s.ampY * 0.06 + flowY * 0.55
@@ -201,7 +202,7 @@
             dx = s.cx - pointer.x;
             dy = s.cy - pointer.y;
             d = Math.sqrt(dx * dx + dy * dy);
-            pushR = 240;
+            pushR = PUSH_RADIUS;
             if (d < pushR && d > 0.001) {
                 fall = 1 - d / pushR;
                 fall *= fall;
@@ -210,13 +211,13 @@
                 fy += dy * inv * PUSH_ACCEL * fall;
                 fx += pointer.vx * WAKE * fall;
                 fy += pointer.vy * WAKE * fall;
-                s.rvy += (dx * inv) * 8 * fall * dt;
-                s.rvx += (-dy * inv) * 6 * fall * dt;
+                s.rvy += (dx * inv) * 16 * fall * dt;
+                s.rvx += (-dy * inv) * 12 * fall * dt;
             }
         }
 
         fy += scrollImpulse * SCROLL_FORCE;
-        s.rvx += scrollImpulse * 1.2 * dt;
+        s.rvx += scrollImpulse * 2.4 * dt;
 
         s.vx += (fx / mass) * dt;
         s.vy += (fy / mass) * dt;
@@ -225,9 +226,9 @@
         s.x = clamp(s.x, -MAX_X, MAX_X);
         s.y = clamp(s.y, -MAX_Y, MAX_Y);
 
-        var restRx = s.ampRx * Math.sin(t * s.wRx + s.pRx) + s.vy * 0.03;
-        var restRy = s.ampRy * Math.sin(t * s.wRy + s.pRy) + s.vx * 0.04;
-        var restRz = s.ampRz * Math.sin(t * s.wRz + s.pRz) + s.vx * 0.03;
+        var restRx = s.ampRx * Math.sin(t * s.wRx + s.pRx) + s.vy * 0.06;
+        var restRy = s.ampRy * Math.sin(t * s.wRy + s.pRy) + s.vx * 0.08;
+        var restRz = s.ampRz * Math.sin(t * s.wRz + s.pRz) + s.vx * 0.06;
         s.rvx += ((restRx - s.rx) * ANG_SPRING - s.rvx * ANG_DAMPING) * dt;
         s.rvy += ((restRy - s.ry) * ANG_SPRING - s.rvy * ANG_DAMPING) * dt;
         s.rvz += ((restRz - s.rz) * ANG_SPRING - s.rvz * ANG_DAMPING) * dt;
@@ -279,6 +280,7 @@
         var vs = compile(gl.VERTEX_SHADER, [
             'attribute vec2 a_uv;',
             'uniform float u_time, u_amp, u_speed, u_phase, u_pad;',
+            'uniform vec2 u_push;',
             'varying vec2 v_uv;',
             'void main() {',
             '  float u = a_uv.x;',
@@ -292,11 +294,13 @@
             '  float w1 = sin(u * 8.2 + v * 3.4 + t * 1.55);',
             '  float w2 = sin(u * 5.1 - v * 6.6 + t * 2.15 + 1.7);',
             '  float w3 = sin((u + v) * 11.0 + t * 1.05 + 0.6);',
+            '  float w4 = sin(u * 3.2 + v * 2.1 + t * 0.85 + 2.1);',
+            '  float flutter = sin(u * 12.0 + t * 2.35 + 0.8) * 0.22 + sin(v * 9.5 - t * 1.85) * 0.18;',
             '  vec2 disp = vec2(',
-            '    w1 * 0.55 + w2 * 0.3 + w3 * 0.15,',
-            '    w1 * 0.35 + w3 * 0.4 + w2 * 0.25',
-            '  ) * u_amp * wgt;',
-            '  float billow = 1.0 + (w2 * 0.55 + w1 * 0.35) * u_amp * 2.4 * edge;',
+            '    w1 * 0.45 + w2 * 0.25 + w3 * 0.14 + w4 * 0.28 + flutter * 0.55 * edge,',
+            '    w1 * 0.28 + w3 * 0.32 + w2 * 0.18 + w4 * 0.30 + flutter * 0.45 * edge',
+            '  ) * u_amp * wgt + u_push * wgt;',
+            '  float billow = 1.0 + (w2 * 0.40 + w1 * 0.28 + w4 * 0.42) * u_amp * 2.8 * edge + flutter * u_amp * 1.15 * edge;',
             '  float scale = 1.0 / (1.0 + 2.0 * u_pad);',
             '  vec2 p = (a_uv + disp - 0.5) * billow * scale;',
             /* p is already centered in ~[-0.5,0.5]; +Y in clip space is the top of the canvas. */
@@ -331,6 +335,7 @@
         glUniforms.speed = gl.getUniformLocation(glProg, 'u_speed');
         glUniforms.phase = gl.getUniformLocation(glProg, 'u_phase');
         glUniforms.pad = gl.getUniformLocation(glProg, 'u_pad');
+        glUniforms.push = gl.getUniformLocation(glProg, 'u_push');
         glUniforms.tex = gl.getUniformLocation(glProg, 'u_tex');
         glUniforms.pix = gl.getUniformLocation(glProg, 'u_pix');
 
@@ -520,9 +525,11 @@
         gl.uniform1i(glUniforms.tex, 0);
         gl.uniform1f(glUniforms.time, t);
         gl.uniform1f(glUniforms.amp, s.waveAmp);
+        var push = clothPush(s);
         gl.uniform1f(glUniforms.speed, s.waveSpeed);
         gl.uniform1f(glUniforms.phase, s.p5);
         gl.uniform1f(glUniforms.pad, CLOTH_PAD);
+        gl.uniform2f(glUniforms.push, push.x, push.y);
         gl.uniform2f(glUniforms.pix, s.pixX || 64, s.pixY || 64);
         gl.drawElements(gl.TRIANGLES, glIdxCount, gl.UNSIGNED_SHORT, 0);
         try {
@@ -535,6 +542,26 @@
         }
     }
 
+    function clothPush(s) {
+        var px = 0, py = 0, dx, dy, d, fall, inv;
+        if (pointer.on) {
+            dx = s.cx - pointer.x;
+            dy = s.cy - pointer.y;
+            d = Math.sqrt(dx * dx + dy * dy);
+            if (d < PUSH_RADIUS && d > 0.001) {
+                fall = 1 - d / PUSH_RADIUS;
+                fall *= fall;
+                inv = 1 / d;
+                px += dx * inv * 0.038 * fall + pointer.vx * 0.00007 * fall;
+                py += dy * inv * 0.038 * fall + pointer.vy * 0.00007 * fall;
+            }
+        }
+        py += clamp(scrollImpulse * 0.004, -0.03, 0.03);
+        px = clamp(px, -0.06, 0.06);
+        py = clamp(py, -0.06, 0.06);
+        return { x: px, y: py };
+    }
+
     function warp2d(s, u, v, t) {
         var hem = v < 0.42 ? 0 : (v - 0.42) / 0.58;
         var sleeve = Math.pow(Math.abs(u - 0.5) * 2, 1.35) * (1 - Math.abs(v - 0.42) * 1.15);
@@ -545,8 +572,15 @@
         var tm = t * s.waveSpeed + s.p5;
         var w1 = Math.sin(u * 8.2 + v * 3.4 + tm * 1.55);
         var w2 = Math.sin(u * 5.1 - v * 6.6 + tm * 2.15 + 1.7);
+        var w3 = Math.sin((u + v) * 11.0 + tm * 1.05 + 0.6);
+        var w4 = Math.sin(u * 3.2 + v * 2.1 + tm * 0.85 + 2.1);
+        var flutter = Math.sin(u * 12.0 + tm * 2.35 + 0.8) * 0.22 + Math.sin(v * 9.5 - tm * 1.85) * 0.18;
         var amp = s.waveAmp * wgt;
-        return { x: (w1 * 0.55 + w2 * 0.3) * amp, y: (w1 * 0.35 + w2 * 0.25) * amp };
+        var push = clothPush(s);
+        return {
+            x: (w1 * 0.45 + w2 * 0.25 + w3 * 0.14 + w4 * 0.28 + flutter * 0.55 * edge) * amp + push.x * wgt,
+            y: (w1 * 0.28 + w3 * 0.32 + w2 * 0.18 + w4 * 0.30 + flutter * 0.45 * edge) * amp + push.y * wgt
+        };
     }
 
     function ensurePixSource(s) {
@@ -683,9 +717,9 @@
         var y = window.scrollY || 0;
         var dy = y - lastScrollY;
         lastScrollY = y;
-        scrollImpulse += dy * 0.065;
-        if (scrollImpulse > 18) scrollImpulse = 18;
-        if (scrollImpulse < -18) scrollImpulse = -18;
+        scrollImpulse += dy * 0.09;
+        if (scrollImpulse > 22) scrollImpulse = 22;
+        if (scrollImpulse < -22) scrollImpulse = -22;
         cacheRects();
     }, { passive: true });
 
