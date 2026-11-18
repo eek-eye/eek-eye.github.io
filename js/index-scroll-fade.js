@@ -42,15 +42,15 @@
         if (vh < 1) vh = 1;
 
         var heroBottom = hero.getBoundingClientRect().bottom;
-        /* Fully clear near the top of the page; solid black once the hero
-           has receded to about mid-viewport, before the shirts arrive. */
-        var heroT = (heroBottom - vh * 0.55) / (vh * 0.40);
+        /* Fully clear near the top of the page; ease to black as the hero
+           leaves, done once only a sliver remains at the top. */
+        var heroT = (heroBottom - vh * 0.20) / (vh * 0.55);
         var heroOp = 1 - ease(heroT);
 
         var shirtsTop = products.getBoundingClientRect().top;
-        /* Stay black until the product row is well into the viewport, then
-           ease the shirts in. Leaves a pure-black beat between the two. */
-        var gridT = (vh * 0.52 - shirtsTop) / (vh * 0.34);
+        /* Start revealing as soon as the shirts enter, and be fully clear
+           once a good portion of the row is on screen. */
+        var gridT = (vh * 0.95 - shirtsTop) / (vh * 0.35);
         var gridOp = 1 - ease(gridT);
 
         heroVeil.style.opacity = clamp(heroOp, 0, 1).toFixed(4);

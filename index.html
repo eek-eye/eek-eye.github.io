@@ -984,12 +984,12 @@
         }
 
         body.dark-theme .hero-section {
-            /* Tall enough for a large head-to-feet figure in the first
-               screen, with the reflection extending below into the fade. */
-            height: 170vh;
-            height: 170svh;
-            min-height: 170vh;
-            min-height: 170svh;
+            /* Large head-to-feet figure on the first screen, with a short
+               reflection just below the fold, then the shirts. */
+            height: 120vh;
+            height: 120svh;
+            min-height: 120vh;
+            min-height: 120svh;
         }
 
         /* Don't dim the mannequin: the 55% black veil turned the white
@@ -1031,17 +1031,17 @@
                 transform: none;
             }
             .hero-gone-mini-wrapper {
-                transform: scale(1.214);
+                transform: scale(0.813);
             }
         }
         
         /* Restore a large mannequin (original visual weight) while keeping
-           head-to-feet on the first screen. Percentages are of the 170vh
-           hero so the body is ~80vh and the mirror continues below the fold.
+           head-to-feet on the first screen. Percentages are of the 120vh
+           hero so the body is ~80vh and a short mirror sits below the fold.
            Art is 4000² with the body from 11.4%–85.0% of the frame. */
         .hero-section {
-            --hero-figure-top-pad: 5.882%;  /* 10vh of 170vh */
-            --hero-figure-height: 47.059%; /* 80vh of 170vh */
+            --hero-figure-top-pad: 8.333%;  /* 10vh of 120vh */
+            --hero-figure-height: 66.667%; /* 80vh of 120vh */
             --hero-img-top-frac: 0.114;
             --hero-img-bottom-frac: 0.8498;
             --hero-img-h: calc(var(--hero-figure-height) / (var(--hero-img-bottom-frac) - var(--hero-img-top-frac)));
@@ -1123,9 +1123,9 @@
         }
         @media (max-width: 768px) {
             .hero-section {
-                /* 22vh pad + 70vh figure + 70vh mirror on a 162vh hero */
-                --hero-figure-top-pad: 13.58%;
-                --hero-figure-height: 43.21%;
+                /* 18vh pad + 70vh figure + 32vh mirror on a 120vh hero */
+                --hero-figure-top-pad: 15%;
+                --hero-figure-height: 58.333%;
             }
         }
         @media (prefers-reduced-motion: reduce) {
@@ -1505,7 +1505,7 @@
             right: 4%;
             width: 140px;
             height: 140px;
-            transform: scale(4.857);
+            transform: scale(3.254);
             transform-origin: top right;
             border: 1px solid rgba(255, 255, 255, 0.9);
             box-sizing: border-box;
@@ -2491,15 +2491,16 @@
                 top: 14vh !important;
                 bottom: auto !important;
                 right: 3% !important;
-                width: 60px !important;
-                max-height: 180px !important;
-                transform: scale(0.825) !important;
+                width: 80px !important;
+                height: 80px !important;
+                max-height: 80px !important;
+                transform: scale(0.79) !important;
                 transform-origin: top right !important;
             }
 
             .hero-gone-mini-stage,
-            .hero-gone-extra-image {
-                height: 100px !important;
+            .hero-gone-extra-image-button {
+                height: 100% !important;
             }
 
             /* Marquee ticker */
@@ -2770,7 +2771,7 @@
         <button type="button" class="hero-gone-nav hero-gone-nav-next" aria-label="Present image" data-translate="heroPresent" data-translate-aria="ariaPresentImage">Present</button>
         <div class="hero-gone-mini-wrapper">
             <button type="button" class="hero-gone-extra-image-button" aria-label="Open original image" data-translate-aria="ariaOpenOriginal">
-                <img src="eekseye.png/I 伊克西 I I eeks eye I I 2026.png" alt="I 伊克西 I I eeks eye I I 2026" class="hero-gone-extra-image">
+                <img src="images/gone gone 3.png" alt="Mannequin" class="hero-gone-extra-image">
                 <span class="hero-gone-zoom-icon"><i class="fas fa-search-plus" aria-hidden="true"></i></span>
             </button>
             <div class="hero-gone-mini-stage">
@@ -2804,7 +2805,7 @@
 
     <div class="hero-gone-image-modal" id="heroGoneImageModal" aria-hidden="true">
         <button type="button" class="hero-gone-image-modal-close" id="heroGoneImageModalClose" aria-label="Close image preview" data-translate-aria="ariaCloseModal">&times;</button>
-        <img src="eekseye.png/I 伊克西 I I eeks eye I I 2026.png" alt="I 伊克西 I I eeks eye I I 2026 original view">
+        <img src="images/gone gone 3.png" alt="Mannequin original view">
     </div>
 
 
