@@ -1437,11 +1437,18 @@
 
         .hero-gone-image-1,
         .hero-gone-image-2 {
-            top: var(--hero-img-top);
+            /* Box is just the body, left-aligned, so the 4000² art
+               cannot hang off-canvas and get clipped. */
+            top: var(--hero-figure-top-pad);
             left: var(--hero-figure-left);
-            /* Align the body's left edge, not the square art's left edge. */
-            transform: translateX(calc(var(--hero-img-left-frac) * -100%));
-            transform-origin: center top;
+            height: var(--hero-figure-height);
+            width: auto;
+            aspect-ratio: 0.19 / 0.74;
+            max-width: none;
+            object-fit: cover;
+            object-position: 49.7% 48%;
+            transform: none;
+            transform-origin: left top;
         }
 
         .hero-gone-image.hero-gone-image--visible {
@@ -3228,6 +3235,10 @@
 
                 let showingFirst = false;
                 const INTERVAL_MS = 6000; // slow cycle
+                /* Past/Present buttons and the 6s auto-cycle are hidden for
+                   now so the white Present figure stays on the left. Set
+                   PAST_PRESENT_ENABLED to true to restore them. */
+                const PAST_PRESENT_ENABLED = false;
                 // Start on the white Present frame so the figure is bright at rest.
                 showSecond();
 
@@ -3240,9 +3251,10 @@
                     showingFirst = !showingFirst;
                 };
 
-                let cycleTimer = setInterval(runCycle, INTERVAL_MS);
+                let cycleTimer = PAST_PRESENT_ENABLED ? setInterval(runCycle, INTERVAL_MS) : null;
 
                 const resetCycleTimer = () => {
+                    if (!PAST_PRESENT_ENABLED) return;
                     clearInterval(cycleTimer);
                     cycleTimer = setInterval(runCycle, INTERVAL_MS);
                 };
@@ -3264,14 +3276,14 @@
                     });
                 };
 
-                if (gonePrev) {
+                if (PAST_PRESENT_ENABLED && gonePrev) {
                     gonePrev.addEventListener('click', () => {
                         switchInstantly(false);
                         resetCycleTimer();
                     });
                 }
 
-                if (goneNext) {
+                if (PAST_PRESENT_ENABLED && goneNext) {
                     goneNext.addEventListener('click', () => {
                         switchInstantly(true);
                         resetCycleTimer();

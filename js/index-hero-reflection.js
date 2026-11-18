@@ -89,7 +89,15 @@
                 ? 'brightness(2.7) contrast(1.1) '
                 : '') + 'brightness(0.8) saturate(0.8) hue-rotate(196deg)';
             try {
-                ctx.drawImage(img, destX, destY, r.width, r.height);
+                /* Crop to the body in the 4000² art so the reflection
+                   matches the left-aligned on-page figure box. */
+                var nw = img.naturalWidth;
+                var nh = img.naturalHeight;
+                ctx.drawImage(
+                    img,
+                    nw * 0.401, nh * 0.110, nw * 0.190, nh * 0.740,
+                    destX, destY, r.width, r.height
+                );
             } catch (err) {}
         }
 

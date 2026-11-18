@@ -611,3 +611,10 @@ body.index-page .hero-gone-mini-wrapper .hero-gone-zoom-icon {
     }
 }
 
+/* Hidden for now (Past/Present buttons and the corner box).
+   Markup and styles stay in place so these can be restored. */
+body.index-page .hero-gone-nav,
+body.index-page .hero-gone-mini-wrapper,
+body.index-page .hero-gone-image-modal {
+    display: none !important;
+}
