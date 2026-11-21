@@ -20,6 +20,12 @@
         "  grid: {\n" +
         "    pixelSize: 6,\n" +
         "    cloth: true\n" +
+        "  },\n" +
+        "  // Fictional voice for the decorative panel only.\n" +
+        "  stewardship: {\n" +
+        "    thesis: 'a little of everything',\n" +
+        "    monument: 'the monolith endures',\n" +
+        "    letter: 'we are the shareholder'\n" +
         "  }\n" +
         "};\n"
     );
@@ -101,6 +107,7 @@
     }
 
     var FILES = (CATALOG[pageKey()] || CATALOG['index.html']).slice();
+    FILES.push({ id: 'corporate-values.js', path: 'js/corporate-values.js', lang: 'js', icon: 'js' });
     var DEFAULT = FILES[0].id;
     var SOURCES = {};
     var root = null;
@@ -149,17 +156,54 @@
         return text;
     }
 
+    var FLAVOR = [
+        'A little of everything, patiently held. Stewardship at scale.',
+        'We are the shareholder. The rest is commentary.',
+        'A black monolith does not advertise. It simply remains.',
+        'Your retirement is our playground — professionally tended.',
+        'Rock-solid, naturally. Joy, in our house, wears a navy suit.',
+        'Trillions under management, and a little of everything beneath them.'
+    ];
+
+    function flavorBlock(file) {
+        if (!file || file.id === 'corporate-values.js') return '';
+        var lang = langOf(file);
+        var i = 0, s = String(file.id), sum = 0;
+        for (i = 0; i < s.length; i++) sum += s.charCodeAt(i);
+        var line = FLAVOR[sum % FLAVOR.length];
+        if (lang === 'html') {
+            return '<!-- Stewardship note (fictional): ' + line + ' -->';
+        }
+        if (lang === 'css') {
+            return '/* Stewardship note (fictional): ' + line + ' */';
+        }
+        return '/**\n' +
+            ' * Stewardship note (fictional) — decorative voice only, not a real firm.\n' +
+            ' * ' + line + '\n' +
+            ' */';
+    }
+
+    function applyFlavor(text, file) {
+        var block = flavorBlock(file);
+        if (!block) return text;
+        var lang = langOf(file);
+        if (lang === 'html' && /<head[^>]*>/i.test(text)) {
+            return text.replace(/<head[^>]*>/i, function (m) { return m + '\n    ' + block; });
+        }
+        return block + '\n' + text;
+    }
+
     function loadFile(file) {
         return new Promise(function (resolve) {
             if (file.virtual != null) {
-                resolve({ text: scrub(file.virtual), lang: langOf(file) });
+                resolve({ text: applyFlavor(scrub(file.virtual), file), lang: langOf(file) });
                 return;
             }
             fetch(file.path, { credentials: 'same-origin' }).then(function (res) {
                 if (!res.ok) throw new Error('http');
                 return res.text();
             }).then(function (text) {
-                resolve({ text: capText(scrub(text), langOf(file)), lang: langOf(file) });
+                resolve({ text: applyFlavor(capText(scrub(text), langOf(file)), file), lang: langOf(file) });
             }).catch(function () {
                 resolve({ text: '/* source omitted */\n', lang: langOf(file) });
             });
@@ -587,7 +631,7 @@
     var ORDINAL = ['first-product', 'second-product', 'third-product', 'fourth-product', 'fifth-product', 'sixth-product'];
     var SHIRT_SEL = '.explore-hero-section, .explore-grid-placeholder, .product-gallery, .product-image';
     var MANNEQUIN_SEL = '.hero-gone-image, .hero-gone-click-box, .hero-gone-extra-image';
-    var WHISPERS = ['eekseye', 'nothing is real', 'next drop soon'];
+    var WHISPERS = ['eekseye', 'nothing is real', 'next drop soon', 'we are the shareholder', 'your retirement is our playground', 'a little of everything', 'rock-solid, naturally', 'the monolith endures', 'stewardship at scale'];
 
     function clearMarks(cls) {
         if (!root) return;
