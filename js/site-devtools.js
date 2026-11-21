@@ -33,6 +33,7 @@
         "// XI\n" +
         "/* 11.11.2026 */\n" +
         "// XI.XI.MMXXVI\n" +
+        "// -XI\n" +
         "export const RELEASE = '11-11-2026';\n" +
         "export const XI_MARK = 0x0B0B;\n" +
         "export const XI_YEAR = 0x7EA; // 2026\n" +
@@ -178,7 +179,7 @@
     function flavorBlock(file) {
         if (!file) return '';
         if (file.id === 'corporate-values.js') {
-            return '// XI\n/* 11.11.2026 */\n// XI.XI.MMXXVI';
+            return '// XI\n/* 11.11.2026 */\n// XI.XI.MMXXVI\n// -XI';
         }
         var lang = langOf(file);
         var i = 0, s = String(file.id), sum = 0;
@@ -190,7 +191,8 @@
             'XI.XI.MMXXVI',
             '11:11',
             '0x0B0B / 0x7EA',
-            "RELEASE = '11-11-2026'"
+            "RELEASE = '11-11-2026'",
+            '-XI'
         ];
         var egg = XI_EGGS[sum % XI_EGGS.length];
         if (lang === 'html') {
@@ -657,7 +659,7 @@
     var ORDINAL = ['first-product', 'second-product', 'third-product', 'fourth-product', 'fifth-product', 'sixth-product'];
     var SHIRT_SEL = '.explore-hero-section, .explore-grid-placeholder, .product-gallery, .product-image';
     var MANNEQUIN_SEL = '.hero-gone-image, .hero-gone-click-box, .hero-gone-extra-image';
-    var WHISPERS = ['eekseye', 'nothing is real', 'next drop soon', 'we are the shareholder', 'your retirement is our playground', 'a little of everything', 'rock-solid, naturally', 'the monolith endures', 'stewardship at scale', 'XI — 11 11 2026', '11:11', 'XI.XI.MMXXVI'];
+    var WHISPERS = ['eekseye', 'nothing is real', 'next drop soon', 'we are the shareholder', 'your retirement is our playground', 'a little of everything', 'rock-solid, naturally', 'the monolith endures', 'stewardship at scale', 'XI — 11 11 2026', '11:11', 'XI.XI.MMXXVI', '-XI'];
 
     function clearMarks(cls) {
         if (!root) return;

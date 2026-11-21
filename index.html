@@ -1124,6 +1124,45 @@
             box-shadow: 0 0 18px 2px rgba(140, 180, 220, 0.08);
             pointer-events: none;
         }
+
+        .hero-xi-sign {
+            position: absolute;
+            left: 56%;
+            top: calc(var(--hero-figure-top-pad) + var(--hero-figure-height) * 0.52);
+            z-index: 7;
+            margin: 0;
+            padding: 0;
+            color: #c42828;
+            font-family: 'Inter', 'SF Pro Display', -apple-system, sans-serif;
+            font-weight: 300;
+            font-size: clamp(0.8rem, 1.15vw, 1.05rem);
+            letter-spacing: 0.32em;
+            line-height: 1;
+            pointer-events: none;
+            user-select: none;
+            opacity: 0;
+            animation: heroXiIn 1.8s ease 1.05s forwards;
+        }
+        @keyframes heroXiIn {
+            from { opacity: 0; }
+            to { opacity: 0.88; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .hero-xi-sign {
+                animation: none;
+                opacity: 0.88;
+            }
+        }
+        @media (max-width: 768px) {
+            .hero-xi-sign {
+                left: auto;
+                right: 7%;
+                top: calc(var(--hero-figure-top-pad) + var(--hero-figure-height) * 0.42);
+                font-size: 0.78rem;
+                letter-spacing: 0.28em;
+            }
+        }
+
         @media (max-width: 768px) {
             .hero-section {
                 /* 22vh pad + 70vh figure + 70vh mirror on a 162/170vh hero */
@@ -2793,6 +2832,7 @@
             </div>
         </div>
         </div>
+        <p class="hero-xi-sign" aria-hidden="true">-XI</p>
         <div class="hero-water" aria-hidden="true">
             <svg class="hero-water-svg" aria-hidden="true" focusable="false">
                 <filter id="heroWaterRipple" x="-8%" y="-8%" width="116%" height="116%" color-interpolation-filters="sRGB">
