@@ -1,5 +1,5 @@
 /**
- * Shared decorative sources panel — site design, not real developer tools.
+ * Shared decorative Sources panel — docked DevTools structure, eekseye red accent.
  * Fixed to the viewport on every page. Source text is fetched same-origin and scrubbed.
  */
 (function () {
@@ -353,10 +353,9 @@
         var i;
         for (i = 0; i < lines.length; i++) {
             var caret = (i === 0) ? '<span class="dt-caret-blink" aria-hidden="true"></span>' : '';
-            var ln = String(i + 1).padStart(2, '0');
             buf.push(
                 '<div class="dt-code-row' + (i === 0 ? ' is-current' : '') + '" data-line="' + (i + 1) + '">' +
-                '<span class="dt-ln">' + ln + '</span>' +
+                '<span class="dt-ln">-</span>' +
                 '<span class="dt-line">' + (lines[i] || '') + caret + '</span>' +
                 '</div>'
             );
@@ -379,7 +378,7 @@
 
     function updateStatus(line, col) {
         var el = root.querySelector('.dt-status-pos-text');
-        if (el) el.textContent = 'line ' + String(line).padStart(2, '0');
+        if (el) el.textContent = 'Line ' + line + ', column ' + col;
     }
 
     function syncActive() {
@@ -401,9 +400,10 @@
     }
 
     function filetabsHtml() {
-        return FILES.map(function (f) {
+        return FILES.map(function (f, i) {
+            var x = (i === 0) ? '<span class="dt-filetab-x" aria-hidden="true">×</span>' : '';
             return '<button type="button" class="dt-filetab' + (f.id === DEFAULT ? ' is-active' : '') + '" data-file="' + f.id + '">' +
-                (f.label || f.id) + '</button>';
+                (f.label || f.id) + x + '</button>';
         }).join('');
     }
 
@@ -418,7 +418,7 @@
         return '<div class="dt-tree-row' + active + '"' + fileAttr + toggle +
             ' style="padding-left:' + (4 + pad * 12) + 'px">' +
             caret +
-            (opts.kind ? '<span class="dt-tree-kind">' + opts.kind + '</span>' : '<span class="dt-tree-icon">' + (opts.icon || '') + '</span>') +
+            '<span class="dt-tree-icon">' + opts.icon + '</span>' +
             '<span class="dt-tree-label">' + opts.label + '</span>' +
             '</div>';
     }
@@ -428,51 +428,125 @@
         var css = FILES.filter(function (f) { return iconOf(f) === 'css'; });
         var other = FILES.filter(function (f) { return iconOf(f) !== 'js' && iconOf(f) !== 'css'; });
         function fileRow(f, depth) {
-            return row({ depth: depth, leaf: true, kind: iconOf(f), label: f.id, file: f.id });
+            return row({ depth: depth, leaf: true, icon: fileIcon(iconOf(f)), label: f.id, file: f.id });
         }
         var jsBlock = '';
         if (js.length) {
-            jsBlock = row({ depth: 1, open: true, kind: '', icon: '', label: 'js', key: 'js' }) +
+            jsBlock = row({ depth: 2, open: true, icon: ICO.folder, label: 'js', key: 'js' }) +
                 '<div class="dt-tree-children is-open" data-branch="js">' +
-                js.map(function (f) { return fileRow(f, 2); }).join('') +
+                js.map(function (f) { return fileRow(f, 3); }).join('') +
                 '</div>';
         }
         var cssBlock = '';
         if (css.length) {
-            cssBlock = row({ depth: 1, open: true, kind: '', icon: '', label: 'css', key: 'css' }) +
+            cssBlock = row({ depth: 2, open: true, icon: ICO.folder, label: 'css', key: 'css' }) +
                 '<div class="dt-tree-children is-open" data-branch="css">' +
-                css.map(function (f) { return fileRow(f, 2); }).join('') +
+                css.map(function (f) { return fileRow(f, 3); }).join('') +
                 '</div>';
         }
-        var otherBlock = other.map(function (f) { return fileRow(f, 1); }).join('');
+        var otherBlock = other.map(function (f) { return fileRow(f, 2); }).join('');
         return [
-            row({ depth: 0, open: true, kind: '', icon: '', label: 'eekseye', key: 'eek' }),
-            '<div class="dt-tree-children is-open" data-branch="eek">',
-                jsBlock,
-                cssBlock,
-                otherBlock,
+            row({ depth: 0, open: true, icon: ICO.pages, label: 'top', key: 'top' }),
+            '<div class="dt-tree-children is-open" data-branch="top">',
+                row({ depth: 1, open: true, icon: ICO.cloud, label: 'eekseye.com', key: 'eek' }),
+                '<div class="dt-tree-children is-open" data-branch="eek">',
+                    jsBlock,
+                    cssBlock,
+                    otherBlock,
+                '</div>',
+                row({ depth: 1, open: false, icon: ICO.cloud, label: 'cdn.jsdelivr.net', key: 'cdnjsd' }),
+                '<div class="dt-tree-children" data-branch="cdnjsd">',
+                    row({ depth: 2, open: false, icon: ICO.folder, label: 'npm', key: 'npm' }),
+                '</div>',
+                row({ depth: 1, open: false, icon: ICO.cloud, label: 'cdnjs.cloudflare.com', key: 'cdnjs' }),
+                row({ depth: 1, open: false, icon: ICO.cloud, label: 'fonts.googleapis.com', key: 'gfonts' }),
+                row({ depth: 1, open: false, icon: ICO.cloud, label: 'localhost', key: 'local' }),
             '</div>'
         ].join('');
     }
 
+    var MAIN_TABS = ['Elements', 'Console', 'Sources', 'Network', 'Performance', 'Memory', 'Application', 'Security', 'Lighthouse', 'Recorder'];
+
     function markup() {
+        var tabs = MAIN_TABS.map(function (name) {
+            var on = name === 'Sources' ? ' is-active' : '';
+            return '<span class="dt-tab' + on + '">' + name + '</span>';
+        }).join('');
         return (
+            '<div class="dt-tabbar">' +
+                '<div class="dt-tabbar-left">' +
+                    '<span class="dt-ico">' + ICO.inspect + '</span>' +
+                    '<span class="dt-ico">' + ICO.device + '</span>' +
+                '</div>' +
+                '<div class="dt-tabs">' + tabs + '</div>' +
+                '<div class="dt-tabbar-right">' +
+                    '<span class="dt-badge is-error"><span class="dt-badge-dot"></span>2</span>' +
+                    '<span class="dt-badge is-warn"><span class="dt-badge-dot"></span>2</span>' +
+                    '<span class="dt-ico">' + ICO.gear + '</span>' +
+                    '<span class="dt-ico">' + ICO.kebab + '</span>' +
+                    '<span class="dt-ico">' + ICO.close + '</span>' +
+                '</div>' +
+            '</div>' +
+            '<div class="dt-subbar">' +
+                '<div class="dt-tree-tabs">' +
+                    '<span class="dt-tree-tab is-active">Page</span>' +
+                    '<span class="dt-tree-tab">Workspace</span>' +
+                    '<span class="dt-tree-tab">Overrides</span>' +
+                    '<span class="dt-tree-tab">≫</span>' +
+                '</div>' +
+                '<div class="dt-filetabs">' + filetabsHtml() +
+                    '<div class="dt-filetabs-end"><span class="dt-ico">' + ICO.split + '</span><span class="dt-ico">' + ICO.more + '</span></div>' +
+                '</div>' +
+                '<div class="dt-side-tools">' +
+                    '<span class="dt-ico">' + ICO.pause + '</span>' +
+                    '<span class="dt-ico">' + ICO.stepover + '</span>' +
+                    '<span class="dt-ico">' + ICO.stepinto + '</span>' +
+                    '<span class="dt-ico">' + ICO.stepout + '</span>' +
+                    '<span class="dt-ico">' + ICO.deactivate + '</span>' +
+                '</div>' +
+            '</div>' +
             '<div class="dt-panes">' +
                 '<div class="dt-tree">' +
-                    '<div class="dt-tree-label-top">eekseye</div>' +
                     '<div class="dt-tree-scroll">' + treeHtml() + '</div>' +
                 '</div>' +
                 '<div class="dt-editor">' +
-                    '<div class="dt-filetabs">' + filetabsHtml() + '</div>' +
                     '<div class="dt-code-scroll" tabindex="0"></div>' +
                     '<div class="dt-status">' +
                         '<div class="dt-status-left">' +
-                            '<span class="dt-status-mark" aria-hidden="true"></span>' +
-                            '<span class="dt-status-pos-text">line 01</span>' +
+                            '<span class="dt-ico" style="width:16px;height:16px">' + ICO.chev + '</span>' +
+                            '<span class="dt-status-pos">' +
+                                '<span class="dt-ico" style="width:14px;height:14px">' + ICO.brackets + '</span>' +
+                                '<span class="dt-status-pos-text">Line 1, column 1</span>' +
+                            '</span>' +
                         '</div>' +
-                        '<div class="dt-status-right">eekseye</div>' +
+                        '<div class="dt-status-right">Coverage: N/A</div>' +
                     '</div>' +
                 '</div>' +
+                '<aside class="dt-side" aria-hidden="true">' +
+                    '<div class="dt-side-scroll">' +
+                        '<div class="dt-sec"><div class="dt-sec-h"><span class="dt-caret">' + ICO.caretRight + '</span>Watch</div></div>' +
+                        '<div class="dt-sec">' +
+                            '<div class="dt-sec-h"><span class="dt-caret">' + ICO.caretDown + '</span>Breakpoints</div>' +
+                            '<div class="dt-sec-body">' +
+                                '<label class="dt-check"><input type="checkbox" tabindex="-1"> Pause on uncaught exceptions</label>' +
+                                '<label class="dt-check"><input type="checkbox" checked tabindex="-1"> Pause on caught exceptions</label>' +
+                            '</div>' +
+                        '</div>' +
+                        '<div class="dt-sec">' +
+                            '<div class="dt-sec-h"><span class="dt-caret">' + ICO.caretDown + '</span>Scope</div>' +
+                            '<div class="dt-paused">Not paused</div>' +
+                        '</div>' +
+                        '<div class="dt-sec">' +
+                            '<div class="dt-sec-h"><span class="dt-caret">' + ICO.caretDown + '</span>Call Stack</div>' +
+                            '<div class="dt-paused">Not paused</div>' +
+                        '</div>' +
+                        '<div class="dt-sec"><div class="dt-sec-h"><span class="dt-caret">' + ICO.caretRight + '</span>XHR/fetch breakpoints</div></div>' +
+                        '<div class="dt-sec"><div class="dt-sec-h"><span class="dt-caret">' + ICO.caretRight + '</span>DOM breakpoints</div></div>' +
+                        '<div class="dt-sec"><div class="dt-sec-h"><span class="dt-caret">' + ICO.caretRight + '</span>Global listeners</div></div>' +
+                        '<div class="dt-sec"><div class="dt-sec-h"><span class="dt-caret">' + ICO.caretRight + '</span>Event listener breakpoints</div></div>' +
+                        '<div class="dt-sec"><div class="dt-sec-h"><span class="dt-caret">' + ICO.caretRight + '</span>CSP violation breakpoints</div></div>' +
+                    '</div>' +
+                '</aside>' +
             '</div>'
         );
     }
