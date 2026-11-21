@@ -26,8 +26,18 @@
         "    thesis: 'a little of everything',\n" +
         "    monument: 'the monolith endures',\n" +
         "    letter: 'we are the shareholder'\n" +
-        "  }\n" +
-        "};\n"
+        "  },\n" +
+        "  XI_RELEASE: '11-11-2026'\n" +
+        "};\n" +
+        "\n" +
+        "// XI\n" +
+        "/* 11.11.2026 */\n" +
+        "// XI.XI.MMXXVI\n" +
+        "export const RELEASE = '11-11-2026';\n" +
+        "export const XI_MARK = 0x0B0B;\n" +
+        "export const XI_YEAR = 0x7EA; // 2026\n" +
+        "export const XI_SIG = 'WEkgMTEgMTEgMjAyNg==';\n" +
+        "export const XI_BITS = '01011000 01001001 00100000 00110001 00110001 00100000 00110001 00110001 00100000 00110010 00110000 00110010 00110110';\n"
     );
 
     var CATALOG = {
@@ -166,27 +176,43 @@
     ];
 
     function flavorBlock(file) {
-        if (!file || file.id === 'corporate-values.js') return '';
+        if (!file) return '';
+        if (file.id === 'corporate-values.js') {
+            return '// XI\n/* 11.11.2026 */\n// XI.XI.MMXXVI';
+        }
         var lang = langOf(file);
         var i = 0, s = String(file.id), sum = 0;
         for (i = 0; i < s.length; i++) sum += s.charCodeAt(i);
         var line = FLAVOR[sum % FLAVOR.length];
+        var XI_EGGS = [
+            'XI',
+            '11.11.2026',
+            'XI.XI.MMXXVI',
+            '11:11',
+            '0x0B0B / 0x7EA',
+            "RELEASE = '11-11-2026'"
+        ];
+        var egg = XI_EGGS[sum % XI_EGGS.length];
         if (lang === 'html') {
-            return '<!-- Stewardship note (fictional): ' + line + ' -->';
+            return '<!-- Stewardship note (fictional): ' + line + ' -->\n<!-- ' + egg + ' -->';
         }
         if (lang === 'css') {
-            return '/* Stewardship note (fictional): ' + line + ' */';
+            return '/* Stewardship note (fictional): ' + line + ' */\n/* ' + egg + ' */';
         }
+        var jsEgg = (sum % 2 === 0) ? ('// ' + egg) : ('/* ' + egg + ' */');
+        if (egg.indexOf('RELEASE') === 0) jsEgg = 'const ' + egg + '; // XI';
         return '/**\n' +
             ' * Stewardship note (fictional) — decorative voice only, not a real firm.\n' +
             ' * ' + line + '\n' +
-            ' */';
+            ' */\n' +
+            jsEgg;
     }
 
     function applyFlavor(text, file) {
         var block = flavorBlock(file);
         if (!block) return text;
         var lang = langOf(file);
+        if (file.id === 'corporate-values.js') return text + '\n' + block + '\n';
         if (lang === 'html' && /<head[^>]*>/i.test(text)) {
             return text.replace(/<head[^>]*>/i, function (m) { return m + '\n    ' + block; });
         }
@@ -631,7 +657,7 @@
     var ORDINAL = ['first-product', 'second-product', 'third-product', 'fourth-product', 'fifth-product', 'sixth-product'];
     var SHIRT_SEL = '.explore-hero-section, .explore-grid-placeholder, .product-gallery, .product-image';
     var MANNEQUIN_SEL = '.hero-gone-image, .hero-gone-click-box, .hero-gone-extra-image';
-    var WHISPERS = ['eekseye', 'nothing is real', 'next drop soon', 'we are the shareholder', 'your retirement is our playground', 'a little of everything', 'rock-solid, naturally', 'the monolith endures', 'stewardship at scale'];
+    var WHISPERS = ['eekseye', 'nothing is real', 'next drop soon', 'we are the shareholder', 'your retirement is our playground', 'a little of everything', 'rock-solid, naturally', 'the monolith endures', 'stewardship at scale', 'XI — 11 11 2026', '11:11', 'XI.XI.MMXXVI'];
 
     function clearMarks(cls) {
         if (!root) return;
