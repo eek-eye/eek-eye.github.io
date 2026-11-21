@@ -1,7 +1,6 @@
 /**
- * Shared decorative Chrome DevTools Sources panel.
- * Visual only — not real developer tools. Fixed to the viewport on every page.
- * Source text is fetched from this origin and scrubbed of secrets.
+ * Shared decorative sources panel — site design, not real developer tools.
+ * Fixed to the viewport on every page. Source text is fetched same-origin and scrubbed.
  */
 (function () {
     'use strict';
@@ -173,6 +172,11 @@
     var htmlCache = {};
     var scrollTimer = 0;
     var scrollDir = 1;
+    var speedMul = 1;
+    var holdScroll = false;
+    var boostTimer = 0;
+    var whisperTimer = 0;
+    var shirtTimer = 0;
 
     function svg(inner, view) {
         return '<svg viewBox="' + (view || '0 0 16 16') + '" aria-hidden="true">' + inner + '</svg>';
@@ -349,9 +353,10 @@
         var i;
         for (i = 0; i < lines.length; i++) {
             var caret = (i === 0) ? '<span class="dt-caret-blink" aria-hidden="true"></span>' : '';
+            var ln = String(i + 1).padStart(2, '0');
             buf.push(
                 '<div class="dt-code-row' + (i === 0 ? ' is-current' : '') + '" data-line="' + (i + 1) + '">' +
-                '<span class="dt-ln">-</span>' +
+                '<span class="dt-ln">' + ln + '</span>' +
                 '<span class="dt-line">' + (lines[i] || '') + caret + '</span>' +
                 '</div>'
             );
@@ -374,7 +379,7 @@
 
     function updateStatus(line, col) {
         var el = root.querySelector('.dt-status-pos-text');
-        if (el) el.textContent = 'Line ' + line + ', column ' + col;
+        if (el) el.textContent = 'line ' + String(line).padStart(2, '0');
     }
 
     function syncActive() {
@@ -383,6 +388,8 @@
         for (i = 0; i < nodes.length; i++) {
             nodes[i].classList.toggle('is-active', nodes[i].getAttribute('data-file') === activeId);
         }
+        var tab = root.querySelector('.dt-filetab.is-active');
+        if (tab && tab.scrollIntoView) tab.scrollIntoView({ inline: 'nearest', block: 'nearest' });
     }
 
     function openFile(id) {
@@ -394,10 +401,9 @@
     }
 
     function filetabsHtml() {
-        return FILES.map(function (f, i) {
-            var x = (i === 0) ? '<span class="dt-filetab-x" aria-hidden="true">×</span>' : '';
+        return FILES.map(function (f) {
             return '<button type="button" class="dt-filetab' + (f.id === DEFAULT ? ' is-active' : '') + '" data-file="' + f.id + '">' +
-                (f.label || f.id) + x + '</button>';
+                (f.label || f.id) + '</button>';
         }).join('');
     }
 
@@ -412,7 +418,7 @@
         return '<div class="dt-tree-row' + active + '"' + fileAttr + toggle +
             ' style="padding-left:' + (4 + pad * 12) + 'px">' +
             caret +
-            '<span class="dt-tree-icon">' + opts.icon + '</span>' +
+            (opts.kind ? '<span class="dt-tree-kind">' + opts.kind + '</span>' : '<span class="dt-tree-icon">' + (opts.icon || '') + '</span>') +
             '<span class="dt-tree-label">' + opts.label + '</span>' +
             '</div>';
     }
@@ -422,125 +428,51 @@
         var css = FILES.filter(function (f) { return iconOf(f) === 'css'; });
         var other = FILES.filter(function (f) { return iconOf(f) !== 'js' && iconOf(f) !== 'css'; });
         function fileRow(f, depth) {
-            return row({ depth: depth, leaf: true, icon: fileIcon(iconOf(f)), label: f.id, file: f.id });
+            return row({ depth: depth, leaf: true, kind: iconOf(f), label: f.id, file: f.id });
         }
         var jsBlock = '';
         if (js.length) {
-            jsBlock = row({ depth: 2, open: true, icon: ICO.folder, label: 'js', key: 'js' }) +
+            jsBlock = row({ depth: 1, open: true, kind: '', icon: '', label: 'js', key: 'js' }) +
                 '<div class="dt-tree-children is-open" data-branch="js">' +
-                js.map(function (f) { return fileRow(f, 3); }).join('') +
+                js.map(function (f) { return fileRow(f, 2); }).join('') +
                 '</div>';
         }
         var cssBlock = '';
         if (css.length) {
-            cssBlock = row({ depth: 2, open: true, icon: ICO.folder, label: 'css', key: 'css' }) +
+            cssBlock = row({ depth: 1, open: true, kind: '', icon: '', label: 'css', key: 'css' }) +
                 '<div class="dt-tree-children is-open" data-branch="css">' +
-                css.map(function (f) { return fileRow(f, 3); }).join('') +
+                css.map(function (f) { return fileRow(f, 2); }).join('') +
                 '</div>';
         }
-        var otherBlock = other.map(function (f) { return fileRow(f, 2); }).join('');
+        var otherBlock = other.map(function (f) { return fileRow(f, 1); }).join('');
         return [
-            row({ depth: 0, open: true, icon: ICO.pages, label: 'top', key: 'top' }),
-            '<div class="dt-tree-children is-open" data-branch="top">',
-                row({ depth: 1, open: true, icon: ICO.cloud, label: 'eekseye.com', key: 'eek' }),
-                '<div class="dt-tree-children is-open" data-branch="eek">',
-                    jsBlock,
-                    cssBlock,
-                    otherBlock,
-                '</div>',
-                row({ depth: 1, open: false, icon: ICO.cloud, label: 'cdn.jsdelivr.net', key: 'cdnjsd' }),
-                '<div class="dt-tree-children" data-branch="cdnjsd">',
-                    row({ depth: 2, open: false, icon: ICO.folder, label: 'npm', key: 'npm' }),
-                '</div>',
-                row({ depth: 1, open: false, icon: ICO.cloud, label: 'cdnjs.cloudflare.com', key: 'cdnjs' }),
-                row({ depth: 1, open: false, icon: ICO.cloud, label: 'fonts.googleapis.com', key: 'gfonts' }),
-                row({ depth: 1, open: false, icon: ICO.cloud, label: 'localhost', key: 'local' }),
+            row({ depth: 0, open: true, kind: '', icon: '', label: 'eekseye', key: 'eek' }),
+            '<div class="dt-tree-children is-open" data-branch="eek">',
+                jsBlock,
+                cssBlock,
+                otherBlock,
             '</div>'
         ].join('');
     }
 
-    var MAIN_TABS = ['Elements', 'Console', 'Sources', 'Network', 'Performance', 'Memory', 'Application', 'Security', 'Lighthouse', 'Recorder'];
-
     function markup() {
-        var tabs = MAIN_TABS.map(function (name) {
-            var on = name === 'Sources' ? ' is-active' : '';
-            return '<span class="dt-tab' + on + '">' + name + '</span>';
-        }).join('');
         return (
-            '<div class="dt-tabbar">' +
-                '<div class="dt-tabbar-left">' +
-                    '<span class="dt-ico">' + ICO.inspect + '</span>' +
-                    '<span class="dt-ico">' + ICO.device + '</span>' +
-                '</div>' +
-                '<div class="dt-tabs">' + tabs + '</div>' +
-                '<div class="dt-tabbar-right">' +
-                    '<span class="dt-badge is-error"><span class="dt-badge-dot"></span>2</span>' +
-                    '<span class="dt-badge is-warn"><span class="dt-badge-dot"></span>2</span>' +
-                    '<span class="dt-ico">' + ICO.gear + '</span>' +
-                    '<span class="dt-ico">' + ICO.kebab + '</span>' +
-                    '<span class="dt-ico">' + ICO.close + '</span>' +
-                '</div>' +
-            '</div>' +
-            '<div class="dt-subbar">' +
-                '<div class="dt-tree-tabs">' +
-                    '<span class="dt-tree-tab is-active">Page</span>' +
-                    '<span class="dt-tree-tab">Workspace</span>' +
-                    '<span class="dt-tree-tab">Overrides</span>' +
-                    '<span class="dt-tree-tab">≫</span>' +
-                '</div>' +
-                '<div class="dt-filetabs">' + filetabsHtml() +
-                    '<div class="dt-filetabs-end"><span class="dt-ico">' + ICO.split + '</span><span class="dt-ico">' + ICO.more + '</span></div>' +
-                '</div>' +
-                '<div class="dt-side-tools">' +
-                    '<span class="dt-ico">' + ICO.pause + '</span>' +
-                    '<span class="dt-ico">' + ICO.stepover + '</span>' +
-                    '<span class="dt-ico">' + ICO.stepinto + '</span>' +
-                    '<span class="dt-ico">' + ICO.stepout + '</span>' +
-                    '<span class="dt-ico">' + ICO.deactivate + '</span>' +
-                '</div>' +
-            '</div>' +
             '<div class="dt-panes">' +
                 '<div class="dt-tree">' +
+                    '<div class="dt-tree-label-top">eekseye</div>' +
                     '<div class="dt-tree-scroll">' + treeHtml() + '</div>' +
                 '</div>' +
                 '<div class="dt-editor">' +
+                    '<div class="dt-filetabs">' + filetabsHtml() + '</div>' +
                     '<div class="dt-code-scroll" tabindex="0"></div>' +
                     '<div class="dt-status">' +
                         '<div class="dt-status-left">' +
-                            '<span class="dt-ico" style="width:16px;height:16px">' + ICO.chev + '</span>' +
-                            '<span class="dt-status-pos">' +
-                                '<span class="dt-ico" style="width:14px;height:14px">' + ICO.brackets + '</span>' +
-                                '<span class="dt-status-pos-text">Line 1, column 1</span>' +
-                            '</span>' +
+                            '<span class="dt-status-mark" aria-hidden="true"></span>' +
+                            '<span class="dt-status-pos-text">line 01</span>' +
                         '</div>' +
-                        '<div class="dt-status-right">Coverage: N/A</div>' +
+                        '<div class="dt-status-right">eekseye</div>' +
                     '</div>' +
                 '</div>' +
-                '<aside class="dt-side" aria-hidden="true">' +
-                    '<div class="dt-side-scroll">' +
-                        '<div class="dt-sec"><div class="dt-sec-h"><span class="dt-caret">' + ICO.caretRight + '</span>Watch</div></div>' +
-                        '<div class="dt-sec">' +
-                            '<div class="dt-sec-h"><span class="dt-caret">' + ICO.caretDown + '</span>Breakpoints</div>' +
-                            '<div class="dt-sec-body">' +
-                                '<label class="dt-check"><input type="checkbox" tabindex="-1"> Pause on uncaught exceptions</label>' +
-                                '<label class="dt-check"><input type="checkbox" checked tabindex="-1"> Pause on caught exceptions</label>' +
-                            '</div>' +
-                        '</div>' +
-                        '<div class="dt-sec">' +
-                            '<div class="dt-sec-h"><span class="dt-caret">' + ICO.caretDown + '</span>Scope</div>' +
-                            '<div class="dt-paused">Not paused</div>' +
-                        '</div>' +
-                        '<div class="dt-sec">' +
-                            '<div class="dt-sec-h"><span class="dt-caret">' + ICO.caretDown + '</span>Call Stack</div>' +
-                            '<div class="dt-paused">Not paused</div>' +
-                        '</div>' +
-                        '<div class="dt-sec"><div class="dt-sec-h"><span class="dt-caret">' + ICO.caretRight + '</span>XHR/fetch breakpoints</div></div>' +
-                        '<div class="dt-sec"><div class="dt-sec-h"><span class="dt-caret">' + ICO.caretRight + '</span>DOM breakpoints</div></div>' +
-                        '<div class="dt-sec"><div class="dt-sec-h"><span class="dt-caret">' + ICO.caretRight + '</span>Global listeners</div></div>' +
-                        '<div class="dt-sec"><div class="dt-sec-h"><span class="dt-caret">' + ICO.caretRight + '</span>Event listener breakpoints</div></div>' +
-                        '<div class="dt-sec"><div class="dt-sec-h"><span class="dt-caret">' + ICO.caretRight + '</span>CSP violation breakpoints</div></div>' +
-                    '</div>' +
-                '</aside>' +
             '</div>'
         );
     }
@@ -577,6 +509,226 @@
         }, { passive: true });
     }
 
+
+    var ORDINAL = ['first-product', 'second-product', 'third-product', 'fourth-product', 'fifth-product', 'sixth-product'];
+    var SHIRT_SEL = '.explore-hero-section, .explore-grid-placeholder, .product-gallery, .product-image';
+    var MANNEQUIN_SEL = '.hero-gone-image, .hero-gone-click-box, .hero-gone-extra-image';
+    var WHISPERS = ['eekseye', 'nothing is real', 'next drop soon'];
+
+    function clearMarks(cls) {
+        if (!root) return;
+        var rows = root.querySelectorAll('.dt-code-row.' + cls);
+        var i;
+        for (i = 0; i < rows.length; i++) rows[i].classList.remove(cls);
+    }
+
+    function lightRange(start, count, cls) {
+        var sc = root.querySelector('.dt-code-scroll');
+        if (!sc) return;
+        var rows = sc.querySelectorAll('.dt-code-row');
+        if (!rows.length) return;
+        var i, from = Math.max(0, start - 1), n = count || 5;
+        clearMarks(cls);
+        for (i = from; i < Math.min(rows.length, from + n); i++) rows[i].classList.add(cls);
+        return rows[Math.min(rows.length - 1, from)];
+    }
+
+    function findInSources(needles, preferId) {
+        var lists = [];
+        if (preferId) {
+            var pref = FILES.filter(function (f) { return f.id === preferId; });
+            lists = pref.concat(FILES.filter(function (f) { return f.id !== preferId; }));
+        } else lists = FILES.slice();
+        var f, i, n, src, lines, line;
+        for (f = 0; f < lists.length; f++) {
+            src = SOURCES[lists[f].id];
+            if (!src) continue;
+            lines = src.text.split('\n');
+            for (i = 0; i < lines.length; i++) {
+                line = lines[i];
+                for (n = 0; n < needles.length; n++) {
+                    if (needles[n] && line.indexOf(needles[n]) !== -1) {
+                        return { id: lists[f].id, line: i + 1 };
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    function needlesFor(el) {
+        var out = [];
+        var id = el.id || (el.closest && (el.closest('[id]') || {}).id) || '';
+        var host = el.closest ? (el.closest('[data-product-id], .explore-hero-section, .explore-grid-placeholder, .product-gallery') || el) : el;
+        if (host.id) id = host.id || id;
+        var pid = host.getAttribute && (host.getAttribute('data-product-id') || host.getAttribute('data-id'));
+        if (!pid && id) {
+            var ix = ORDINAL.indexOf(id);
+            if (ix >= 0) pid = String(ix + 1);
+        }
+        if (id) {
+            out.push(id);
+            out.push('#' + id);
+        }
+        if (pid) {
+            out.push('data-product-id="' + pid + '"');
+            out.push('product-id="' + pid + '"');
+            out.push("id: '" + pid + "'");
+            out.push('id=' + pid);
+            var ord = ORDINAL[parseInt(pid, 10) - 1];
+            if (ord) { out.push(ord); out.push('#' + ord); }
+        }
+        return out;
+    }
+
+    function revealTarget(hit, cls, pulse) {
+        if (!hit) return;
+        function apply() {
+            var row = lightRange(hit.line, 6, cls || 'is-lit');
+            if (pulse) {
+                clearMarks('is-pulse');
+                lightRange(hit.line, 8, 'is-pulse');
+            }
+            if (row && row.scrollIntoView) {
+                row.scrollIntoView({ block: 'center', behavior: reduced ? 'auto' : 'smooth' });
+            }
+        }
+        if (hit.id !== activeId) {
+            openFile(hit.id);
+            window.requestAnimationFrame(function () { window.requestAnimationFrame(apply); });
+        } else apply();
+    }
+
+    function onShirtEnter(el) {
+        window.clearTimeout(shirtTimer);
+        holdScroll = true;
+        var hit = findInSources(needlesFor(el), activeId);
+        if (!hit) {
+            var fallback = FILES.filter(function (f) { return /grid-float|explore-grid|designs-data|product\.html/.test(f.id); })[0];
+            if (fallback && SOURCES[fallback.id]) hit = { id: fallback.id, line: 12 };
+        }
+        if (hit) revealTarget(hit, 'is-lit', false);
+    }
+
+    function onShirtLeave() {
+        holdScroll = false;
+        window.clearTimeout(shirtTimer);
+        shirtTimer = window.setTimeout(function () { clearMarks('is-lit'); clearMarks('is-pulse'); }, 2200);
+    }
+
+    function onMannequinEnter() {
+        window.clearTimeout(shirtTimer);
+        holdScroll = true;
+        var hero = FILES.filter(function (f) { return f.id === 'index-hero-reflection.js'; })[0];
+        var hit = null;
+        if (hero && SOURCES[hero.id]) {
+            hit = findInSources(['reflection', 'hero', 'mannequin'], hero.id) || { id: hero.id, line: 1 };
+        } else {
+            hit = findInSources(['hero-reflection', 'reflection', 'mannequin'], activeId);
+        }
+        if (hit) revealTarget(hit, 'is-lit', true);
+    }
+
+    function bindReactive() {
+        function fromEvent(e, sel) {
+            var t = e.target;
+            if (!t || !t.closest) return null;
+            if (root.contains(t)) return null;
+            return t.closest(sel);
+        }
+        document.addEventListener('pointerenter', function (e) {
+            var shirt = fromEvent(e, SHIRT_SEL);
+            if (shirt) { onShirtEnter(shirt); return; }
+            var man = fromEvent(e, MANNEQUIN_SEL);
+            if (man) onMannequinEnter();
+        }, true);
+        document.addEventListener('pointerleave', function (e) {
+            var shirt = fromEvent(e, SHIRT_SEL);
+            var man = fromEvent(e, MANNEQUIN_SEL);
+            if (shirt || man) onShirtLeave();
+        }, true);
+        document.addEventListener('pointerdown', function (e) {
+            var shirt = fromEvent(e, SHIRT_SEL);
+            if (shirt) onShirtEnter(shirt);
+        }, true);
+
+        window.addEventListener('scroll', function () {
+            if (holdScroll) return;
+            speedMul = 3.4;
+            window.clearTimeout(boostTimer);
+            boostTimer = window.setTimeout(function () { speedMul = 1; }, 850);
+            var sc = root && root.querySelector('.dt-code-scroll');
+            if (!sc) return;
+            var rows = sc.querySelectorAll('.dt-code-row');
+            if (!rows.length) return;
+            var box = sc.getBoundingClientRect();
+            var vis = [];
+            var i, r;
+            for (i = 0; i < rows.length; i++) {
+                r = rows[i].getBoundingClientRect();
+                if (r.bottom > box.top + 4 && r.top < box.bottom - 4) vis.push(rows[i]);
+            }
+            clearMarks('is-passing');
+            if (!vis.length) return;
+            var max = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+            var p = Math.max(0, Math.min(1, window.scrollY / max));
+            var mid = Math.floor(p * Math.max(0, vis.length - 1));
+            var from = Math.max(0, mid - 2);
+            for (i = from; i < Math.min(vis.length, from + 5); i++) vis[i].classList.add('is-passing');
+        }, { passive: true });
+    }
+
+    function startWhispers() {
+        if (reduced) return;
+        function schedule() {
+            var wait = 10000 + Math.floor(Math.random() * 10000);
+            whisperTimer = window.setTimeout(run, wait);
+        }
+        function run() {
+            if (!root || !root.isConnected) return;
+            if (holdScroll) { schedule(); return; }
+            var sc = root.querySelector('.dt-code-scroll');
+            if (!sc) { schedule(); return; }
+            var rows = sc.querySelectorAll('.dt-code-row');
+            if (!rows.length) { schedule(); return; }
+            var vis = [];
+            var cr = sc.getBoundingClientRect();
+            var i, r;
+            for (i = 0; i < rows.length; i++) {
+                r = rows[i].getBoundingClientRect();
+                if (r.top >= cr.top && r.bottom <= cr.bottom) vis.push(rows[i]);
+            }
+            var row = vis.length ? vis[Math.floor(Math.random() * vis.length)] : rows[Math.floor(Math.random() * rows.length)];
+            var line = row.querySelector('.dt-line');
+            if (!line) { schedule(); return; }
+            var msg = WHISPERS[Math.floor(Math.random() * WHISPERS.length)];
+            var whisper = document.createElement('span');
+            whisper.className = 'dt-whisper';
+            whisper.setAttribute('aria-hidden', 'true');
+            line.appendChild(whisper);
+            row.classList.add('is-whisper');
+            var typed = 0;
+            function type() {
+                typed += 1;
+                whisper.textContent = msg.slice(0, typed);
+                if (typed < msg.length) {
+                    window.setTimeout(type, 55);
+                } else {
+                    window.setTimeout(function () {
+                        whisper.classList.add('is-fade');
+                        window.setTimeout(function () {
+                            if (whisper.parentNode) whisper.parentNode.removeChild(whisper);
+                            row.classList.remove('is-whisper');
+                        }, 900);
+                    }, 1600);
+                }
+            }
+            type();
+            schedule();
+        }
+        schedule();
+    }
+
     function startAutoScroll() {
         if (reduced) return;
         var sc = root.querySelector('.dt-code-scroll');
@@ -590,8 +742,12 @@
                 return;
             }
             var max = sc.scrollHeight - sc.clientHeight;
+            if (holdScroll) {
+                scrollTimer = window.requestAnimationFrame(tick);
+                return;
+            }
             if (max > 8) {
-                acc += 0.28 * scrollDir;
+                acc += 0.28 * scrollDir * speedMul;
                 if (acc >= 1 || acc <= -1) {
                     sc.scrollTop += acc;
                     acc = acc - (acc >= 1 ? Math.floor(acc) : Math.ceil(acc));
@@ -633,6 +789,8 @@
         })).then(function () {
             renderCode(DEFAULT);
             startAutoScroll();
+            bindReactive();
+            startWhispers();
         });
     }
 
