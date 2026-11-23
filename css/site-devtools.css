@@ -873,7 +873,7 @@ html.has-site-devtools body {
         width: 100% !important;
         max-width: 100% !important;
         right: 0 !important;
-        bottom: var(--dt-panel-h);
+        bottom: var(--dt-panel-h) !important;
     }
     .site-devtools {
         position: fixed;
