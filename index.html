@@ -1,27 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script>
-        (function () {
-            try {
-                var fromQuery = /(?:^|[?&])from=void-up(?:&|$)/.test(location.search);
-                var fromStore = false;
-                try { fromStore = sessionStorage.getItem('eekseyeVoidReturn') === '1'; } catch (err) {}
-                if (fromQuery || fromStore) {
-                    try { sessionStorage.removeItem('eekseyeVoidReturn'); } catch (err) {}
-                    document.documentElement.classList.add('void-returning');
-                    window.EEKSEYE_skipEntrance = true;
-                    window.EEKSEYE_voidForwardLock = true;
-                    if (fromQuery) {
-                        var url = new URL(location.href);
-                        url.searchParams.delete('from');
-                        var q = url.searchParams.toString();
-                        history.replaceState(null, '', url.pathname + (q ? '?' + q : '') + url.hash);
-                    }
-                }
-            } catch (err) {}
-        })();
-    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EeksEye Official Store | Custom Dice, Digital Tools & TTRPG Designs</title>
@@ -90,39 +69,6 @@
             opacity: 0;
         }
 
-        .index-void {
-            width: 100%;
-            height: 100vh;
-            height: 100dvh;
-            background: #000;
-            position: relative;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        html.void-returning,
-        html.void-returning body {
-            background-color: #000;
-        }
-        html.void-returning .page-transition-overlay {
-            z-index: 10080;
-            background-color: #000;
-            pointer-events: none;
-        }
-        html.void-returning .page-transition-overlay:not(.void-arrival-release) {
-            opacity: 1 !important;
-            transition: none !important;
-        }
-        html.void-returning .cookie-consent-banner,
-        html.void-returning .cookie-settings-panel {
-            visibility: hidden !important;
-            pointer-events: none !important;
-        }
-        /* Home page only: no footer — the mannequin hero flows into the shirt grid, then the void. */
-        .explore-footer-scale-wrap {
-            display: none !important;
-        }
-
         /* Temporarily hide the x+y pair row (#sixth-product) at the bottom of the
            home Aesthetic grid. Restore by removing this rule and the hidden
            attribute on #sixth-product. Markup is left in place. */
@@ -131,36 +77,99 @@
             display: none !important;
         }
 
-        html.void-returning.void-arrival-armed .hero-section,
-        html.void-returning.void-arrival-armed #index-explore-grid,
-        html.void-returning.void-arrival-armed #index-void {
-            transform: translateY(32px);
-            filter: blur(8px);
+        /* Aesthetic (explore.html) footer + quick-link buttons. Index body is not
+           zoomed to 67%, so these sit in .explore-footer-scale-wrap (zoom 67%). */
+        .explore-buttons-section {
+            padding: 1rem 1.25rem;
+            background: #fff;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 0.45rem;
         }
-        html.void-returning.is-void-emerging .hero-section,
-        html.void-returning.is-void-emerging #index-explore-grid,
-        html.void-returning.is-void-emerging #index-void {
-            transform: none;
-            filter: none;
-            transition: transform 1.25s cubic-bezier(0.22, 1, 0.36, 1), filter 1s ease;
+        .explore-buttons-section .btn {
+            display: inline-block;
+            box-sizing: border-box;
+            padding: 0.48rem 1.05rem;
+            background: #fff;
+            color: #000;
+            border: 1px solid #000;
+            border-radius: 3px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            text-decoration: none;
+            transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+            cursor: pointer;
+            text-align: center;
+            width: auto;
+            line-height: 1.2;
+            font-family: inherit;
+            white-space: nowrap;
         }
-        html.void-returning.is-void-emerging .page-transition-overlay.void-arrival-release {
-            opacity: 0 !important;
-            transition: opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1) !important;
+        .explore-buttons-section .btn:hover {
+            background: #000;
+            color: #fff;
+            border-color: #000;
+            box-shadow: none;
+            text-shadow: none;
         }
-        @media (prefers-reduced-motion: reduce) {
-            html.void-returning.void-arrival-armed .hero-section,
-            html.void-returning.void-arrival-armed #index-explore-grid,
-            html.void-returning.void-arrival-armed #index-void,
-            html.void-returning.is-void-emerging .hero-section,
-            html.void-returning.is-void-emerging #index-explore-grid,
-            html.void-returning.is-void-emerging #index-void {
-                transform: none;
-                filter: none;
-                transition: none;
-            }
-            html.void-returning.is-void-emerging .page-transition-overlay.void-arrival-release {
-                transition: opacity 0.6s ease !important;
+        body.index-page .explore-buttons-section {
+            background: #000;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        body.index-page .explore-buttons-section .btn {
+            background: transparent;
+            color: #f2f2f2;
+            border-color: rgba(255, 255, 255, 0.8);
+        }
+        body.index-page .explore-buttons-section .btn:hover {
+            background: #fff;
+            color: #000;
+            border-color: #fff;
+        }
+        body.index-page .site-footer.explore-footer-editorial,
+        body.index-page .explore-footer-scale-wrap {
+            background-color: #000;
+            color: #e8e8e8;
+        }
+        body.index-page .site-footer.explore-footer-editorial {
+            border-top: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        body.index-page .explore-footer-col {
+            border-right-color: rgba(255, 255, 255, 0.12);
+        }
+        body.index-page .explore-footer-heading,
+        body.index-page .explore-footer-subhead {
+            color: #f4f4f4;
+        }
+        body.index-page .explore-footer-link,
+        body.index-page .explore-footer-bottom a,
+        body.index-page .explore-footer-note,
+        body.index-page .explore-footer-list li {
+            color: #d8d8d8;
+        }
+        body.index-page .explore-footer-link:hover,
+        body.index-page .explore-footer-bottom a:hover {
+            color: #fff;
+            opacity: 1;
+        }
+        body.index-page .explore-footer-bottom {
+            border-top-color: rgba(255, 255, 255, 0.12);
+            color: #d8d8d8;
+        }
+        body.index-page .site-footer input[type="email"],
+        body.index-page .site-footer input[type="text"] {
+            background: #111;
+            color: #f2f2f2;
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        @media (max-width: 1100px) {
+            body.index-page .explore-footer-grid > .explore-footer-col:nth-child(3n + 1):not(:first-child) {
+                padding-left: 1.85rem;
             }
         }
 
@@ -3046,7 +3055,27 @@
     </section>
     </div>
 
-    <div class="explore-footer-scale-wrap" hidden>
+    <div class="explore-footer-scale-wrap">
+    <section class="explore-buttons-section" aria-label="Quick links">
+            <a href="index.html" class="btn" data-translate="home">Home</a>
+            <a href="designs.html" class="btn" data-translate="designs">Designs</a>
+            <a href="about.html" class="btn" data-translate="why">Why?</a>
+            <a href="contact.html" class="btn" data-translate="contact">Contact</a>
+            <a href="faq.html" class="btn" data-translate="faq">FAQ</a>
+            <a href="news.html" class="btn" data-translate="news">News</a>
+            <a href="explore.html?season=1" class="btn">Season 1</a>
+            <a href="explore.html?season=2" class="btn">Season 2</a>
+            <a href="explore.html?season=3" class="btn">Season 3</a>
+            <a href="explore.html?season=4" class="btn">Season 4</a>
+            <a href="explore.html?season=5" class="btn">Season 5</a>
+            <a href="#" class="btn">Lookbook</a>
+            <a href="#" class="btn">Size Guide</a>
+            <a href="#" class="btn">Shipping</a>
+            <a href="#" class="btn">Returns</a>
+            <a href="#" class="btn">Store Locator</a>
+            <a href="#" class="btn">Care</a>
+            <a href="#" class="btn">Wholesale</a>
+        </section>
     <footer class="site-footer explore-footer-editorial">
         <div class="explore-footer-grid">
             <div class="explore-footer-col">
@@ -3105,7 +3134,6 @@
     <div class="x-line">XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</div>
     </div>
 
-    <div id="index-void" class="index-void" aria-hidden="true"></div>
 
     <div id="copyright-modal" style="display:none; position:fixed; left:0; top:0; width:100vw; height:100vh; background:rgba(0,0,0,0.9); z-index:999999; align-items:center; justify-content:center; flex-direction:column; overflow-y:auto;">
         <div style="background:#fff; color:#111; max-width:90vw; width:400px; padding:2rem 1.5rem; border-radius:10px; box-shadow:0 8px 32px #000a; position:relative; text-align:center; z-index:1000000; margin:auto;">
@@ -3128,8 +3156,6 @@
     <script src="js/product-i18n.js"></script>
     <script src="js/mix-player.js"></script>
     <script src="js/page-transition.js"></script>
-    <script src="js/index-void-transition.js"></script>
-    <script src="js/index-void-return.js"></script>
     <script src="js/index-hero-reflection.js"></script>
     <script src="js/explore-grid.js"></script>
     <script src="js/explore-text-glitch.js"></script>
