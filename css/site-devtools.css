@@ -89,7 +89,7 @@ html.has-site-devtools body {
     z-index: 40;
     display: flex;
     flex-direction: column;
-    background: var(--dt-bg);
+    background: #141517;
     color: var(--dt-text);
     font-family: "Segoe UI", "Roboto", "Helvetica Neue", system-ui, sans-serif;
     font-size: var(--dt-ui);
@@ -101,6 +101,7 @@ html.has-site-devtools body {
     animation: siteDevtoolsIn 1.15s ease 0.45s forwards;
     -webkit-font-smoothing: antialiased;
     color-scheme: dark;
+    perspective: 1100px;
 }
 
 .site-devtools button {
@@ -136,7 +137,7 @@ html.has-site-devtools body {
 
 
 /* Faint crisp scanline — texture only, no blur, does not hide chrome. */
-.site-devtools::before {
+.dt-card::before {
     content: "";
     position: absolute;
     inset: 0;
@@ -152,6 +153,64 @@ html.has-site-devtools body {
         rgba(255, 255, 255, 0.04) 2px,
         rgba(255, 255, 255, 0.04) 3px
     );
+}
+
+/* Flat-lay field: inset DevTools chrome as a lifted card, wreath around it. */
+.dt-card {
+    position: relative;
+    z-index: 2;
+    flex: 1 1 auto;
+    min-height: 0;
+    min-width: 0;
+    margin: 52px 46px;
+    display: flex;
+    flex-direction: column;
+    background: var(--dt-bg);
+    border: 1px solid #3a3a3a;
+    box-shadow:
+        0 2px 4px rgba(0, 0, 0, 0.4),
+        0 14px 28px rgba(0, 0, 0, 0.48),
+        0 28px 56px rgba(0, 0, 0, 0.32);
+    overflow: hidden;
+    transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+    transform-origin: center center;
+    transition: transform 0.5s ease-out;
+}
+
+.dt-wreath {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.dt-wreath-sprite {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: visible;
+}
+
+.dt-wreath-piece {
+    position: absolute;
+    z-index: 3;
+    pointer-events: none;
+    transform: translate3d(var(--tx, 0px), var(--ty, 0px), 0) rotate(var(--rot, 0deg)) scale(var(--sc, 1));
+    transform-origin: center center;
+    filter: drop-shadow(1px 3px 4px rgba(0, 0, 0, 0.58)) drop-shadow(0 8px 12px rgba(0, 0, 0, 0.38));
+    transition: transform 0.5s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dt-card,
+    .dt-wreath-piece {
+        transition: none;
+        transform: none;
+    }
+    .dt-wreath-piece {
+        transform: rotate(var(--rot, 0deg)) scale(var(--sc, 1));
+    }
 }
 
 .dt-code-row.is-lit {
@@ -733,6 +792,8 @@ html.has-site-devtools body {
     .dt-tree, .dt-tree-tabs { flex-basis: 132px; width: 132px; }
     .dt-side, .dt-subbar .dt-side-tools { flex-basis: 150px; width: 150px; }
     .dt-tab { padding: 0 6px; font-size: 11px; }
+    .dt-card { margin: 36px 26px; }
+    .dt-wreath-piece { --sc: 0.8; }
 }
 
 /* Mobile: compact code panel docked to the bottom of the viewport on every page. */
@@ -780,7 +841,17 @@ html.has-site-devtools body {
         animation-delay: 0.35s;
         transform: none !important;
         z-index: 40;
+        perspective: none;
     }
+    .dt-card {
+        margin: 16px 10px 8px;
+        transform: none;
+        box-shadow:
+            0 1px 3px rgba(0, 0, 0, 0.4),
+            0 8px 18px rgba(0, 0, 0, 0.4);
+    }
+    .dt-wreath-piece { display: none; --sc: 0.52; }
+    .dt-wreath-piece.is-mobile { display: block; }
     .dt-tree,
     .dt-tree-tabs,
     .dt-side,
