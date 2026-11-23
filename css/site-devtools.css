@@ -2,7 +2,7 @@
    Visual only. Distinct gray panel beside the site, not blended into the page. */
 
 html.has-site-devtools {
-    --dt-panel-w: 48%;
+    --dt-panel-w: 10vw;
 }
 
 /* Neutralize style.css body { transform: scale(1) } so fixed overlays
@@ -13,7 +13,7 @@ html.has-site-devtools body {
 
 @media (max-width: 1180px) and (min-width: 769px) {
     html.has-site-devtools {
-        --dt-panel-w: 40%;
+        --dt-panel-w: 10vw;
     }
 }
 
@@ -82,7 +82,7 @@ html.has-site-devtools body {
     position: fixed;
     top: 0;
     right: 0;
-    width: var(--dt-panel-w, 48%);
+    width: var(--dt-panel-w, 10vw);
     height: 100%;
     height: 100vh;
     height: 100svh;
@@ -162,15 +162,15 @@ html.has-site-devtools body {
     flex: 1 1 auto;
     min-height: 0;
     min-width: 0;
-    margin: 52px 46px;
+    margin: 22px 8px 18px;
     display: flex;
     flex-direction: column;
     background: var(--dt-bg);
     border: 1px solid #3a3a3a;
     box-shadow:
-        0 2px 4px rgba(0, 0, 0, 0.4),
-        0 14px 28px rgba(0, 0, 0, 0.48),
-        0 28px 56px rgba(0, 0, 0, 0.32);
+        0 1px 3px rgba(0, 0, 0, 0.4),
+        0 6px 14px rgba(0, 0, 0, 0.45),
+        0 12px 24px rgba(0, 0, 0, 0.28);
     overflow: hidden;
     transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
     transform-origin: center center;
@@ -787,20 +787,67 @@ html.has-site-devtools body {
     background: #242424;
 }
 
-/* compact mid-width */
+/* Slim 10vw column: collapse chrome, keep a readable code card + a few wreath pieces. */
+@media (min-width: 769px) {
+    .site-devtools {
+        --dt-ui: 9px;
+        --dt-code: 8px;
+    }
+    .dt-tree,
+    .dt-tree-tabs,
+    .dt-side,
+    .dt-subbar .dt-side-tools,
+    .dt-tabbar-left,
+    .dt-tabbar-right,
+    .dt-filetabs-end,
+    .dt-tab:not(.is-active),
+    .dt-filetab:not(.is-active),
+    .dt-filetab-x,
+    .dt-status-right,
+    .dt-status-left .dt-ico {
+        display: none;
+    }
+    .dt-tabbar { flex-basis: 20px; height: 20px; padding: 0 3px; }
+    .dt-tabs { min-width: 0; overflow: hidden; }
+    .dt-tab {
+        font-size: 8px;
+        padding: 0 4px;
+        letter-spacing: 0.02em;
+    }
+    .dt-subbar,
+    .dt-filetabs { flex-basis: 18px; height: 18px; min-width: 0; }
+    .dt-filetabs { width: 100%; }
+    .dt-filetab {
+        font-size: 7px;
+        padding: 0 4px;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .dt-code-row { min-height: 12px; line-height: 12px; }
+    .dt-ln {
+        flex-basis: 18px;
+        width: 18px;
+        font-size: 7px;
+    }
+    .dt-line { padding: 0 4px 0 6px; }
+    .dt-status { flex-basis: 16px; height: 16px; font-size: 7px; padding: 0 4px; }
+    .dt-wreath-piece { display: none; --sc: 0.26; }
+    .dt-wreath-piece.is-slim { display: block; }
+}
+
+/* Mid-width stays 10vw like every other desktop breakpoint. */
 @media (max-width: 1180px) and (min-width: 769px) {
-    .dt-tree, .dt-tree-tabs { flex-basis: 132px; width: 132px; }
-    .dt-side, .dt-subbar .dt-side-tools { flex-basis: 150px; width: 150px; }
-    .dt-tab { padding: 0 6px; font-size: 11px; }
-    .dt-card { margin: 36px 26px; }
-    .dt-wreath-piece { --sc: 0.8; }
+    html.has-site-devtools {
+        --dt-panel-w: 10vw;
+    }
 }
 
 /* Mobile: compact code panel docked to the bottom of the viewport on every page. */
 @media (max-width: 768px) {
     html.has-site-devtools {
         --dt-panel-w: 0%;
-        --dt-panel-h: 35vh;
+        --dt-panel-h: 10vh;
         scroll-padding-bottom: var(--dt-panel-h);
     }
     html.has-site-devtools body {
@@ -835,7 +882,7 @@ html.has-site-devtools body {
         left: 0;
         right: 0;
         width: 100%;
-        height: var(--dt-panel-h, 35vh);
+        height: var(--dt-panel-h, 10vh);
         border-left: 0;
         border-top: 1px solid #5a5a5a;
         animation-delay: 0.35s;
@@ -844,26 +891,40 @@ html.has-site-devtools body {
         perspective: none;
     }
     .dt-card {
-        margin: 16px 10px 8px;
+        margin: 6px 6px 4px;
         transform: none;
         box-shadow:
-            0 1px 3px rgba(0, 0, 0, 0.4),
-            0 8px 18px rgba(0, 0, 0, 0.4);
+            0 1px 2px rgba(0, 0, 0, 0.4),
+            0 4px 10px rgba(0, 0, 0, 0.4);
     }
-    .dt-wreath-piece { display: none; --sc: 0.52; }
-    .dt-wreath-piece.is-mobile { display: block; }
+    .site-devtools {
+        --dt-ui: 8px;
+        --dt-code: 8px;
+    }
+    .dt-wreath-piece { display: none; --sc: 0.28; }
+    .dt-wreath-piece.is-slim { display: block; }
     .dt-tree,
     .dt-tree-tabs,
     .dt-side,
     .dt-subbar .dt-side-tools,
     .dt-tabbar-left,
-    .dt-tabbar-right .dt-ico,
-    .dt-filetabs-end {
+    .dt-tabbar-right,
+    .dt-filetabs-end,
+    .dt-tab:not(.is-active),
+    .dt-filetab:not(.is-active),
+    .dt-filetab-x,
+    .dt-status-right,
+    .dt-status-left .dt-ico {
         display: none;
     }
-    .dt-tabbar { flex-basis: 24px; height: 24px; }
-    .dt-tab { font-size: 10px; padding: 0 5px; }
+    .dt-tabbar { flex-basis: 16px; height: 16px; padding: 0 3px; }
+    .dt-tab { font-size: 7px; padding: 0 4px; }
     .dt-subbar,
-    .dt-filetabs { flex-basis: 24px; height: 24px; }
+    .dt-filetabs { flex-basis: 15px; height: 15px; }
+    .dt-filetab { font-size: 7px; padding: 0 4px; }
+    .dt-code-row { min-height: 11px; line-height: 11px; }
+    .dt-ln { flex-basis: 16px; width: 16px; font-size: 6px; }
+    .dt-line { padding: 0 4px 0 5px; }
+    .dt-status { flex-basis: 14px; height: 14px; font-size: 6px; padding: 0 4px; }
 }
 
