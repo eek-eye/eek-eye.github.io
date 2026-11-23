@@ -88,30 +88,39 @@ body.index-page #index-explore-grid {
     overflow: visible;
     isolation: isolate;
     background: #000;
-    margin-top: -8vh;
-    padding-top: 10vh;
+    z-index: 3;
+    margin-top: 0;
+    /* Clear the fixed header so shirts are fully visible on load. */
+    padding-top: 6.25rem;
+    margin-bottom: -8vh;
+    padding-bottom: 10vh;
 }
 
-/* Short black cap over the hero overlap so the seam cannot go gray. */
+/* Short black cap over the mannequin overlap so the seam cannot go gray. */
 body.index-page #index-explore-grid::before {
     content: "";
     position: absolute;
     left: 0;
     right: 0;
-    top: 0;
+    top: auto;
+    bottom: 0;
     height: 10vh;
     z-index: 8;
     pointer-events: none;
-    background: linear-gradient(to bottom, #000 0%, #000 35%, transparent 100%);
+    background: linear-gradient(to top, #000 0%, #000 35%, transparent 100%);
 }
 
 @media (max-width: 768px) {
     body.index-page #index-explore-grid {
-        margin-top: -8vh;
-        padding-top: 10vh;
+        margin-top: 0;
+        padding-top: 10.5rem;
+        margin-bottom: -8vh;
+        padding-bottom: 10vh;
     }
     body.index-page #index-explore-grid::before {
         height: 10vh;
+        top: auto;
+        bottom: 0;
     }
     body.index-page .hero-bottom-fade {
         height: auto;
