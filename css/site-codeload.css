@@ -1,0 +1,310 @@
+/* Command-prompt load + scroll-to-code reveal. Visual only; no secrets. */
+
+html.eeks-codeload-boot,
+html.eeks-codeload-active {
+    overflow: hidden;
+}
+
+/* FOUC cover from the first paint until JS mounts the terminal (or failsafe). */
+html.eeks-codeload-boot::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: #000;
+    z-index: 10080;
+    pointer-events: auto;
+    animation: eeks-codeload-failsafe 0.45s linear 3.2s forwards;
+}
+
+/* If JS never runs, also release the existing black entrance overlay. */
+html.eeks-codeload-boot .page-transition-overlay {
+    animation: eeks-codeload-failsafe 0.45s linear 3.2s forwards;
+}
+
+@keyframes eeks-codeload-failsafe {
+    to {
+        opacity: 0;
+        pointer-events: none;
+        visibility: hidden;
+    }
+}
+
+html.eeks-codeload-active::before,
+html.eeks-codeload-done::before,
+html.eeks-codeload-skip::before {
+    content: none;
+    display: none;
+    animation: none;
+}
+
+#eeks-codeload {
+    position: fixed;
+    inset: 0;
+    z-index: 10080;
+    display: flex;
+    flex-direction: column;
+    background: #000;
+    color: #d4d4d4;
+    font-family: "Cascadia Mono", "Consolas", "SF Mono", "IBM Plex Mono", ui-monospace, Menlo, Monaco, monospace;
+    font-size: 13px;
+    line-height: 1.45;
+    letter-spacing: 0.01em;
+    overflow: hidden;
+    opacity: 1;
+    pointer-events: auto;
+    -webkit-font-smoothing: antialiased;
+}
+
+#eeks-codeload::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.015) 0,
+        rgba(255, 255, 255, 0.015) 1px,
+        transparent 1px,
+        transparent 3px
+    );
+    opacity: 0.55;
+    z-index: 2;
+}
+
+#eeks-codeload .eeks-codeload-bar {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 32px;
+    padding: 0 12px;
+    background: #161616;
+    border-bottom: 1px solid #2a2a2a;
+    color: #c8c8c8;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    z-index: 3;
+}
+
+#eeks-codeload .eeks-codeload-dots {
+    display: flex;
+    gap: 6px;
+}
+
+#eeks-codeload .eeks-codeload-dots span {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #2a2a2a;
+    box-shadow: inset 0 0 0 1px #3a3a3a;
+}
+
+#eeks-codeload .eeks-codeload-dots span:last-child {
+    background: #c42828;
+    box-shadow: none;
+}
+
+#eeks-codeload .eeks-codeload-title {
+    flex: 1;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    color: #9a9a9a;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+#eeks-codeload .eeks-codeload-skip-hint {
+    color: #5a5a5a;
+    letter-spacing: 0.06em;
+    text-transform: none;
+    font-size: 10px;
+}
+
+#eeks-codeload .eeks-codeload-body {
+    position: relative;
+    flex: 1 1 auto;
+    padding: 22px 26px 28px;
+    overflow: hidden;
+    z-index: 3;
+}
+
+#eeks-codeload .eeks-codeload-line {
+    white-space: pre-wrap;
+    word-break: break-word;
+    min-height: 1.45em;
+}
+
+#eeks-codeload .eeks-codeload-prompt {
+    color: #c42828;
+}
+
+#eeks-codeload .eeks-codeload-ok {
+    color: #e8e8e8;
+}
+
+#eeks-codeload .eeks-codeload-dim {
+    color: #6a6a6a;
+}
+
+#eeks-codeload .eeks-codeload-code {
+    color: #bdbdbd;
+}
+
+#eeks-codeload .eeks-codeload-cursor {
+    display: inline-block;
+    width: 0.6em;
+    height: 1.05em;
+    margin-left: 1px;
+    background: #c42828;
+    vertical-align: text-bottom;
+    animation: eeks-codeload-blink 0.9s step-end infinite;
+}
+
+@keyframes eeks-codeload-blink {
+    50% { background: transparent; }
+}
+
+#eeks-codeload .eeks-codeload-sweep {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -8%;
+    height: 18%;
+    pointer-events: none;
+    opacity: 0;
+    background: linear-gradient(
+        to bottom,
+        transparent,
+        rgba(196, 40, 40, 0.18) 40%,
+        rgba(255, 255, 255, 0.55) 50%,
+        rgba(196, 40, 40, 0.18) 60%,
+        transparent
+    );
+    z-index: 4;
+}
+
+#eeks-codeload.eeks-codeload--compile {
+    transition: opacity 0.55s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+    pointer-events: none;
+}
+
+#eeks-codeload.eeks-codeload--compile .eeks-codeload-sweep {
+    opacity: 1;
+    animation: eeks-codeload-sweep 0.55s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes eeks-codeload-sweep {
+    from { top: -8%; opacity: 0.95; }
+    to { top: 92%; opacity: 0; }
+}
+
+#eeks-codeload.eeks-codeload--gone {
+    display: none;
+}
+
+/* Scroll-triggered code masks sit under the slim sources panel and cookie UI. */
+.eeks-codereveal-mask {
+    position: fixed;
+    z-index: 10040;
+    overflow: hidden;
+    pointer-events: none;
+    box-sizing: border-box;
+    background: #050505;
+    color: #d6d6d6;
+    font-family: "Cascadia Mono", "Consolas", "SF Mono", "IBM Plex Mono", ui-monospace, Menlo, Monaco, monospace;
+    font-size: 12.5px;
+    line-height: 1.45;
+    letter-spacing: 0.01em;
+    padding: 12px 14px 14px;
+    box-shadow: inset 0 0 0 1px rgba(196, 40, 40, 0.35);
+    opacity: 1;
+    clip-path: inset(0 0 0 0);
+    -webkit-clip-path: inset(0 0 0 0);
+}
+
+.eeks-codereveal-mask::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.02) 0,
+        rgba(255, 255, 255, 0.02) 1px,
+        transparent 1px,
+        transparent 3px
+    );
+    opacity: 0.7;
+}
+
+.eeks-codereveal-mask::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 2px;
+    top: 0;
+    background: linear-gradient(to right, transparent, #c42828, transparent);
+    opacity: 0.85;
+    transform: translateY(0);
+}
+
+.eeks-codereveal-mask .eeks-codereveal-lines {
+    position: relative;
+    z-index: 1;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.eeks-codereveal-mask .eeks-codereveal-k {
+    color: #c42828;
+}
+
+.eeks-codereveal-mask.is-resolving {
+    transition: opacity 0.48s cubic-bezier(0.4, 0, 0.2, 1);
+    opacity: 0;
+}
+
+.eeks-codereveal-mask.is-resolving::after {
+    animation: eeks-codereveal-scan 0.52s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes eeks-codereveal-scan {
+    from { top: 0; opacity: 0.95; }
+    to { top: 100%; opacity: 0; }
+}
+
+@media (max-width: 768px) {
+    #eeks-codeload {
+        font-size: 12px;
+    }
+    #eeks-codeload .eeks-codeload-body {
+        padding: 16px 16px 22px;
+    }
+    #eeks-codeload .eeks-codeload-skip-hint {
+        display: none;
+    }
+    .eeks-codereveal-mask {
+        font-size: 11px;
+        padding: 8px 10px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html.eeks-codeload-boot::before,
+    html.eeks-codeload-boot .page-transition-overlay {
+        animation: none;
+    }
+    #eeks-codeload .eeks-codeload-cursor,
+    #eeks-codeload.eeks-codeload--compile .eeks-codeload-sweep,
+    .eeks-codereveal-mask.is-resolving::after {
+        animation: none;
+    }
+    #eeks-codeload,
+    #eeks-codeload.eeks-codeload--compile,
+    .eeks-codereveal-mask.is-resolving {
+        transition: none;
+    }
+}
