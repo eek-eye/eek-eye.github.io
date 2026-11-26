@@ -1,9 +1,14 @@
 /**
  * Shared decorative Sources panel — docked DevTools structure, eekseye red accent.
  * Fixed to the viewport on every page. Source text is fetched same-origin and scrubbed.
+ *
+ * Hidden 2026-11-26 at the owner's request. Flip SITE_DEVTOOLS_ENABLED to true to restore.
  */
 (function () {
     'use strict';
+
+    var SITE_DEVTOOLS_ENABLED = false;
+    if (!SITE_DEVTOOLS_ENABLED) return;
 
     var ENV_TS = (
         "export const environment = {\n" +
