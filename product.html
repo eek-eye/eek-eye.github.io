@@ -247,45 +247,52 @@
 
         .ship-to {
             display: flex;
-            flex-direction: column;
-            gap: 0.45rem;
+            align-items: baseline;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.15rem 0.55rem;
             width: 100%;
-        }
-
-        .ship-to-label {
-            font-size: 0.75rem;
-            letter-spacing: 0.1em;
-            text-transform: uppercase;
-            color: #111;
-        }
-
-        .ship-to-options {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 0.5rem;
-        }
-
-        .ship-to-option {
-            border: 1px solid #111;
-            padding: 0.7rem 0.55rem;
-            font-size: 0.75rem;
-            letter-spacing: 0.03em;
+            margin: 0;
+            font-size: 0.8rem;
+            color: #777;
+            line-height: 1.45;
             text-align: center;
+            min-height: 1.45em;
+        }
+
+        .ship-to-text {
+            display: inline-block;
+            transition: opacity 0.28s ease;
+        }
+
+        .ship-to.is-pending .ship-to-text,
+        .ship-to.is-updating .ship-to-text {
+            opacity: 0;
+        }
+
+        .ship-to-change {
+            background: none;
+            border: none;
+            padding: 0;
+            margin: 0;
+            font: inherit;
+            font-size: 0.8rem;
+            color: #777;
+            text-decoration: underline;
+            text-underline-offset: 0.15em;
             cursor: pointer;
-            line-height: 1.35;
-            background: #fff;
+            letter-spacing: 0.02em;
+        }
+
+        .ship-to-change:hover,
+        .ship-to-change:focus-visible {
             color: #111;
         }
 
-        .ship-to-option input {
-            position: absolute;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .ship-to-option:has(input:checked) {
-            background: #111;
-            color: #fff;
+        @media (prefers-reduced-motion: reduce) {
+            .ship-to-text {
+                transition: none;
+            }
         }
         .product-actions .checkout-button {
             margin-top: 0;
@@ -505,19 +512,10 @@
                 <div class="product-price" id="product-price" data-price=""></div>
                 <div class="product-description" id="product-description"></div>
                 <div class="product-actions">
-                <div class="ship-to" role="group" aria-label="Ship to">
-                    <span class="ship-to-label">Ship to</span>
-                    <div class="ship-to-options">
-                        <label class="ship-to-option">
-                            <input type="radio" name="ship-to" value="us" checked>
-                            United States · free
-                        </label>
-                        <label class="ship-to-option">
-                            <input type="radio" name="ship-to" value="intl">
-                            International · $35
-                        </label>
-                    </div>
-                </div>
+                <p class="ship-to is-pending" id="ship-to-status" aria-live="polite">
+                    <span class="ship-to-text">Detecting shipping…</span>
+                    <button type="button" class="ship-to-change" id="ship-to-change">change</button>
+                </p>
                 <button type="button" class="checkout-button" id="buy-now-btn">Buy now</button>
                 </div>
                 <p id="buy-now-status" class="checkout-note" hidden></p>

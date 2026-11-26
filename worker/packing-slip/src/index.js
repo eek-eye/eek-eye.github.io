@@ -3,6 +3,7 @@ import { buildOrder, loadOrder, saveOrder } from "./orders.js";
 import { packingSlipHtml } from "./packing-slip.js";
 import { emailPackingSlip, emailBuyerTracking } from "./email.js";
 import { createShippingLabel, withLabel, withoutLabelImages } from "./labels.js";
+import { geoResponse } from "./geo.js";
 
 const enc = new TextEncoder();
 
@@ -206,6 +207,9 @@ export default {
     const url = new URL(request.url);
     if (request.method === "GET" && url.pathname === "/") {
       return json({ ok: true, service: "eekseye-orders" });
+    }
+    if (url.pathname === "/geo" && (request.method === "GET" || request.method === "OPTIONS")) {
+      return geoResponse(request);
     }
     if (request.method === "POST" && (url.pathname === "/stripe/webhook" || url.pathname === "/webhook")) {
       try {

@@ -38,7 +38,8 @@
       '.eeks-cart-remove{background:none;border:none;color:#666;font-size:.75rem;cursor:pointer;margin-top:.35rem;padding:0;text-decoration:underline;}' +
       '.eeks-cart-empty{color:#777;font-size:.95rem;padding:1rem 0;}' +
       '.eeks-cart-footer{margin-top:1.25rem;padding-top:1rem;border-top:1px solid #e5e5e5;}' +
-      '.eeks-cart-subtotal{display:flex;justify-content:space-between;font-weight:600;margin-bottom:1rem;color:#111;}' +
+      '.eeks-cart-subtotal{display:flex;justify-content:space-between;font-weight:600;margin-bottom:.65rem;color:#111;}' +
+      '#eeks-ship-to-mount{margin:0 0 1rem;}' +
       '.eeks-profile-actions{display:flex;flex-direction:column;gap:.55rem;}' +
       '.eeks-profile-actions a,.eeks-profile-actions button{display:block;text-align:center;padding:.75rem 1rem;border-radius:4px;font-weight:600;text-decoration:none;cursor:pointer;border:none;font:inherit;text-transform:uppercase;letter-spacing:.08em;font-size:.9rem;transition:background .2s ease,color .2s ease,border-color .2s ease;}' +
       '.eeks-btn-primary{background:#111;color:#fff;}' +
@@ -192,6 +193,7 @@
       '<div id="eeks-cart-mount"></div>' +
       '<div class="eeks-cart-footer">' +
       '<div class="eeks-cart-subtotal"><span>Subtotal</span><span id="eeks-cart-subtotal">$0.00</span></div>' +
+      '<div id="eeks-ship-to-mount"></div>' +
       '<div class="eeks-profile-actions">' +
       '<button type="button" class="eeks-btn-primary" id="eeks-checkout-btn">Checkout</button>' +
       '<a class="eeks-btn-secondary" href="explore.html">Continue shopping</a>' +
@@ -215,6 +217,9 @@
     renderCartList(panelEl.querySelector('#eeks-cart-mount'));
     var sub = window.EeksCart ? window.EeksCart.subtotal() : 0;
     panelEl.querySelector('#eeks-cart-subtotal').textContent = money(sub);
+    if (window.EeksStripeCheckout && typeof window.EeksStripeCheckout.mountShipTo === 'function') {
+      window.EeksStripeCheckout.mountShipTo(panelEl.querySelector('#eeks-ship-to-mount'));
+    }
 
     panelEl.querySelector('.eeks-profile-close').onclick = function () { closePanel(); };
     panelEl.addEventListener('click', function (e) {

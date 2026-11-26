@@ -6,6 +6,13 @@ Live webhook:
 
 `https://eekseye-orders.pages.dev/stripe/webhook`
 
+Country lookup for checkout (CORS limited to eekseye.com):
+
+`https://eekseye-orders.pages.dev/geo`
+
+Returns `{ ok, country, region }` from `request.cf.country`. `region` is `us` or `intl`, or empty when the country is unknown so the site can fall back to timezone and locale.
+
+
 Stripe webhook id: `we_1UalNy2X7APw4VwXr4LObWzz` (event: `checkout.session.completed` only).
 
 ## What is on the packing slip
