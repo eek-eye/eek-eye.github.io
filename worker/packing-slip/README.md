@@ -29,7 +29,7 @@ Nothing is sent to the customer from this Worker.
 
 **One-time step to turn on owner email (pick one):**
 
-- **Recommended / free:** Create a free [Resend](https://resend.com) account with `fuchendeonze@gmail.com`, click the verification email, create an API key, and add it as the Pages secret `RESEND_API_KEY` on project `eekseye-orders` (Cloudflare Dashboard → Workers & Pages → eekseye-orders → Settings → Variables and Secrets, or `npx wrangler pages secret put RESEND_API_KEY --project-name eekseye-orders`). Until the `eekseye.com` domain is verified in Resend, set `EMAIL_FROM` to `onboarding@resend.dev`. After a domain is verified, change `EMAIL_FROM` to something like `orders@eekseye.com`.
+- **Recommended / free:** Create a free [Resend](https://resend.com) account with `fuchendeonze@gmail.com`, click the verification email, create an API key, and add it as the Pages secret `RESEND_API_KEY` on project `eekseye-orders` (Cloudflare Dashboard → Workers & Pages → eekseye-orders → Settings → Variables and Secrets, or `npx wrangler pages secret put RESEND_API_KEY --project-name eekseye-orders`). The `eekseye.com` sending domain is verified in Resend. `EMAIL_FROM` is `eekseye <orders@eekseye.com>`.
 - **Already on the site:** Create an EmailJS template that sends HTML `html_message` to `to_email`, then add `EMAILJS_TEMPLATE_ID` and `EMAILJS_PRIVATE_KEY` (plus the existing public key `4NNKONRfDtWHf7PIK` and service `service_ty390sa`) as Pages secrets/vars.
 - **Cloudflare Email:** The current Cloudflare token can deploy this Pages project but cannot enable Email Routing or Sending, and `eekseye.com` is not on this Cloudflare account. If you later add the domain or broaden the token, a `send_email` binding can be added.
 
@@ -55,7 +55,7 @@ Already set as Pages `secret_text` on `eekseye-orders`: `STRIPE_WEBHOOK_SECRET`,
 | `SLIP_VIEW_SECRET` | HMAC key that protects printable `/slip/EE-…` links (already set) |
 | `RESEND_API_KEY` | Recommended email path |
 | `EMAILJS_PUBLIC_KEY` / `EMAILJS_SERVICE_ID` / `EMAILJS_TEMPLATE_ID` / `EMAILJS_PRIVATE_KEY` | Optional EmailJS path |
-| `EMAIL_FROM` | Sender address (e.g. `onboarding@resend.dev` or `orders@eekseye.com`) |
+| `EMAIL_FROM` | Sender address (`eekseye <orders@eekseye.com>`) |
 | `SHIPPO_API_KEY` | Shippo API token for buying 4x6 labels (Pages secret) |
 | `SHIPPO_TEST_API_KEY` | Optional Shippo test token for Stripe test orders |
 

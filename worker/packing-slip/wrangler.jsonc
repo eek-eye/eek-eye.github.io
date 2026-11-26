@@ -12,7 +12,7 @@
   },
   "vars": {
     "OWNER_EMAIL": "fuchendeonze@gmail.com",
-    "EMAIL_FROM": "eekseye Orders <onboarding@resend.dev>",
+    "EMAIL_FROM": "eekseye <orders@eekseye.com>",
     "ORDER_PREFIX": "",
     "ORDER_START": "1001",
     "TIMEZONE": "America/Los_Angeles",

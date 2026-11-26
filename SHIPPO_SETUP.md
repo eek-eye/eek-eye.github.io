@@ -40,12 +40,7 @@ Default shirt box (overridable later): **1 lb, 12 × 10 × 2 in**.
 
 ## Buyer tracking emails
 
-Owner packing-slip email already works through Resend (or EmailJS). Buyer tracking emails need one of:
-
-- A verified sending domain on Resend (so mail can go to customers, not only your own inbox), or
-- An EmailJS template for tracking, stored as the Pages secret `EMAILJS_TEMPLATE_ID_TRACKING`.
-
-Until one of those is set, you still get the label; the buyer may not get the tracking email automatically.
+Owner packing-slip and buyer tracking emails are sent through Resend from `eekseye <orders@eekseye.com>` (the eekseye.com sending domain is verified).
 
 ## Secrets (never commit these, never paste them in chat)
 
