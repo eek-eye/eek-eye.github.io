@@ -23,6 +23,7 @@ window.EXPLORE_PRODUCTS = {
     modelImage: "Product-Models/Model-XI.jpg",
     description: "EEKSEYE | Yīkèxī Collection oversized T-shirt in black.",
     stripePaymentLink: "https://buy.stripe.com/28E6oA8JT5LJbSTeIjeQM01",
+    stripePaymentLinkIntl: "https://buy.stripe.com/3cIdR28JT2zx8GH8jVeQM07",
     purchaseUrl: "https://fuchendeonze.wixsite.com/my-site-2"
   },
   2: {
@@ -34,6 +35,7 @@ window.EXPLORE_PRODUCTS = {
     modelImage: null,
     description: "Exclusive design from the Eeks Eye collection — contemporary art and fashion.",
     stripePaymentLink: "https://buy.stripe.com/8x26oA8JT1vt5uvas3eQM02",
+    stripePaymentLinkIntl: "https://buy.stripe.com/bJedR22lv0rpbST9nZeQM08",
     purchaseUrl: "https://fuchendeonze.wixsite.com/my-site-2"
   },
   3: {
@@ -45,6 +47,7 @@ window.EXPLORE_PRODUCTS = {
     modelImage: null,
     description: "Exclusive design from the Eeks Eye collection — contemporary art and fashion.",
     stripePaymentLink: "https://buy.stripe.com/9B64gse4d6PNg990RteQM03",
+    stripePaymentLinkIntl: "https://buy.stripe.com/7sY14g5xH6PN3mnbw7eQM09",
     purchaseUrl: "https://fuchendeonze.wixsite.com/my-site-2"
   },
   4: {
@@ -56,6 +59,7 @@ window.EXPLORE_PRODUCTS = {
     modelImage: null,
     description: "Eeks Eye signature design — oversized T-shirt in premium dry jersey.",
     stripePaymentLink: "https://buy.stripe.com/dRmbIUd09b637CD8jVeQM04",
+    stripePaymentLinkIntl: "https://buy.stripe.com/14A6oAbW51vt7CDfMneQM0a",
     purchaseUrl: "https://fuchendeonze.wixsite.com/my-site-2"
   },
   5: {
@@ -67,6 +71,7 @@ window.EXPLORE_PRODUCTS = {
     modelImage: null,
     description: "Eeks Eye collection — future-facing graphic capturing the cold smile ideology of 2029.",
     stripePaymentLink: "https://buy.stripe.com/00weV60dngqng9943FeQM05",
+    stripePaymentLinkIntl: "https://buy.stripe.com/6oUdR29NXgqn7CDcAbeQM0b",
     purchaseUrl: "https://fuchendeonze.wixsite.com/my-site-2"
   },
   6: {
@@ -83,6 +88,7 @@ window.EXPLORE_PRODUCTS = {
     designs: ["x", "y"],
     description: "Exclusive design from the Eeks Eye collection — contemporary art and fashion.",
     stripePaymentLink: "https://buy.stripe.com/fZu14g2lva1ZbSTcAbeQM06",
+    stripePaymentLinkIntl: "https://buy.stripe.com/eVq28kbW53DB1ef2ZBeQM0c",
     purchaseUrl: "https://fuchendeonze.wixsite.com/my-site-2"
   }
 };

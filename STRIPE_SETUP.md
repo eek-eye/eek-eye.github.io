@@ -8,7 +8,7 @@ Customers pay on **product pages** (`product.html`) via **Stripe Checkout** (hos
 |------|---------|
 | `js/stripe-config.js` | Public config (API URL, publishable key) |
 | `js/stripe-checkout.js` | Purchase button to Stripe |
-| `js/explore-data.js` | Optional `stripePaymentLink` per product |
+| `js/explore-data.js` | Optional `stripePaymentLink` (US, free shipping) and `stripePaymentLinkIntl` ($35 international) per product |
 | `api/create-checkout-session.js` | Vercel serverless handler |
 | `netlify/functions/create-checkout-session.js` | Netlify serverless handler |
 | `lib/stripe-checkout.js` | Shared session logic |
@@ -68,6 +68,7 @@ If you cannot deploy serverless yet, create a **Payment Link** in Stripe for eac
 
 ```javascript
 stripePaymentLink: "https://buy.stripe.com/…",
+stripePaymentLinkIntl: "https://buy.stripe.com/…",
 ```
 
 The Purchase button will open that link directly (no API needed).

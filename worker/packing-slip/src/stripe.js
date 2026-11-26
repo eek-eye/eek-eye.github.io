@@ -99,11 +99,14 @@ export function lineItemsFromSession(session) {
       (typeof product === "object" && product.name) ||
       (price && price.nickname) ||
       "Shirt";
+    const priceId = (price && typeof price.id === "string") ? price.id : (typeof item.price === "string" ? item.price : "");
     return {
       name,
       quantity: item.quantity || 1,
       amountCents: item.amount_total != null ? item.amount_total : (price && price.unit_amount) || 0,
-      currency: item.currency || (price && price.currency) || session.currency || "usd"
+      currency: item.currency || (price && price.currency) || session.currency || "usd",
+      priceId,
+      isShipping: priceId === "price_1Ufran2X7APw4VwXnjxjMtqA"
     };
   });
 }

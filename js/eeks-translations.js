@@ -61,7 +61,7 @@
         contactSend: 'Send Message', contactName: 'Name', contactEmail: 'Email', contactSubject: 'Subject', contactMessage: 'Message',
         productFindInStore: 'Find in store', productDetails: 'Product details', productDetailsBody: 'Oversized fit. Crewneck. Short sleeves. Printed graphics.',
         productSizeFit: 'Size & fit', productSizeFitBody: 'This style fits oversized. For a closer fit, consider sizing down.',
-        productFreeShip: 'Free shipping, free returns', productFreeShipBody: 'Complimentary standard shipping and returns on all orders.',
+        productFreeShip: 'Free US shipping · $35 international', productFreeShipBody: 'Free standard shipping in the United States. International orders are $35 USD. Returns accepted within 14 days of delivery.',
         productCare: 'Product care', productCareBody: 'Machine wash cold. Do not bleach. Tumble dry low.',
         productSustainability: 'Sustainability', productSustainabilityBody: 'This product is made with responsibly sourced materials.',
         checkoutConfirm: 'Redirecting you to checkout are you okay with that its your choice not mine', clientServices: 'CLIENT SERVICES',
@@ -96,7 +96,7 @@
             footerLivechat: 'Chat en vivo', footerUnavailable: 'Nuestros asesores no están disponibles ahora', footerCallUs: 'Llámanos', footerEmailUs: 'Escríbenos',
             copyrightModalTitle: 'Aviso de copyright', copyrightModalBody: 'Todo el contenido, imágenes y diseños de este sitio son propiedad de Eeks Eye. Queda prohibida la copia o reproducción sin permiso expreso por escrito. Todos los derechos reservados.',
             tabCovers: 'Portadas', tabAdvertisements: 'Anuncios / Pósters', tabArchived: 'Archivado', svcWebTitle: 'Diseño web', svcGoogleTitle: 'Publicidad Google', svcEmailTitle: 'Alojamiento de correo',
-            productDetails: 'Detalles del producto', productSizeFit: 'Talla y corte', productFreeShip: 'Envío y devoluciones gratis', productCare: 'Cuidado del producto', productSustainability: 'Sostenibilidad',
+            productDetails: 'Detalles del producto', productSizeFit: 'Talla y corte', productFreeShip: 'Envío gratis en EE. UU. · $35 internacional', productCare: 'Cuidado del producto', productSustainability: 'Sostenibilidad',
             purchase: 'Comprar', backToExplore: '← Volver a Explorar', contactHeading: 'Contáctanos', contactIntro: 'Nos encantaría saber de ti. Si tienes preguntas sobre nuestros diseños, colaboración o solo saludar, estamos aquí.',
             contactSend: 'Enviar mensaje', contactName: 'Nombre', contactEmail: 'Correo', contactSubject: 'Asunto', contactMessage: 'Mensaje',
             scrollBottom: 'Ir al final', archiveEmptySidebar: 'Archivo próximamente.', archiveSectionTitle: 'Archivo próximamente', archiveSectionBody: 'Las imágenes archivadas se mostrarán aquí'
@@ -116,7 +116,7 @@
             footerLivechat: 'Chat en direct', footerUnavailable: 'Nos conseillers ne sont pas disponibles pour le moment', footerCallUs: 'Appelez-nous', footerEmailUs: 'Écrivez-nous',
             copyrightModalTitle: 'Avis de droit d\'auteur', copyrightModalBody: 'Tout le contenu, images et designs de ce site appartiennent à Eeks Eye. Aucune copie sans autorisation écrite expresse. Tous droits réservés.',
             tabCovers: 'Couvertures', tabAdvertisements: 'Annonces / Affiches', tabArchived: 'Archivé', svcWebTitle: 'Conception web', svcGoogleTitle: 'Publicité Google', svcEmailTitle: 'Hébergement e-mail',
-            productDetails: 'Détails du produit', productSizeFit: 'Taille et coupe', productFreeShip: 'Livraison et retours gratuits', productCare: 'Entretien', productSustainability: 'Durabilité',
+            productDetails: 'Détails du produit', productSizeFit: 'Taille et coupe', productFreeShip: 'Livraison gratuite aux États-Unis · 35 $ à l’international', productCare: 'Entretien', productSustainability: 'Durabilité',
             purchase: 'Acheter', backToExplore: '← Retour à Explorer', contactHeading: 'Contactez-nous', contactIntro: 'Nous serions ravis de vous entendre.',
             contactSend: 'Envoyer', contactName: 'Nom', contactEmail: 'E-mail', contactSubject: 'Sujet', contactMessage: 'Message',
             scrollBottom: 'Aller en bas', archiveEmptySidebar: 'Archive bientôt disponible.', archiveSectionTitle: 'Archive bientôt disponible', archiveSectionBody: 'Les images archivées s’afficheront ici'
@@ -135,7 +135,7 @@
             footerLivechat: 'Live-Chat', footerUnavailable: 'Unsere Berater sind derzeit nicht verfügbar', footerCallUs: 'Rufen Sie uns an', footerEmailUs: 'E-Mail an uns',
             copyrightModalTitle: 'Urheberrechtshinweis', copyrightModalBody: 'Alle Inhalte, Bilder und Designs auf dieser Website gehören Eeks Eye. Vervielfältigung nur mit schriftlicher Genehmigung. Alle Rechte vorbehalten.',
             tabCovers: 'Covers', tabAdvertisements: 'Werbung / Poster', tabArchived: 'Archiv', svcWebTitle: 'Webdesign', svcGoogleTitle: 'Google-Werbung', svcEmailTitle: 'E-Mail-Hosting',
-            productDetails: 'Produktdetails', productSizeFit: 'Größe & Passform', productFreeShip: 'Kostenloser Versand und Rückgabe', productCare: 'Pflege', productSustainability: 'Nachhaltigkeit',
+            productDetails: 'Produktdetails', productSizeFit: 'Größe & Passform', productFreeShip: 'Kostenloser Versand in die USA · 35 $ international', productCare: 'Pflege', productSustainability: 'Nachhaltigkeit',
             purchase: 'Kaufen', backToExplore: '← Zurück zu Entdecken', contactHeading: 'Kontakt aufnehmen', contactSend: 'Senden', contactName: 'Name', contactEmail: 'E-Mail', contactSubject: 'Betreff', contactMessage: 'Nachricht',
             scrollBottom: 'Nach unten scrollen', archiveEmptySidebar: 'Archiv demnächst.', archiveSectionTitle: 'Archiv demnächst', archiveSectionBody: 'Archivierte Bilder erscheinen hier'
         }),
@@ -153,7 +153,7 @@
             footerLivechat: 'Live chat', footerUnavailable: 'I consulenti non sono al momento disponibili', footerCallUs: 'Chiamaci', footerEmailUs: 'Scrivici',
             copyrightModalTitle: 'Avviso copyright', copyrightModalBody: 'Tutti i contenuti, immagini e design di questo sito sono di proprietà di Eeks Eye. Nessuna copia senza autorizzazione scritta. Tutti i diritti riservati.',
             tabCovers: 'Copertine', tabAdvertisements: 'Pubblicità / Poster', tabArchived: 'Archivio', svcWebTitle: 'Web design', svcGoogleTitle: 'Pubblicità Google', svcEmailTitle: 'Hosting e-mail',
-            productDetails: 'Dettagli prodotto', productSizeFit: 'Taglia e vestibilità', productFreeShip: 'Spedizione e resi gratuiti', productCare: 'Cura', productSustainability: 'Sostenibilità',
+            productDetails: 'Dettagli prodotto', productSizeFit: 'Taglia e vestibilità', productFreeShip: 'Spedizione gratuita negli USA · 35 $ internazionale', productCare: 'Cura', productSustainability: 'Sostenibilità',
             purchase: 'Acquista', backToExplore: '← Torna a Esplora', contactHeading: 'Contattaci', contactSend: 'Invia', contactName: 'Nome', contactEmail: 'Email', contactSubject: 'Oggetto', contactMessage: 'Messaggio',
             scrollBottom: 'Scorri in basso', archiveEmptySidebar: 'Archivio in arrivo.', archiveSectionTitle: 'Archivio in arrivo', archiveSectionBody: 'Le immagini archiviate saranno mostrate qui'
         }),
@@ -170,7 +170,7 @@
             footerLivechat: '在线客服', footerUnavailable: '顾问目前不在线', footerCallUs: '致电', footerEmailUs: '邮件',
             copyrightModalTitle: '版权声明', copyrightModalBody: '本网站所有内容、图像与设计归 Eeks Eye 所有。未经许可不得复制或使用。保留所有权利。',
             tabCovers: '封面', tabAdvertisements: '广告 / 海报', tabArchived: '归档', svcWebTitle: '网站设计', svcGoogleTitle: 'Google 广告', svcEmailTitle: '邮件托管',
-            productDetails: '商品详情', productSizeFit: '尺码与版型', productFreeShip: '包邮与免费退货', productCare: '护理说明', productSustainability: '可持续性',
+            productDetails: '商品详情', productSizeFit: '尺码与版型', productFreeShip: '美国免运费 · 国际运费 $35', productCare: '护理说明', productSustainability: '可持续性',
             purchase: '购买', backToExplore: '← 返回探索', contactHeading: '联系我们', contactSend: '发送', contactName: '姓名', contactEmail: '邮箱', contactSubject: '主题', contactMessage: '留言',
             scrollBottom: '滚动到底部', archiveEmptySidebar: '档案即将推出。', archiveSectionTitle: '档案即将推出', archiveSectionBody: '归档图片将显示在此处'
         }),
@@ -187,7 +187,7 @@
             footerLivechat: 'ライブチャット', footerUnavailable: '現在アドバイザーは対応できません', footerCallUs: '電話', footerEmailUs: 'メール',
             copyrightModalTitle: '著作権表示', copyrightModalBody: '本サイトのコンテンツ、画像、デザインは Eeks Eye に帰属します。書面による許可なく複製・使用を禁じます。',
             tabCovers: 'カバー', tabAdvertisements: '広告 / ポスター', tabArchived: 'アーカイブ', svcWebTitle: 'ウェブデザイン', svcGoogleTitle: 'Google 広告', svcEmailTitle: 'メールホスティング',
-            productDetails: '商品詳細', productSizeFit: 'サイズとフィット', productFreeShip: '送料・返品無料', productCare: 'お手入れ', productSustainability: 'サステナビリティ',
+            productDetails: '商品詳細', productSizeFit: 'サイズとフィット', productFreeShip: '米国内送料無料 · 海外は $35', productCare: 'お手入れ', productSustainability: 'サステナビリティ',
             purchase: '購入', backToExplore: '← エクスプロールに戻る', contactHeading: 'お問い合わせ', contactSend: '送信', contactName: '名前', contactEmail: 'メール', contactSubject: '件名', contactMessage: 'メッセージ',
             scrollBottom: '下へスクロール', archiveEmptySidebar: 'アーカイブは近日公開。', archiveSectionTitle: 'アーカイブ近日公開', archiveSectionBody: 'アーカイブ画像はここに表示されます'
         }),
@@ -204,7 +204,7 @@
             footerLivechat: '라이브 채팅', footerUnavailable: '현재 상담원이 부재 중입니다', footerCallUs: '전화', footerEmailUs: '이메일',
             copyrightModalTitle: '저작권 안내', copyrightModalBody: '본 사이트의 모든 콘텐츠, 이미지, 디자인은 Eeks Eye 소유입니다. 서면 허가 없이 복제할 수 없습니다.',
             tabCovers: '커버', tabAdvertisements: '광고 / 포스터', tabArchived: '보관됨', svcWebTitle: '웹 디자인', svcGoogleTitle: 'Google 광고', svcEmailTitle: '이메일 호스팅',
-            productDetails: '제품 상세', productSizeFit: '사이즈 및 핏', productFreeShip: '무료 배송 및 반품', productCare: '관리 방법', productSustainability: '지속가능성',
+            productDetails: '제품 상세', productSizeFit: '사이즈 및 핏', productFreeShip: '미국 무료 배송 · 해외 $35', productCare: '관리 방법', productSustainability: '지속가능성',
             purchase: '구매', backToExplore: '← 탐색으로 돌아가기', contactHeading: '문의하기', contactSend: '보내기', contactName: '이름', contactEmail: '이메일', contactSubject: '제목', contactMessage: '메시지',
             scrollBottom: '맨 아래로', archiveEmptySidebar: '아카이브 곧 공개.', archiveSectionTitle: '아카이브 곧 공개', archiveSectionBody: '보관된 이미지가 여기에 표시됩니다'
         })

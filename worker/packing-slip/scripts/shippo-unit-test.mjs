@@ -123,6 +123,21 @@ const customs = customsDeclaration({ SHIP_FROM_NAME: "eekseye" }, { amountCents:
 assert(customs.contents_type === "MERCHANDISE" && customs.items[0].tariff_number === "610910" && customs.items[0].value_amount === "275" && customs.eel_pfc === "NOEEI_30_37_a", "customs for a shirt");
 const customsCA = customsDeclaration({ SHIP_FROM_NAME: "eekseye" }, { amountCents: 27500, currency: "USD", items: [{ name: "I Eeks Eye I 2026", quantity: 1 }], customer: { country: "CA" } }, parcel);
 assert(customsCA.eel_pfc === "NOEEI_30_36", "Canada uses NOEEI_30_36");
+const customsIntl = customsDeclaration(
+  { SHIP_FROM_NAME: "eekseye" },
+  {
+    amountCents: 31000,
+    amountShipping: 3500,
+    currency: "USD",
+    items: [
+      { name: "I Eeks Eye I 2026", quantity: 1 },
+      { name: "International shipping", quantity: 1, isShipping: true, amountCents: 3500 }
+    ]
+  },
+  parcel
+);
+assert(customsIntl.items[0].value_amount === "275" && customsIntl.items[0].quantity === 1, "customs excludes $35 international shipping");
+
 
 assert(shippoKey({}, {}).skipped === "missing_key", "missing key is skipped");
 assert(shippoKey({ SHIPPO_API_KEY: "shippo_live_dummy" }, { isTest: true }).skipped === "test_order_no_test_key", "live key is not used for Stripe test orders");

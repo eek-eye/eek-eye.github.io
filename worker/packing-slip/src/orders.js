@@ -1,4 +1,4 @@
-import { SHIRTS, siteIdFromSession } from "./catalog.js";
+import { SHIRTS, siteIdFromSession, isInternationalShippingPrice } from "./catalog.js";
 import { fieldValue, lineItemsFromSession, retrieveSession, shippingFromSession } from "./stripe.js";
 import { labelFromStripeMetadata } from "./labels.js";
 
@@ -80,7 +80,12 @@ export async function buildOrder(env, session, opts = {}) {
       }
     ];
   }
-  if (design && items[0]) items[0].design = design;
+  if (design && items[0] && !items[0].isShipping) items[0].design = design;
+  items = items.map((it) => ({
+    ...it,
+    isShipping: Boolean(it.isShipping) || isInternationalShippingPrice(it.priceId)
+  }));
+  const shippingFromItems = items.reduce((n, it) => n + (it.isShipping ? (it.amountCents || 0) : 0), 0);
 
   const stripeMetadata = (full.metadata && typeof full.metadata === "object") ? full.metadata : {};
   const existingLabel = labelFromStripeMetadata(stripeMetadata);
@@ -95,7 +100,7 @@ export async function buildOrder(env, session, opts = {}) {
     timezone: env.TIMEZONE || "America/Los_Angeles",
     currency: (full.currency || "usd").toUpperCase(),
     amountCents: full.amount_total != null ? full.amount_total : items.reduce((n, it) => n + (it.amountCents || 0), 0),
-    amountShipping: (full.total_details && full.total_details.amount_shipping) || 0,
+    amountShipping: (full.total_details && full.total_details.amount_shipping) || shippingFromItems || 0,
     size,
     design,
     siteId,

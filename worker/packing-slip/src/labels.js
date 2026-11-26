@@ -181,11 +181,13 @@ export function pickRate(rates, env, domestic) {
 
 export function customsDeclaration(env, order, parcel) {
   const c = order.customer || {};
-  const qty = (order.items || []).reduce((n, it) => n + (Number(it.quantity) || 1), 0) || 1;
-  const amount = Number(((order.amountCents || 0) / 100).toFixed(2)) || 0;
+  const merchItems = (order.items || []).filter((it) => !it.isShipping);
+  const qty = merchItems.reduce((n, it) => n + (Number(it.quantity) || 1), 0) || 1;
+  const goodsCents = Math.max(0, (order.amountCents || 0) - (order.amountShipping || 0));
+  const amount = Number((goodsCents / 100).toFixed(2)) || 0;
   const currency = (order.currency || "USD").toUpperCase();
   const unit = Number((amount / qty).toFixed(2)) || amount;
-  const description = (order.items && order.items[0] && order.items[0].name) || "Cotton t-shirt";
+  const description = (merchItems[0] && merchItems[0].name) || (order.items && order.items[0] && order.items[0].name) || "Cotton t-shirt";
   const toCountry = String((order.customer && order.customer.country) || "").toUpperCase();
   // Shippo enum is case-sensitive: CA uses NOEEI_30_36; most other US exports use NOEEI_30_37_a.
   const eelPfc = toCountry === "CA" ? "NOEEI_30_36" : "NOEEI_30_37_a";

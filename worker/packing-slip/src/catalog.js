@@ -14,7 +14,13 @@ export const PAYMENT_LINKS = {
   plink_1Uajlg2X7APw4VwXY84Z5mWK: "3",
   plink_1Uajlj2X7APw4VwX5tDoPe99: "4",
   plink_1Uajlm2X7APw4VwXK3wjxVkY: "5",
-  plink_1Uajlr2X7APw4VwXVXpJgzlm: "6"
+  plink_1Uajlr2X7APw4VwXVXpJgzlm: "6",
+  plink_1Ufrbu2X7APw4VwXyRna2gUe: "1",
+  plink_1Ufrby2X7APw4VwXUw5P4APC: "2",
+  plink_1Ufrc12X7APw4VwXPSvHF8OS: "3",
+  plink_1Ufrc62X7APw4VwXZBVtoH8R: "4",
+  plink_1UfrcA2X7APw4VwXhvzUqQ4p: "5",
+  plink_1UfrcF2X7APw4VwXoVzY2oRY: "6"
 };
 
 export const PRICES = {
@@ -25,6 +31,14 @@ export const PRICES = {
   price_1Uajl52X7APw4VwXccP4CSnE: "5",
   price_1Uajl52X7APw4VwX3JVy1kmk: "6"
 };
+
+/** Flat $35 international shipping line item on the non-US Payment Links. */
+export const INTERNATIONAL_SHIPPING_PRICE_ID = "price_1Ufran2X7APw4VwXnjxjMtqA";
+export const INTERNATIONAL_SHIPPING_CENTS = 3500;
+
+export function isInternationalShippingPrice(priceId) {
+  return priceId === INTERNATIONAL_SHIPPING_PRICE_ID;
+}
 
 export function siteIdFromSession(session) {
   const meta = (session && session.metadata) || {};
