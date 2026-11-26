@@ -55,7 +55,9 @@ export function shippingStatus(order) {
   if (!l) return null;
   if (l.ok === false) return { ok: false, text: `Label failed: ${l.error || "unknown error"}` };
   if (!l.trackingNumber) return null;
-  return { ok: true, text: `${l.provider || "FedEx"} tracking: ${l.trackingNumber}${l.sandbox ? " (sandbox test)" : ""}` };
+  const who = l.carrier || l.provider || "Ship";
+  const url = l.trackingUrl ? ` ${l.trackingUrl}` : "";
+  return { ok: true, text: `${who} tracking: ${l.trackingNumber}${url}${l.sandbox ? " (sandbox test)" : ""}` };
 }
 
 export function packingSlipHtml(order, env = {}, opts = {}) {

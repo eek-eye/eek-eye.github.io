@@ -51,7 +51,11 @@ async function sendViaEmailJs(env, { to, subject, text, html, order, slipUrl }) 
       slip_url: slipUrl || "",
       shirt: (order.items && order.items[0] && order.items[0].name) || "",
       size: order.size || "",
-      design: order.design || ""
+      design: order.design || "",
+      tracking_number: (order.label && order.label.trackingNumber) || "",
+      tracking_url: (order.label && order.label.trackingUrl) || "",
+      label_url: (order.label && order.label.labelUrl) || "",
+      carrier: (order.label && (order.label.carrier || order.label.provider)) || ""
     }
   };
   if (env.EMAILJS_PRIVATE_KEY) body.accessToken = env.EMAILJS_PRIVATE_KEY;
@@ -96,20 +100,31 @@ export async function emailPackingSlip(env, order, slipUrl) {
   } else {
     from = `${fromName} <orders@${env.EMAIL_FROM_DOMAIN || "eekseye.com"}>`;
   }
-  const subject = `${order.isTest ? "[TEST] " : ""}eekseye packing slip ${order.orderNumber}`;
   const label = order.label || null;
+  const trackBit = label && label.ok && label.trackingNumber ? ` — ${label.carrier || label.provider || "Ship"} ${label.trackingNumber}` : "";
+  const subject = `${order.isTest ? "[TEST] " : ""}eekseye packing slip ${order.orderNumber}${trackBit}`;
   const attachments = [];
   if (label && label.ok && label.pdfBase64) {
-    attachments.push({ filename: `fedex-label-${order.orderNumber}.pdf`, content: label.pdfBase64 });
+    attachments.push({ filename: `shipping-label-${order.orderNumber}.pdf`, content: label.pdfBase64 });
   }
   if (label && label.ok && label.invoicePdfBase64) {
     attachments.push({ filename: `commercial-invoice-${order.orderNumber}.pdf`, content: label.invoicePdfBase64 });
   }
-  // Email HTML never carries the label bytes inline; the 4x6 label PDF is attached.
+  // Email HTML never carries the label bytes inline; the 4x6 label PDF is attached or linked.
   const html = packingSlipHtml(order, env, { printable: true, includeLabel: false });
-  const labelNote = attachments.length
-    ? `\n\nFedEx label (4x6 PDF) attached: ${attachments[0].filename}${attachments[1] ? " — print 3 copies of the commercial invoice and put them in the pouch" : ""}`
-    : "";
+  const labelLines = [];
+  if (label && label.ok) {
+    if (attachments.length) {
+      labelLines.push(`Shipping label (4x6 PDF) attached: ${attachments[0].filename}`);
+    }
+    if (label.labelUrl) labelLines.push(`Label PDF: ${label.labelUrl}`);
+    if (label.trackingNumber) labelLines.push(`${label.carrier || label.provider || "Carrier"} tracking: ${label.trackingNumber}`);
+    if (label.trackingUrl) labelLines.push(`Track: ${label.trackingUrl}`);
+    if (attachments[1]) labelLines.push("Print 3 copies of the commercial invoice and put them in the pouch.");
+  } else if (label && label.ok === false && label.error) {
+    labelLines.push(`Label not created: ${label.error}`);
+  }
+  const labelNote = labelLines.length ? `\n\n` + labelLines.join("\n") : "";
   const text = packingSlipText(order, env) + labelNote + (slipUrl ? `\n\nPrintable slip: ${slipUrl}` : "");
   const payload = { from, to, subject, text, html, order, slipUrl, attachments };
 
@@ -130,4 +145,96 @@ export async function emailPackingSlip(env, order, slipUrl) {
     error: "No email provider succeeded",
     attempts
   };
+}
+
+function escapeHtml(s) {
+  return String(s == null ? "" : s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function buyerFrom(env) {
+  const fromName = env.BRAND_NAME || "eekseye";
+  const rawFrom = (env.EMAIL_FROM || "").trim();
+  if (rawFrom.includes("<") && rawFrom.includes(">")) return rawFrom;
+  if (rawFrom.includes("@")) return `${fromName} <${rawFrom}>`;
+  return `${fromName} <orders@${env.EMAIL_FROM_DOMAIN || "eekseye.com"}>`;
+}
+
+function buyerTrackingCopy(order) {
+  const label = order.label || {};
+  const carrier = label.carrier || label.provider || "the carrier";
+  const tracking = label.trackingNumber || "";
+  const url = label.trackingUrl || "";
+  const text = [
+    `Thank you for your eekseye order ${order.orderNumber}.`,
+    "",
+    `Your package is on the way with ${carrier}.`,
+    tracking ? `Tracking number: ${tracking}` : "",
+    url ? `Track your shipment: ${url}` : "",
+    "",
+    "If you have a question, reply to this email or write to fuchendeonze@gmail.com."
+  ]
+    .filter((line, i, arr) => !(line === "" && (i === 0 || arr[i - 1] === "")))
+    .join("\n")
+    .trim();
+  const html = `<!DOCTYPE html><html lang="en"><body style="font-family:Arial,Helvetica,sans-serif;color:#111;background:#fff;padding:24px;">
+  <p>Thank you for your <strong>eekseye</strong> order <strong>${escapeHtml(order.orderNumber)}</strong>.</p>
+  <p>Your package is on the way with ${escapeHtml(carrier)}.</p>
+  ${tracking ? `<p>Tracking number: <strong>${escapeHtml(tracking)}</strong></p>` : ""}
+  ${url ? `<p><a href="${escapeHtml(url)}">Track your shipment</a></p>` : ""}
+  <p style="color:#555;font-size:13px;">If you have a question, reply to this email or write to fuchendeonze@gmail.com.</p>
+</body></html>`;
+  return { text, html, subject: `Your eekseye order is on the way${tracking ? ` — ${tracking}` : ""}` };
+}
+
+/**
+ * Email the buyer their tracking number and link.
+ * Skips Stripe test orders (unless SHIPPO_EMAIL_TEST_BUYERS=1), missing emails,
+ * failed labels, and orders already marked as emailed.
+ */
+export async function emailBuyerTracking(env, order) {
+  const label = order.label || {};
+  const to = order.customer && order.customer.email;
+  if (!to) return { ok: false, skipped: "no_email" };
+  if (!label.ok || !label.trackingNumber) return { ok: false, skipped: "no_tracking" };
+  if (label.buyerEmailed || (order.stripeMetadata && order.stripeMetadata.eekseye_buyer_tracking_sent === "1")) {
+    return { ok: true, skipped: "already_sent" };
+  }
+  if (order.isTest && env.SHIPPO_EMAIL_TEST_BUYERS !== "1") {
+    return { ok: false, skipped: "test_order" };
+  }
+
+  const from = buyerFrom(env);
+  const { text, html, subject } = buyerTrackingCopy(order);
+  const payload = { from, to, subject, text, html, order, slipUrl: "", attachments: [] };
+
+  // Do not reuse the owner packing-slip EmailJS template for buyers.
+  const buyerEmailJsEnv = {
+    ...env,
+    EMAILJS_TEMPLATE_ID: env.EMAILJS_TEMPLATE_ID_TRACKING || env.EMAILJS_TEMPLATE_ID_BUYER || ""
+  };
+  const attempts = [];
+  const tryEmailJs = (e, payload) => sendViaEmailJs(buyerEmailJsEnv, payload);
+  for (const fn of [sendViaResend, tryEmailJs, sendViaCloudflareBinding]) {
+    try {
+      const result = await fn(env, payload);
+      if (result == null) continue;
+      attempts.push(result);
+      if (result.ok) {
+        try {
+          const { updateShippingMetadata } = await import("./stripe.js");
+          await updateShippingMetadata(env, order, { eekseye_buyer_tracking_sent: "1" });
+        } catch (err) {
+          console.log(JSON.stringify({ msg: "buyer_email_flag_failed", orderNumber: order.orderNumber, error: String(err && err.message ? err.message : err).slice(0, 200) }));
+        }
+        return result;
+      }
+    } catch (err) {
+      attempts.push({ ok: false, provider: fn.name, error: String(err && err.message ? err.message : err) });
+    }
+  }
+  return { ok: false, provider: "none", error: "No email provider succeeded", attempts };
 }

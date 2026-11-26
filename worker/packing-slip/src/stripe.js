@@ -107,3 +107,49 @@ export function lineItemsFromSession(session) {
     };
   });
 }
+
+/**
+ * Persist label + tracking on the Checkout Session (and PaymentIntent if present).
+ * Values are strings, max 500 chars. Never pass secrets here.
+ */
+export async function updateShippingMetadata(env, order, meta) {
+  const key = env.STRIPE_SECRET_KEY;
+  if (!key || !order) return false;
+  const body = new URLSearchParams();
+  let count = 0;
+  for (const [k, v] of Object.entries(meta || {})) {
+    if (v == null || v === "") continue;
+    body.set(`metadata[${k}]`, String(v).slice(0, 500));
+    count += 1;
+  }
+  if (!count) return false;
+
+  const headers = {
+    Authorization: `Bearer ${key}`,
+    "Content-Type": "application/x-www-form-urlencoded"
+  };
+  let ok = false;
+  if (order.sessionId && !String(order.sessionId).startsWith("cs_test_fixture_")) {
+    const res = await fetch(`https://api.stripe.com/v1/checkout/sessions/${encodeURIComponent(order.sessionId)}`, {
+      method: "POST",
+      headers,
+      body
+    });
+    ok = res.ok;
+    if (!res.ok) {
+      console.log(JSON.stringify({ msg: "stripe_session_metadata_failed", status: res.status, sessionId: order.sessionId }));
+    }
+  }
+  if (order.paymentIntentId) {
+    const res = await fetch(`https://api.stripe.com/v1/payment_intents/${encodeURIComponent(order.paymentIntentId)}`, {
+      method: "POST",
+      headers,
+      body
+    });
+    ok = res.ok || ok;
+    if (!res.ok) {
+      console.log(JSON.stringify({ msg: "stripe_pi_metadata_failed", status: res.status }));
+    }
+  }
+  return ok;
+}

@@ -1,7 +1,7 @@
 import { verifyStripeSignature } from "./stripe.js";
 import { buildOrder, loadOrder, saveOrder } from "./orders.js";
 import { packingSlipHtml } from "./packing-slip.js";
-import { emailPackingSlip } from "./email.js";
+import { emailPackingSlip, emailBuyerTracking } from "./email.js";
 import { createShippingLabel, withLabel, withoutLabelImages } from "./labels.js";
 
 const enc = new TextEncoder();
@@ -131,6 +131,12 @@ async function handleWebhook(request, env) {
   if (packed.sig) qs.set("s", packed.sig);
   const slipUrl = `${origin}/slip/${encodeURIComponent(order.orderNumber)}${qs.toString() ? `?${qs}` : ""}`;
   const emailed = await emailPackingSlip(env, order, slipUrl);
+  let buyerMail = { ok: false, skipped: "not_attempted" };
+  try {
+    buyerMail = await emailBuyerTracking(env, order);
+  } catch (err) {
+    buyerMail = { ok: false, error: String(err && err.message ? err.message : err).slice(0, 200) };
+  }
   console.log(
     JSON.stringify({
       msg: "packing_slip_processed",
@@ -139,8 +145,11 @@ async function handleWebhook(request, env) {
       reused: order.reused,
       emailed: emailed.ok,
       emailProvider: emailed.provider,
+      buyerEmailed: buyerMail.ok,
+      buyerSkipped: buyerMail.skipped,
       labelOk: label ? label.ok : null,
       tracking: label && label.trackingNumber ? label.trackingNumber : undefined,
+      carrier: label && (label.carrier || label.provider) ? (label.carrier || label.provider) : undefined,
       labelError: label && !label.ok ? label.error : undefined
     })
   );
@@ -153,7 +162,18 @@ async function handleWebhook(request, env) {
     emailed: emailed.ok,
     emailProvider: emailed.provider,
     slipUrl,
-    label: label ? { ok: label.ok, trackingNumber: label.trackingNumber || undefined, error: label.ok ? undefined : label.error } : null,
+    buyerEmailed: buyerMail.ok,
+    buyerEmail: buyerMail.skipped || buyerMail.provider || undefined,
+    label: label
+      ? {
+          ok: label.ok,
+          trackingNumber: label.trackingNumber || undefined,
+          carrier: label.carrier || label.provider || undefined,
+          labelUrl: label.ok ? label.labelUrl || undefined : undefined,
+          reused: label.reused || undefined,
+          error: label.ok ? undefined : label.error
+        }
+      : null,
     emailError: emailed.ok ? undefined : emailed.error
   });
 }

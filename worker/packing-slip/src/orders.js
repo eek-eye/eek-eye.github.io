@@ -1,5 +1,6 @@
 import { SHIRTS, siteIdFromSession } from "./catalog.js";
 import { fieldValue, lineItemsFromSession, retrieveSession, shippingFromSession } from "./stripe.js";
+import { labelFromStripeMetadata } from "./labels.js";
 
 const enc = new TextEncoder();
 const SUFFIX_ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -81,6 +82,9 @@ export async function buildOrder(env, session, opts = {}) {
   }
   if (design && items[0]) items[0].design = design;
 
+  const stripeMetadata = (full.metadata && typeof full.metadata === "object") ? full.metadata : {};
+  const existingLabel = labelFromStripeMetadata(stripeMetadata);
+
   return {
     orderNumber: assigned.orderNumber,
     reused: assigned.reused,
@@ -98,6 +102,7 @@ export async function buildOrder(env, session, opts = {}) {
     items,
     customer: ship,
     paymentStatus: full.payment_status || "paid",
-    label: null
+    stripeMetadata,
+    label: existingLabel
   };
 }

@@ -1,5 +1,8 @@
 # FedEx label after Stripe order
 
+> **Superseded.** Paid Stripe orders now get shipping labels through **Shippo** (see `SHIPPO_SETUP.md` and `worker/packing-slip`). You do not need FedEx Developer API production keys or label certification for that path. This file is kept as a record of the paused FedEx scaffold.
+
+
 Goal: when a Stripe Checkout payment succeeds, create a FedEx shipment, email yourself a **PDF label**, and (on XI) auto-print when a printer is available.
 
 ## 1) Get FedEx Developer API access (do this in your browser)

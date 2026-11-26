@@ -14,8 +14,8 @@ Stripe webhook id: `we_1UalNy2X7APw4VwXr4LObWzz` (event: `checkout.session.compl
 - Shirt name, size, and design (x/y when that shirt has it)
 - Customer name, shipping address, phone, email
 - Amount and the date/time in America/Los_Angeles
-- A print-ready 4x6 packing slip for a thermal label printer (print the email, or open the signed link). A FedEx 4x6 label, when present, prints on the next page.
-- A FedEx 4x6 label PDF attached to the owner email (see "FedEx labels")
+- A print-ready 4x6 packing slip for a thermal label printer (print the email, or open the signed link). A shipping label, when present as an image, prints on the next page.
+- A 4x6 shipping-label PDF (or link) on the owner email (see "Shippo labels")
 
 ## Email path
 
@@ -56,8 +56,8 @@ Already set as Pages `secret_text` on `eekseye-orders`: `STRIPE_WEBHOOK_SECRET`,
 | `RESEND_API_KEY` | Recommended email path |
 | `EMAILJS_PUBLIC_KEY` / `EMAILJS_SERVICE_ID` / `EMAILJS_TEMPLATE_ID` / `EMAILJS_PRIVATE_KEY` | Optional EmailJS path |
 | `EMAIL_FROM` | Sender address (e.g. `onboarding@resend.dev` or `orders@eekseye.com`) |
-| `FEDEX_CLIENT_ID` / `FEDEX_CLIENT_SECRET` / `FEDEX_ACCOUNT_NUMBER` | Ship API label step (Pages secrets) |
-| `FEDEX_BASE_URL` | `https://apis-sandbox.fedex.com` then `https://apis.fedex.com` |
+| `SHIPPO_API_KEY` | Shippo API token for buying 4x6 labels (Pages secret) |
+| `SHIPPO_TEST_API_KEY` | Optional Shippo test token for Stripe test orders |
 
 ## Deploy
 
@@ -71,31 +71,16 @@ export CLOUDFLARE_ACCOUNT_ID=436fa630c3903b6bb680222a6963dad5
 
 Health check: `GET https://eekseye-orders.pages.dev/` → `{"ok":true,"service":"eekseye-orders"}`.
 
-## FedEx labels
+## Shippo labels
 
-`src/labels.js` creates a FedEx label for every paid `checkout.session.completed` (OAuth → `POST /ship/v1/shipments`, 4x6 `STOCK_4X6` PDF). US orders use `GROUND_HOME_DELIVERY`; other countries use `FEDEX_INTERNATIONAL_PRIORITY` with customs (Cotton t-shirt, HS 610910, value = order total, made in US, duties paid by recipient) plus a commercial invoice. Default package 1 lb, 12x10x2 in (`FEDEX_PKG_WEIGHT_LB`, `FEDEX_PKG_DIMS_IN`, `FEDEX_US_SERVICE`, `FEDEX_INTL_SERVICE` override).
+`src/labels.js` creates a Shippo label for every paid `checkout.session.completed` that does not already have one (quote rates → pick service → `POST /transactions` with `label_file_type: PDF_4x6`). US orders prefer **FedEx Ground Home Delivery** (`fedex_home_delivery`); other countries prefer **FedEx International Priority** (`fedex_international_priority`) with a customs declaration (cotton t-shirt, HS 610910, value = order total, made in US, duties paid by recipient). If FedEx is not available on the Shippo account, the cheapest tracked USPS / UPS / DHL Express rate is used. Default package: 1 lb, 12x10x2 in (`SHIP_PKG_WEIGHT_LB`, `SHIP_PKG_DIMS_IN`, `SHIPPO_US_SERVICE`, `SHIPPO_INTL_SERVICE` override).
 
-- Success: the owner email gets `fedex-label-<order>.pdf` (one 4x6 page) attached and the slip shows the tracking number.
-- Failure never blocks the slip: the email still goes out and the slip says `Label failed: <FedEx error>`.
-- Stripe test-mode orders never buy a production label (unless `FEDEX_LABEL_TEST_ORDERS=1`).
-- Sandbox (`apis-sandbox.fedex.com`) requires the **test account number** FedEx assigns to the project (My Projects → project → Test Key), not the real account.
-- Local check: `node scripts/fedex-test.mjs` (reads keys from /home/box/.secrets; `ACCT=<test acct>` overrides the account, `INTL=1` ships to Mexicali).
+- Success: the owner email gets the 4x6 label PDF link (and an attachment when Resend can attach it). The slip shows the carrier and tracking number. The buyer is emailed the tracking number and link.
+- Failure never blocks the slip: the email still goes out and the slip says `Label failed: <error>`.
+- The same order is never purchased twice: Shippo `Idempotency-Key` is `eekseye-label:<Stripe session id>`, and tracking/label fields are stored on the Stripe session metadata.
+- Stripe test-mode orders never buy a live label. They only use `SHIPPO_TEST_API_KEY` (or a test `SHIPPO_API_KEY`). `SHIPPO_DRY_RUN=1` quotes rates and does not buy.
+- Local checks (never print the key):
+  - `node scripts/shippo-unit-test.mjs` (offline)
+  - `node scripts/shippo-test.mjs` (rate quote only; `INTL=1` for a Mexicali destination)
 
-Official setup (US/Canada shipper):
-
-1. Get or confirm a FedEx shipping account. Have the account number, the billing address on the account, and a ship-from address (this Worker currently uses 2200 Sendero St, Calexico, CA 92231, phone +1 442 478 6003 — confirm these).
-2. Create a FedEx user ID and sign in at [developer.fedex.com](https://developer.fedex.com/).
-3. Create an organization (“Ships with FedEx and needs to integrate FedEx APIs into their own applications”), company name, website, organization name.
-4. Add the shipping account (account number, nickname, billing address) and accept the EULA.
-5. Create an API project, include **Ship API** (and usually API Authorization), name the project, select ship-to countries (this gives a test shipping account).
-6. From My Projects → project → API keys → Test Key, copy the **test API Key** (Client ID) and **test Secret Key**. Request an OAuth token for each call (tokens last one hour). Test against `https://apis-sandbox.fedex.com`.
-7. Move the project to production (Production key tab). Copy the **production API Key** and **production Secret Key**. The production secret is shown **only once** (it can be regenerated later). Add the production shipping account to the project.
-8. US/Canada Ship API requires label validation before production labels work:
-   - Create sample labels in the **test** environment for only the services you will use (for example FedEx Ground / 2Day), using real ship-from and sample recipient addresses.
-   - **Print and scan at 600 DPI or higher. Do not email the raw API image/PDF.**
-   - Fill out the [Label Cover Sheet](https://developer.fedex.com/content/dam/fedex-com/irc/common/Label-Cover-Sheet-form.pdf): shipping account number, production API key, company, contact, email, printer model and count, label image type (PDF or PNG for a laser printer), services requested.
-   - Email the scanned labels + cover sheet to **label@fedex.com** (or mail physical labels to FedEx Services, WTC-Business Solutions Testing, 10 FedEx Parkway, 2nd Floor Horizontal, Collierville, TN 38017).
-   - Allow about **three business days**. Approval is **per project**. If rejected, fix and resubmit.
-9. After the approval email, switch the Worker to `https://apis.fedex.com` and the production keys (as Pages secrets). Then the packing-slip email can attach the label.
-
-References: [FedEx shipper getting started](https://developer.fedex.com/api/en-us/get-started/shipper.html), [shipper validation](https://developer.fedex.com/api/en-us/certification/shipper.html), [Ship API docs](https://developer.fedex.com/api/en-us/catalog/ship/docs.html).
+See `/SHIPPO_SETUP.md` for dashboard steps (connect FedEx, add a payment method, confirm the ship-from address).
