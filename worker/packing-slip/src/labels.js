@@ -186,6 +186,9 @@ export function customsDeclaration(env, order, parcel) {
   const currency = (order.currency || "USD").toUpperCase();
   const unit = Number((amount / qty).toFixed(2)) || amount;
   const description = (order.items && order.items[0] && order.items[0].name) || "Cotton t-shirt";
+  const toCountry = String((order.customer && order.customer.country) || "").toUpperCase();
+  // Shippo enum is case-sensitive: CA uses NOEEI_30_36; most other US exports use NOEEI_30_37_a.
+  const eelPfc = toCountry === "CA" ? "NOEEI_30_36" : "NOEEI_30_37_a";
   return {
     contents_type: "MERCHANDISE",
     contents_explanation: "Cotton t-shirt",
@@ -193,7 +196,7 @@ export function customsDeclaration(env, order, parcel) {
     certify: true,
     certify_signer: String(env.SHIP_FROM_NAME || "eekseye").slice(0, 30),
     incoterm: "DDU",
-    eel_pfc: "NOEEI_30_37_A",
+    eel_pfc: eelPfc,
     items: [
       {
         description: String(description).slice(0, 50),

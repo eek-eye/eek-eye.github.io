@@ -120,7 +120,9 @@ const to = shipToAddress({
 assert(to.street1 === "100 Market St" && to.email === "ada@example.com", "ship-to from order");
 
 const customs = customsDeclaration({ SHIP_FROM_NAME: "eekseye" }, { amountCents: 27500, currency: "USD", items: [{ name: "I Eeks Eye I 2026", quantity: 1 }] }, parcel);
-assert(customs.contents_type === "MERCHANDISE" && customs.items[0].tariff_number === "610910" && customs.items[0].value_amount === "275", "customs for a shirt");
+assert(customs.contents_type === "MERCHANDISE" && customs.items[0].tariff_number === "610910" && customs.items[0].value_amount === "275" && customs.eel_pfc === "NOEEI_30_37_a", "customs for a shirt");
+const customsCA = customsDeclaration({ SHIP_FROM_NAME: "eekseye" }, { amountCents: 27500, currency: "USD", items: [{ name: "I Eeks Eye I 2026", quantity: 1 }], customer: { country: "CA" } }, parcel);
+assert(customsCA.eel_pfc === "NOEEI_30_36", "Canada uses NOEEI_30_36");
 
 assert(shippoKey({}, {}).skipped === "missing_key", "missing key is skipped");
 assert(shippoKey({ SHIPPO_API_KEY: "shippo_live_dummy" }, { isTest: true }).skipped === "test_order_no_test_key", "live key is not used for Stripe test orders");
